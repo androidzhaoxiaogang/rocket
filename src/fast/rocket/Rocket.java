@@ -41,12 +41,12 @@ public class Rocket {
     private Cache cache;
 
 	/**
-	 * With.
+	 *  Get the default Rocket object instance and begin building a request.
 	 *
 	 * @param context the context
 	 * @return the rocket request builder
 	 */
-	public RocketRequestBuilder with(Context context) {
+	public static RocketRequestBuilder with(Context context) {
 		 return getDefault(context).build();
 	}
 	
@@ -177,7 +177,7 @@ public class Rocket {
 		context = context.getApplicationContext();
 		this.name = name;
 		
-		newRequestQueue(context);
+		requestQueue = newRequestQueue(context);
 	}
 
 }

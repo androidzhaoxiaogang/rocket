@@ -8,42 +8,94 @@ import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
 import fast.rocket.error.RocketError;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RocketRequestBuilder.
+ */
 public class RocketRequestBuilder implements LaunchBuilder {
-	private FutureCallback callback;
+	
+	/** The future callback after json string being parsed. */
+	@SuppressWarnings("rawtypes")
+	private FutureCallback callback ;
+	
+	/** The class type to be parsed. */
 	private Class<?> clazz;
+	
+	/** The rocket. */
 	private Rocket rocket;
+	
+	/** The request tag. */
 	private Object tag;
 	
 
+	/**
+	 * Instantiates a new rocket request builder.
+	 *
+	 * @param rocket the rocket
+	 */
 	public RocketRequestBuilder(Rocket rocket) {
 		this.rocket = rocket;
 	}
 	
-	public void setCallback(FutureCallback callback) {
+	/**
+	 * Sets the callback.
+	 *
+	 * @param callback the callback
+	 * @return the rocket request builder
+	 */
+	@SuppressWarnings("rawtypes")
+	public RocketRequestBuilder setCallback(FutureCallback callback) {
 		this.callback = callback;
+		return this;
 	}
 	
-	public void setJsonClass(Class<?> clazz) {
+	/**
+	 * Sets the json class type.
+	 *
+	 * @param clazz the clazz
+	 * @return the rocket request builder
+	 */
+	public RocketRequestBuilder setJsonClass(Class<?> clazz) {
 		this.clazz = clazz;
+		return this;
 	}
 	
-	public void setTag(Object tag) {
+	/**
+	 * Sets the request tag.
+	 *
+	 * @param tag the tag
+	 * @return the rocket request builder
+	 */
+	public RocketRequestBuilder setRequestTag(Object tag) {
 		this.tag = tag;
+		return this;
 	}
 	
+	/* (non-Javadoc)
+	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String)
+	 */
 	@Override
-	public void launch(String uri) {
+	public void load(String uri) {
 		if(clazz == null || callback == null) {
 			throw new IllegalArgumentException("Initialization params is null");
 		}
 		
-		setRequest(uri, clazz);
+		addRequest(uri, clazz);
 	}
 	
-	private <T> void setRequest(String uri, Class<T> clazz) {
+	/**
+	 * Sets the request.
+	 *
+	 * @param <T> the generic type
+	 * @param uri the uri
+	 * @param clazz the clazz
+	 */
+	private <T> void addRequest(String uri, Class<T> clazz) {
 		GsonRequest<T> request = new GsonRequest<T>(uri, clazz,
 				null, new Listener<T>() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onResponse(T response) {
 				if(callback != null) {
@@ -52,6 +104,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 			}
 		}, new ErrorListener() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onErrorResponse(RocketError error) {
 				if(callback != null) {
@@ -64,11 +117,17 @@ public class RocketRequestBuilder implements LaunchBuilder {
 		rocket.getRequestQueue().add(request);
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String, java.lang.String)
+	 */
 	@Override
-	public void launch(String method, String url) {
+	public void load(String method, String url) {
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.config.LaunchBuilder#load(java.io.File)
+	 */
 	@Override
-	public void launch(File file) {
+	public void load(File file) {
 	}
 }
