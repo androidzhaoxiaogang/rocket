@@ -11,7 +11,6 @@ import fast.rocket.Rocket;
 import fast.rocket.error.RocketError;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RocketRequestBuilder.
  */
@@ -27,7 +26,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	private Class<?> clazz;
 	
 	/** Http request method {@link Method}. */
-	private int method = Method.GET;
+	//private int method = Method.GET;
 	
 	/** Http post or put params. */
 	private Map<String, String> params;
@@ -75,17 +74,6 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	}
 	
 	/**
-	 * Sets the request method.
-	 *
-	 * @param method the method
-	 * @return the rocket request builder
-	 */
-	public RocketRequestBuilder setRequestMethod(int method) {
-		this.method = method;
-		return this;
-	}
-	
-	/**
 	 * Sets the request tag.
 	 *
 	 * @param tag the tag
@@ -123,13 +111,29 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 */
 	@Override
 	public void load(String uri) {
+		load(Method.GET, uri);
+	}
+	
+	/* (non-Javadoc)
+	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void load(int method, String uri) {
 		if(clazz == null || callback == null) {
 			throw new IllegalArgumentException("Initialization params is null");
 		}
 		
 		addRequest(method, uri, clazz);
 	}
+
+	/* (non-Javadoc)
+	 * @see fast.rocket.config.LaunchBuilder#load(java.io.File)
+	 */
+	@Override
+	public void load(File file) {
+	}
 	
+	//***************************private apis***************************************//
 	/**
 	 * Add the request to the queue.
 	 *
@@ -165,19 +169,5 @@ public class RocketRequestBuilder implements LaunchBuilder {
 		
 		if(tag != null) request.setTag(tag);
 		rocket.getRequestQueue().add(request);
-	}
-
-	/* (non-Javadoc)
-	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void load(String method, String url) {
-	}
-
-	/* (non-Javadoc)
-	 * @see fast.rocket.config.LaunchBuilder#load(java.io.File)
-	 */
-	@Override
-	public void load(File file) {
 	}
 }
