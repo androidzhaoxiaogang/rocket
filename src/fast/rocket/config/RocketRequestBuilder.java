@@ -1,8 +1,10 @@
 package fast.rocket.config;
 
 import java.io.File;
+import java.util.Map;
 
 import fast.rocket.GsonRequest;
+import fast.rocket.Request.Method;
 import fast.rocket.Response.ErrorListener;
 import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
@@ -15,12 +17,23 @@ import fast.rocket.error.RocketError;
  */
 public class RocketRequestBuilder implements LaunchBuilder {
 	
-	/** The future callback after json string being parsed. */
+	/** The future callback to be invoked after
+	 *  the json string being parsed. 
+	 *  */
 	@SuppressWarnings("rawtypes")
 	private FutureCallback callback ;
 	
 	/** The class type to be parsed. */
 	private Class<?> clazz;
+	
+	/** Http request method {@link Method}. */
+	private int method = Method.GET;
+	
+	/** Http post or put params. */
+	private Map<String, String> params;
+	
+	/** Http headers. */
+	private Map<String, String> headers;
 	
 	/** The rocket. */
 	private Rocket rocket;
@@ -62,6 +75,17 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	}
 	
 	/**
+	 * Sets the request method.
+	 *
+	 * @param method the method
+	 * @return the rocket request builder
+	 */
+	public RocketRequestBuilder setRequestMethod(int method) {
+		this.method = method;
+		return this;
+	}
+	
+	/**
 	 * Sets the request tag.
 	 *
 	 * @param tag the tag
@@ -69,6 +93,28 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 */
 	public RocketRequestBuilder setRequestTag(Object tag) {
 		this.tag = tag;
+		return this;
+	}
+	
+	/**
+	 * Sets the request params.
+	 *
+	 * @param params the params
+	 * @return the rocket request builder
+	 */
+	public RocketRequestBuilder setRequestParams(Map<String, String> params) {
+		this.params = params;
+		return this;
+	}
+	
+	/**
+	 * Sets the request headers.
+	 *
+	 * @param headers the headers
+	 * @return the rocket request builder
+	 */
+	public RocketRequestBuilder setRequestHeaders(Map<String, String> headers) {
+		this.headers = headers;
 		return this;
 	}
 	
@@ -81,19 +127,23 @@ public class RocketRequestBuilder implements LaunchBuilder {
 			throw new IllegalArgumentException("Initialization params is null");
 		}
 		
-		addRequest(uri, clazz);
+		addRequest(method, uri, clazz);
 	}
 	
 	/**
-	 * Sets the request.
+	 * Add the request to the queue.
 	 *
 	 * @param <T> the generic type
 	 * @param uri the uri
 	 * @param clazz the clazz
 	 */
-	private <T> void addRequest(String uri, Class<T> clazz) {
-		GsonRequest<T> request = new GsonRequest<T>(uri, clazz,
-				null, new Listener<T>() {
+	private <T> void addRequest(int method, String uri, Class<T> clazz) {
+		if(params != null && method == Method.GET) {
+			method = Method.POST;//reset the http method
+		}
+		
+		GsonRequest<T> request = new GsonRequest<T>(method, uri, clazz,
+				headers, params, new Listener<T>() {
 
 			@SuppressWarnings("unchecked")
 			@Override

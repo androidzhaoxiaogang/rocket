@@ -176,8 +176,7 @@ public class Rocket {
 	private Rocket(Context context, String name) {
 		context = context.getApplicationContext();
 		this.name = name;
-		
-		requestQueue = newRequestQueue(context);
+		this.requestQueue = newRequestQueue(context);
 	}
 
 }
