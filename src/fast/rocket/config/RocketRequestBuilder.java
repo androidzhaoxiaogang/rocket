@@ -25,9 +25,6 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	/** The class type to be parsed. */
 	private Class<?> clazz;
 	
-	/** Http request method {@link Method}. */
-	//private int method = Method.GET;
-	
 	/** Http post or put params. */
 	private Map<String, String> params;
 	
