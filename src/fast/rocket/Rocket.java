@@ -5,7 +5,7 @@ import java.io.File;
 
 import fast.rocket.cache.Cache;
 import fast.rocket.cache.DiskBasedCache;
-import fast.rocket.config.RocketRequestBuilder;
+import fast.rocket.config.JsonRequestBuilder;
 import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientStack;
 import fast.rocket.http.HttpStack;
@@ -46,7 +46,7 @@ public class Rocket {
 	 * @param context the context
 	 * @return the rocket request builder
 	 */
-	public static RocketRequestBuilder with(Context context) {
+	public static JsonRequestBuilder with(Context context) {
 		 return getDefault(context).build();
 	}
 	
@@ -161,8 +161,8 @@ public class Rocket {
      *
      * @return the rocket request builder
      */
-    public RocketRequestBuilder build() {
-    	return new RocketRequestBuilder(this);
+    public JsonRequestBuilder build() {
+    	return new JsonRequestBuilder(this);
     }
     
 	

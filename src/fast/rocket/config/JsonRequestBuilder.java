@@ -1,6 +1,5 @@
 package fast.rocket.config;
 
-import java.io.File;
 import java.util.Map;
 
 import fast.rocket.GsonRequest;
@@ -14,7 +13,7 @@ import fast.rocket.error.RocketError;
 /**
  * The Class RocketRequestBuilder.
  */
-public class RocketRequestBuilder implements LaunchBuilder {
+public class JsonRequestBuilder implements LaunchBuilder {
 	
 	/** The future callback to be invoked after
 	 *  the json string being parsed. 
@@ -43,7 +42,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 *
 	 * @param rocket the rocket
 	 */
-	public RocketRequestBuilder(Rocket rocket) {
+	public JsonRequestBuilder(Rocket rocket) {
 		this.rocket = rocket;
 	}
 	
@@ -54,7 +53,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 * @return the rocket request builder
 	 */
 	@SuppressWarnings("rawtypes")
-	public RocketRequestBuilder setCallback(FutureCallback callback) {
+	public JsonRequestBuilder setCallback(FutureCallback callback) {
 		this.callback = callback;
 		return this;
 	}
@@ -65,7 +64,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 * @param clazz the clazz
 	 * @return the rocket request builder
 	 */
-	public RocketRequestBuilder setJsonClass(Class<?> clazz) {
+	public JsonRequestBuilder setJsonClass(Class<?> clazz) {
 		this.clazz = clazz;
 		return this;
 	}
@@ -76,7 +75,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 * @param tag the tag
 	 * @return the rocket request builder
 	 */
-	public RocketRequestBuilder setRequestTag(Object tag) {
+	public JsonRequestBuilder setRequestTag(Object tag) {
 		this.tag = tag;
 		return this;
 	}
@@ -87,7 +86,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 * @param params the params
 	 * @return the rocket request builder
 	 */
-	public RocketRequestBuilder setRequestParams(Map<String, String> params) {
+	public JsonRequestBuilder setRequestParams(Map<String, String> params) {
 		this.params = params;
 		return this;
 	}
@@ -98,7 +97,7 @@ public class RocketRequestBuilder implements LaunchBuilder {
 	 * @param headers the headers
 	 * @return the rocket request builder
 	 */
-	public RocketRequestBuilder setRequestHeaders(Map<String, String> headers) {
+	public JsonRequestBuilder setRequestHeaders(Map<String, String> headers) {
 		this.headers = headers;
 		return this;
 	}
@@ -123,13 +122,6 @@ public class RocketRequestBuilder implements LaunchBuilder {
 		addRequest(method, uri, clazz);
 	}
 
-	/* (non-Javadoc)
-	 * @see fast.rocket.config.LaunchBuilder#load(java.io.File)
-	 */
-	@Override
-	public void load(File file) {
-	}
-	
 	//***************************private apis***************************************//
 	/**
 	 * Add the request to the queue.
