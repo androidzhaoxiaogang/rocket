@@ -5,6 +5,7 @@ import java.io.File;
 
 import fast.rocket.cache.Cache;
 import fast.rocket.cache.DiskBasedCache;
+import fast.rocket.config.ImageRequestBuilder;
 import fast.rocket.config.JsonRequestBuilder;
 import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientStack;
@@ -17,6 +18,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.os.Looper;
+import android.widget.ImageView;
 
 /**
  * The Class Rocket.
@@ -49,6 +52,16 @@ public class Rocket {
 	public static JsonRequestBuilder with(Context context) {
 		 return getDefault(context).build();
 	}
+	
+	/**
+     * Create a ImageView image request builder
+     * @param imageView
+     * @return
+     */
+    public static ImageRequestBuilder with(ImageView imageView) {
+    	Rocket rocket = getDefault(imageView.getContext());
+        return rocket.build(imageView);
+    }
 	
 	/**
 	 * Get the default Rocket instance.
@@ -163,6 +176,20 @@ public class Rocket {
      */
     public JsonRequestBuilder build() {
     	return new JsonRequestBuilder(this);
+    }
+    
+    /**
+     * Create a image request builder that can be used to 
+     * build an network image request
+     * @param imageView
+     * @return
+     */
+    public ImageRequestBuilder build(ImageView imageView) {
+        if (Thread.currentThread() != Looper.getMainLooper().getThread())
+            throw new IllegalStateException("must be called from UI thread");
+        final ImageRequestBuilder imageBuilder = new ImageRequestBuilder();
+        imageBuilder.rocket = this;
+        return imageBuilder.withImageView(imageView);
     }
     
 	

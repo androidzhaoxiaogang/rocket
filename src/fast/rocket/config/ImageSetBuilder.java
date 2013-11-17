@@ -3,34 +3,34 @@ package fast.rocket.config;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 
-public interface ImageViewBuilder<IVB extends ImageViewBuilder<?>> {
+public interface ImageSetBuilder<I extends ImageSetBuilder<?>> {
     /**
      * Set a placeholder on the ImageView while the request is loading
      * @param drawable
      * @return
      */
-    public IVB placeholder(Drawable drawable);
+    public I placeholder(Drawable drawable);
 
     /**
      * Set a placeholder on the ImageView while the request is loading
      * @param resourceId
      * @return
      */
-    public IVB placeholder(int resourceId);
+    public I placeholder(int resourceId);
 
     /**
      * Set an error image on the ImageView if the request fails to load
      * @param drawable
      * @return
      */
-    public IVB error(Drawable drawable);
+    public I error(Drawable drawable);
 
     /**
      * Set an error image on the ImageView if the request fails to load
      * @param resourceId
      * @return
      */
-    public IVB error(int resourceId);
+    public I error(int resourceId);
 
     /**
      * If an ImageView is loaded successfully from a remote source or file storage,
@@ -40,7 +40,7 @@ public interface ImageViewBuilder<IVB extends ImageViewBuilder<?>> {
      *           and the Bitmap has been retrieved.
      * @return
      */
-    public IVB animateIn(Animation in);
+    public I animateIn(Animation in);
 
     /**
      * If an ImageView is loaded successfully from a remote source or file storage,
@@ -50,7 +50,7 @@ public interface ImageViewBuilder<IVB extends ImageViewBuilder<?>> {
      *           and the Bitmap has been retrieved.
      * @return
      */
-    public IVB animateIn(int animationResource);
+    public I animateIn(int animationResource);
 
     /**
      * If the ImageView needs to load from a remote source or file storage,
@@ -58,7 +58,7 @@ public interface ImageViewBuilder<IVB extends ImageViewBuilder<?>> {
      * @param load Animation to apply to the imageView while the request is loading.
      * @return
      */
-    public IVB animateLoad(Animation load);
+    public I animateLoad(Animation load);
 
     /**
      * If the ImageView needs to load from a remote source or file storage,
@@ -66,5 +66,5 @@ public interface ImageViewBuilder<IVB extends ImageViewBuilder<?>> {
      * @param animationResource Animation resource to apply to the imageView while the request is loading.
      * @return
      */
-    public IVB animateLoad(int animationResource);
+    public I animateLoad(int animationResource);
 }
