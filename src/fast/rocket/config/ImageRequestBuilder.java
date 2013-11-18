@@ -4,15 +4,20 @@ import java.lang.ref.WeakReference;
 
 import fast.rocket.Rocket;
 import fast.rocket.cache.ImageLoader;
+import fast.rocket.cache.ImageLoader.ImageListener;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
 public class ImageRequestBuilder implements LaunchBuilder{
-	private final static int FitXY = 0x01;
-	private final static int CenterCrop = 0x02;
-	private final static int CenterInside = 0x03;
+	public interface ScaleMode {
+		int FitXY = 0x01;
+		int CenterCrop = 0x02;
+		int CenterInside = 0x03;
+	}
 	
 	private Drawable placeholderDrawable;
 	private int placeholderResource;
@@ -27,7 +32,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	/** The rocket. */
 	public Rocket rocket;
 	
-    private int scaleMode = FitXY;
+    private int scaleMode = ScaleMode.FitXY;
     private int resizeWidth;
     private int resizeHeight;
 
@@ -116,14 +121,14 @@ public class ImageRequestBuilder implements LaunchBuilder{
     public ImageRequestBuilder centerCrop() {
         if (resizeWidth == 0 || resizeHeight == 0)
             throw new IllegalStateException("must call resize first");
-        scaleMode = CenterCrop;
+        scaleMode = ScaleMode.CenterCrop;
         return this;
     }
 
     public ImageRequestBuilder centerInside() {
         if (resizeWidth == 0 || resizeHeight == 0)
             throw new IllegalStateException("must call resize first");
-        scaleMode = CenterInside;
+        scaleMode = ScaleMode.CenterInside;
         return this;
     }
 
@@ -142,10 +147,41 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	public void load(int method, String uri) {
 		final ImageView view = imageViewRef.get();
 		final ImageLoader loader = rocket.getImageLoader();
-		loader.get(uri, ImageLoader.getImageListener(
-				view, placeholderDrawable, placeholderResource,
-				errorDrawable, errorResource, fadeInImage),
-				resizeWidth, resizeHeight);
+		final ImageListener  listener = ImageLoader.getImageListener(view, 
+				placeholderDrawable, placeholderResource,
+				errorDrawable, errorResource, fadeInImage);
+		loader.get(uri, listener, resizeWidth, resizeHeight, skipMemoryCache);
 	}
+	
+	//**************************************private apis***************************************//
+	private Bitmap transform(Bitmap b) {
+        Bitmap ret = Bitmap.createBitmap(resizeWidth, resizeHeight, b.getConfig());
+        Canvas canvas = new Canvas(ret);
+
+        float xratio = (float)resizeWidth / (float)b.getWidth();
+        float yratio = (float)resizeHeight / (float)b.getHeight();
+        float transx = 0;
+        float transy = 0;
+        if (scaleMode != ScaleMode.FitXY) {
+            float ratio;
+            if (scaleMode == ScaleMode.CenterCrop)
+                ratio = Math.max(xratio, yratio);
+            else
+                ratio = Math.min(xratio, yratio);
+
+            xratio = ratio;
+            yratio = ratio;
+
+            float postx = b.getWidth() * ratio;
+            float posty = b.getHeight() * ratio;
+            transx = (resizeWidth - postx) / 2;
+            transy = (resizeHeight - posty) / 2;
+        }
+
+        canvas.scale(xratio, yratio);
+        canvas.drawBitmap(b, transx, transy, null);
+
+        return ret;
+    }
 
 }
