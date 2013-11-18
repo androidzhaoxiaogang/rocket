@@ -3,8 +3,10 @@ package fast.rocket;
 
 import java.io.File;
 
+import fast.rocket.cache.BitmapLruCache;
 import fast.rocket.cache.Cache;
 import fast.rocket.cache.DiskBasedCache;
+import fast.rocket.cache.ImageLoader;
 import fast.rocket.config.ImageRequestBuilder;
 import fast.rocket.config.JsonRequestBuilder;
 import fast.rocket.http.BasicNetwork;
@@ -18,6 +20,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Looper;
 import android.widget.ImageView;
 
@@ -30,6 +33,8 @@ public class Rocket {
 
 	/** The request queue. */
 	private RequestQueue requestQueue;
+	
+	private ImageLoader imageLoader;
 	
 	/** The Rocket instance. */
 	private static Rocket instance;
@@ -76,43 +81,6 @@ public class Rocket {
     }
     
     /**
-     * Gets the Rocket name.
-     *
-     * @return the name
-     */
-    public String getName() {
-		return name;
-	}
-	
-	
-	/**
-	 * Gets the request queue.
-	 *
-	 * @return the request queue
-	 */
-	public RequestQueue getRequestQueue() {
-		return requestQueue;
-	}
-	
-	/**
-	 * Gets the basic network.
-	 *
-	 * @return the basic network
-	 */
-	public Network getBasicNetwork() {
-		return network;
-	}
-
-	/**
-	 * Gets the cache.
-	 *
-	 * @return the cache
-	 */
-	public Cache getCache() {
-		return cache;
-	}
-	
-    /**
      * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
      *
      * @param context A {@link Context} to use for creating the cache dir.
@@ -129,8 +97,6 @@ public class Rocket {
      * @return A started {@link RequestQueue} instance.
      */
     public RequestQueue newRequestQueue(Context context, HttpStack stack) {
-        File cacheDir = new File(context.getCacheDir(), DEFAULT_CACHE_DIR);
-
         String userAgent = "rocket";
         try {
             String packageName = context.getPackageName();
@@ -150,12 +116,22 @@ public class Rocket {
         }
 
         network = new BasicNetwork(stack);
-        cache = new DiskBasedCache(cacheDir);
+        cache = new DiskBasedCache(getDiskCacheDir(context, DEFAULT_CACHE_DIR));
 
         RequestQueue queue = new RequestQueue(cache, network);
         queue.start();
 
         return queue;
+    }
+    
+    /**
+     * Get a usable cache directory (external if available, internal otherwise).
+     *
+     * @param context The context to use
+     * @return The cache dir
+     */
+    public static File getDiskCacheDir(Context context) {
+    	return getDiskCacheDir(context, DEFAULT_CACHE_DIR);
     }
     
     /**
@@ -192,10 +168,50 @@ public class Rocket {
         return imageBuilder.withImageView(imageView);
     }
     
+    /**
+     * Gets the Rocket name.
+     *
+     * @return the name
+     */
+    public String getName() {
+		return name;
+	}
+	
+	
+	/**
+	 * Gets the request queue.
+	 *
+	 * @return the request queue
+	 */
+	public RequestQueue getRequestQueue() {
+		return requestQueue;
+	}
+	
+	/**
+	 * Gets the basic network.
+	 *
+	 * @return the basic network
+	 */
+	public Network getBasicNetwork() {
+		return network;
+	}
+
+	/**
+	 * Gets the cache.
+	 *
+	 * @return the cache
+	 */
+	public Cache getCache() {
+		return cache;
+	}
+	
+	public ImageLoader getImageLoader() {
+		return imageLoader;
+	}
 	
 	//*********************private apis*****************************//
 	/**
-	 * Instantiates a new rocket.
+	 * Instantiates a new rocket and the request queue.
 	 *
 	 * @param context the context
 	 * @param name the name
@@ -204,6 +220,42 @@ public class Rocket {
 		context = context.getApplicationContext();
 		this.name = name;
 		this.requestQueue = newRequestQueue(context);
+		this.imageLoader = new ImageLoader(requestQueue, new BitmapLruCache());
 	}
+	
+	/**
+     * Get a usable cache directory (external if available, internal otherwise).
+     *
+     * @param context The context to use
+     * @param uniqueName A unique directory name to append to the cache dir
+     * @return The cache dir
+     */
+    private static File getDiskCacheDir(Context context, String uniqueName) {
+        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
+        // otherwise use internal cache dir
+
+        // getCacheDir() should be moved to a background thread as it attempts to create the
+        // directory if it does not exist (no disk access should happen on the main/UI thread).
+        final String cachePath =
+                Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                        ? getExternalCacheDir(context).getPath()
+                        : context.getCacheDir().getPath();
+
+        return new File(cachePath + File.separator + uniqueName);
+    }
+	
+    /**
+     * Get the external app cache directory.
+     *
+     * @param context The context to use
+     * @return The external cache dir
+     */
+    private static File getExternalCacheDir(Context context) {
+        // This needs to be moved to a background thread to ensure no disk access on the
+        // main/UI thread as unfortunately getExternalCacheDir() calls mkdirs() for us (even
+        // though the Rocket library will later try and call mkdirs() as well from a background
+        // thread).
+        return context.getExternalCacheDir();
+    }
 
 }

@@ -3,12 +3,17 @@ package fast.rocket.config;
 import java.lang.ref.WeakReference;
 
 import fast.rocket.Rocket;
+import fast.rocket.cache.ImageLoader;
 
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
 public class ImageRequestBuilder implements LaunchBuilder{
+	private final static int FitXY = 0x01;
+	private final static int CenterCrop = 0x02;
+	private final static int CenterInside = 0x03;
+	
 	private Drawable placeholderDrawable;
 	private int placeholderResource;
 	private Drawable errorDrawable;
@@ -18,16 +23,11 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	private int inAnimationResource;
 	private int loadAnimationResource;
 	private boolean skipMemoryCache;
+	private boolean fadeInImage = true;
 	/** The rocket. */
 	public Rocket rocket;
 	
-	static enum ScaleMode {
-        FitXY,
-        CenterCrop,
-        CenterInside
-    }
-
-    private ScaleMode scaleMode = ScaleMode.FitXY;
+    private int scaleMode = FitXY;
     private int resizeWidth;
     private int resizeHeight;
 
@@ -73,6 +73,11 @@ public class ImageRequestBuilder implements LaunchBuilder{
 		errorResource = resourceId;
 		return this;
 	}
+	
+	public ImageRequestBuilder noFadeIn() {
+		this.fadeInImage = false;
+        return this;
+    }
 
 	public ImageRequestBuilder animateIn(Animation in) {
 		inAnimation = in;
@@ -81,16 +86,19 @@ public class ImageRequestBuilder implements LaunchBuilder{
 
 	public ImageRequestBuilder animateIn(int animationResource) {
 		inAnimationResource = animationResource;
+		fadeInImage = true;
 		return this;
 	}
 
 	public ImageRequestBuilder animateLoad(Animation load) {
 		loadAnimation = load;
+		fadeInImage = true;
 		return this;
 	}
 
 	public ImageRequestBuilder animateLoad(int animationResource) {
 		loadAnimationResource = animationResource;
+		fadeInImage = true;
 		return this;
 	}
 
@@ -108,14 +116,14 @@ public class ImageRequestBuilder implements LaunchBuilder{
     public ImageRequestBuilder centerCrop() {
         if (resizeWidth == 0 || resizeHeight == 0)
             throw new IllegalStateException("must call resize first");
-        scaleMode = ScaleMode.CenterCrop;
+        scaleMode = CenterCrop;
         return this;
     }
 
     public ImageRequestBuilder centerInside() {
         if (resizeWidth == 0 || resizeHeight == 0)
             throw new IllegalStateException("must call resize first");
-        scaleMode = ScaleMode.CenterInside;
+        scaleMode = CenterInside;
         return this;
     }
 
@@ -127,14 +135,17 @@ public class ImageRequestBuilder implements LaunchBuilder{
 
 	@Override
 	public void load(String uri) {
-		// TODO Auto-generated method stub
-		
+		load(0, uri);
 	}
 
 	@Override
 	public void load(int method, String uri) {
-		// TODO Auto-generated method stub
-		
+		final ImageView view = imageViewRef.get();
+		final ImageLoader loader = rocket.getImageLoader();
+		loader.get(uri, ImageLoader.getImageListener(
+				view, placeholderDrawable, placeholderResource,
+				errorDrawable, errorResource, fadeInImage),
+				resizeWidth, resizeHeight);
 	}
 
 }

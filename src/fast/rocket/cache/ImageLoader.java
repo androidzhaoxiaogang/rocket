@@ -1,10 +1,21 @@
 
 package fast.rocket.cache;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 
@@ -29,6 +40,12 @@ import fast.rocket.error.RocketError;
  * thread as well.
  */
 public class ImageLoader {
+	private static final int ANIMATION_FADE_IN_TIME = 250;
+	private static final int HALF_FADE_IN_TIME = ANIMATION_FADE_IN_TIME / 2;
+	
+	private static final ColorDrawable transparentDrawable = new ColorDrawable(
+            android.R.color.transparent);
+	
     /** RequestQueue for dispatching ImageRequests onto. */
     private final RequestQueue mRequestQueue;
 
@@ -84,24 +101,96 @@ public class ImageLoader {
      * @param errorImageResId Error image resource ID to use, or 0 if it doesn't exist.
      */
     public static ImageListener getImageListener(final ImageView view,
-            final int defaultImageResId, final int errorImageResId) {
+            final Drawable placeholderDrawable, final int defaultImageResId, final Drawable errorDrawable, 
+            final int errorImageResId, final boolean fadeInImage) {
         return new ImageListener() {
             @Override
             public void onErrorResponse(RocketError error) {
                 if (errorImageResId != 0) {
                     view.setImageResource(errorImageResId);
+                } else {
+                	view.setImageDrawable(errorDrawable);
                 }
             }
 
             @Override
             public void onResponse(ImageContainer response, boolean isImmediate) {
                 if (response.getBitmap() != null) {
-                    view.setImageBitmap(response.getBitmap());
+                    setImageBitmap(view, response.getBitmap(), null, fadeInImage && !isImmediate);
                 } else if (defaultImageResId != 0) {
                     view.setImageResource(defaultImageResId);
+                } else {
+                	view.setImageDrawable(placeholderDrawable);
                 }
             }
         };
+    }
+    
+    static void doAnimation(ImageView imageView, Animation animation, int animationResource) {
+        if (imageView == null)
+            return;
+        if (animation == null && animationResource != 0)
+            animation = AnimationUtils.loadAnimation(imageView.getContext(), animationResource);
+        if (animation == null) {
+            imageView.setAnimation(null);
+            return;
+        }
+
+        imageView.startAnimation(animation);
+    }
+    
+    /**
+     * Sets a {@link android.graphics.Bitmap} to an {@link android.widget.ImageView} using a
+     * fade-in animation. If there is a {@link android.graphics.drawable.Drawable} already set on
+     * the ImageView then use that as the image to fade from. Otherwise fade in from a transparent
+     * Drawable.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+	private static void setImageBitmap(final ImageView imageView, final Bitmap bitmap,
+            Resources resources, boolean fadeIn) {
+
+        // If we're fading in and on HC MR1+
+        if (fadeIn && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            // Use ViewPropertyAnimator to run a simple fade in + fade out animation to update the
+            // ImageView
+            imageView.animate()
+                    .scaleY(0.95f)
+                    .scaleX(0.95f)
+                    .alpha(0f)
+                    .setDuration(imageView.getDrawable() == null ? 0 : HALF_FADE_IN_TIME)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            imageView.setImageBitmap(bitmap);
+                            imageView.animate()
+                                    .alpha(1f)
+                                    .scaleY(1f)
+                                    .scaleX(1f)
+                                    .setDuration(HALF_FADE_IN_TIME)
+                                    .setListener(null);
+                        }
+                    });
+        } else if (fadeIn) {
+            // Otherwise use a TransitionDrawable to fade in
+            Drawable initialDrawable;
+            if (imageView.getDrawable() != null) {
+                initialDrawable = imageView.getDrawable();
+            } else {
+                initialDrawable = transparentDrawable;
+            }
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(resources, bitmap);
+            // Use TransitionDrawable to fade in
+            final TransitionDrawable td =
+                    new TransitionDrawable(new Drawable[] {
+                            initialDrawable,
+                            bitmapDrawable
+                    });
+            imageView.setImageDrawable(td);
+            td.startTransition(ANIMATION_FADE_IN_TIME);
+        } else {
+            // No fade in, just set bitmap directly
+            imageView.setImageBitmap(bitmap);
+        }
     }
 
     /**
