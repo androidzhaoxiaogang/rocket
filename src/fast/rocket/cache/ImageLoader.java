@@ -245,7 +245,7 @@ public class ImageLoader {
      * @param defaultImage Optional default image to return until the actual image is loaded.
      */
     public ImageContainer get(String requestUrl, final ImageListener listener) {
-        return get(requestUrl, listener, 0, 0, false);
+        return get(requestUrl, listener, 0, 0, false, false);
     }
     
     /**
@@ -277,7 +277,8 @@ public class ImageLoader {
      *     the currently available image (default if remote is not loaded).
      */
     public ImageContainer get(String requestUrl, ImageListener imageListener,
-            int maxWidth, int maxHeight, boolean skipMemoryCache) {
+            int maxWidth, int maxHeight, final boolean skipMemoryCache,
+            final boolean skipDiskCache) {
         // only fulfill requests that were initiated from the main thread.
         throwIfNotOnMainThread();
 
@@ -313,7 +314,7 @@ public class ImageLoader {
             new ImageRequest(requestUrl, new Listener<Bitmap>() {
                 @Override
                 public void onResponse(Bitmap response) {
-                    onGetImageSuccess(cacheKey, response);
+                    onGetImageSuccess(cacheKey, response, skipMemoryCache);
                 }
             }, maxWidth, maxHeight,
             Config.RGB_565, new ErrorListener() {
@@ -322,7 +323,7 @@ public class ImageLoader {
                     onGetImageError(cacheKey, error);
                 }
             });
-        newRequest.setShouldCache(!skipMemoryCache);
+        newRequest.setShouldCache(!skipDiskCache);
         mRequestQueue.add(newRequest);
         mInFlightRequests.put(cacheKey,
                 new BatchedImageRequest(newRequest, imageContainer));
@@ -344,9 +345,12 @@ public class ImageLoader {
      * @param cacheKey The cache key that is associated with the image request.
      * @param response The bitmap that was returned from the network.
      */
-    private void onGetImageSuccess(String cacheKey, Bitmap response) {
+    private void onGetImageSuccess(String cacheKey, Bitmap response, 
+    		final boolean skipMemoryCache) {
         // cache the image that was fetched.
-        mCache.putBitmap(cacheKey, response);
+		if (!skipMemoryCache) {
+			mCache.putBitmap(cacheKey, response);
+		}
 
         // remove the request from the list of in-flight requests.
         BatchedImageRequest request = mInFlightRequests.remove(cacheKey);

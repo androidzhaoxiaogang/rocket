@@ -28,6 +28,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	private int inAnimationResource;
 	private int loadAnimationResource;
 	private boolean skipMemoryCache;
+	private boolean skipDiskCache;
 	private boolean fadeInImage = true;
 	/** The rocket. */
 	public Rocket rocket;
@@ -118,6 +119,17 @@ public class ImageRequestBuilder implements LaunchBuilder{
 		return this;
 	}
 	
+	/**
+	 * Indicate that this action should not use the disk cache for attempting
+	 * to load or save the image. This can be useful when you know an image will
+	 * only ever be used once (e.g., loading an image from the filesystem and
+	 * uploading to a remote server).
+	 */
+	public ImageRequestBuilder skipDiskCache() {
+		skipDiskCache = true;
+		return this;
+	}
+	
     public ImageRequestBuilder centerCrop() {
         if (resizeWidth == 0 || resizeHeight == 0)
             throw new IllegalStateException("must call resize first");
@@ -150,7 +162,8 @@ public class ImageRequestBuilder implements LaunchBuilder{
 		final ImageListener  listener = ImageLoader.getImageListener(view, 
 				placeholderDrawable, placeholderResource,
 				errorDrawable, errorResource, fadeInImage);
-		loader.get(uri, listener, resizeWidth, resizeHeight, skipMemoryCache);
+		loader.get(uri, listener, resizeWidth, resizeHeight, 
+				skipMemoryCache, skipDiskCache);
 	}
 	
 	//**************************************private apis***************************************//
