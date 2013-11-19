@@ -5,6 +5,7 @@ import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.error.RocketError;
 import fast.rocket.utils.RocketUtils;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
@@ -168,6 +169,11 @@ public class CacheImageView extends ImageView {
         loadImageIfNecessary(true);
     }
     
+    /**
+     * Handle the OOM issue before 3.0, and to avoid the used the recycled bitmap
+     * runtime exception {@link  BitmapLruCache#entryRemoved(boolean , 
+     * String , Bitmap , Bitmap )}.
+     */
 	@Override
 	protected void onDraw(Canvas canvas) {
 		if (RocketUtils.hasHoneycomb()) {

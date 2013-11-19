@@ -36,6 +36,7 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
         put(url, bitmap);
     }
 
+    //Handle the OOM issue before 3.0.
 	@Override
 	protected void entryRemoved(boolean evicted, String key, Bitmap oldValue,
 			Bitmap newValue) {

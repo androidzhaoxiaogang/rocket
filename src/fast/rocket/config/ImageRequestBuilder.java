@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class ImageRequestBuilder implements LaunchBuilder{
@@ -157,16 +158,31 @@ public class ImageRequestBuilder implements LaunchBuilder{
 
 	@Override
 	public void load(int method, String uri) {
-		final ImageView view = imageViewRef.get();
+		final ImageView imageView = imageViewRef.get();
 		final ImageLoader loader = rocket.getImageLoader();
-		final ImageListener  listener = ImageLoader.getImageListener(view, 
+		final ImageListener  listener = ImageLoader.getImageListener(imageView, 
 				placeholderDrawable, placeholderResource,
 				errorDrawable, errorResource, fadeInImage);
+		
 		loader.get(uri, listener, resizeWidth, resizeHeight, 
 				skipMemoryCache, skipDiskCache);
+		imageAnimation(imageView, loadAnimation, loadAnimationResource);
 	}
 	
 	//**************************************private apis***************************************//
+	private void imageAnimation(ImageView imageView, Animation animation, int animationResource) {
+        if (imageView == null)
+            return;
+        if (animation == null && animationResource != 0)
+            animation = AnimationUtils.loadAnimation(imageView.getContext(), animationResource);
+        if (animation == null) {
+            imageView.setAnimation(null);
+            return;
+        }
+
+        imageView.startAnimation(animation);
+    }
+	
 	private Bitmap transform(Bitmap b) {
         Bitmap ret = Bitmap.createBitmap(resizeWidth, resizeHeight, b.getConfig());
         Canvas canvas = new Canvas(ret);

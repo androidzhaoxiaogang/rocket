@@ -126,7 +126,7 @@ public class ImageLoader {
         };
     }
     
-    static void doAnimation(ImageView imageView, Animation animation, int animationResource) {
+    private static void doAnimation(ImageView imageView, Animation animation, int animationResource) {
         if (imageView == null)
             return;
         if (animation == null && animationResource != 0)
