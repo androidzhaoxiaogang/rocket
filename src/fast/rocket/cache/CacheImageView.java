@@ -3,7 +3,10 @@ package fast.rocket.cache;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.error.RocketError;
+import fast.rocket.utils.RocketUtils;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup.LayoutParams;
@@ -164,8 +167,27 @@ public class CacheImageView extends ImageView {
         super.onLayout(changed, left, top, right, bottom);
         loadImageIfNecessary(true);
     }
+    
+	@Override
+	protected void onDraw(Canvas canvas) {
+		if (RocketUtils.hasHoneycomb()) {
+			super.onDraw(canvas);
+		} else {
+			BitmapDrawable drawable = (BitmapDrawable) getDrawable();
+			if (drawable == null) {
+				setImageResource(mDefaultImageId);
+			} else if ((drawable.getBitmap() == null)
+					|| (drawable.getBitmap().isRecycled())) {
+				setImageResource(mDefaultImageId);
+			}
+			try {
+				super.onDraw(canvas);
+			} catch (RuntimeException localRuntimeException) {
+			}
+		}
+	}
 
-    @Override
+	@Override
     protected void onDetachedFromWindow() {
         if (mImageContainer != null) {
             // If the view was bound to an image request, cancel it and clear

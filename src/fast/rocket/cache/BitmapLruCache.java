@@ -1,6 +1,7 @@
 package fast.rocket.cache;
 
 import fast.rocket.cache.ImageLoader.ImageCache;
+import fast.rocket.utils.RocketUtils;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
@@ -34,4 +35,18 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
     public void putBitmap(String url, Bitmap bitmap) {
         put(url, bitmap);
     }
+
+	@Override
+	protected void entryRemoved(boolean evicted, String key, Bitmap oldValue,
+			Bitmap newValue) {
+		if (RocketUtils.hasHoneycomb()) {
+			super.entryRemoved(evicted, key, oldValue, newValue);
+		} else {
+			if ((evicted) && (oldValue != null) && (!oldValue.isRecycled())) {
+				oldValue.recycle();
+				oldValue = null;
+			}
+		}
+	}
+    
 }
