@@ -10,10 +10,6 @@ public class RocketUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 	
-	public static boolean hasHoneycombMR1() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-    }
-	
 	public static void loadAnimation(ImageView imageView, Animation animation, int animationResource) {
         if (imageView == null)
             return;
