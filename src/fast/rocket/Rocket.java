@@ -5,9 +5,11 @@ import java.io.File;
 
 import fast.rocket.cache.BitmapLruCache;
 import fast.rocket.cache.Cache;
+import fast.rocket.cache.CacheImageView;
 import fast.rocket.cache.DiskBasedCache;
 import fast.rocket.cache.ImageLoader;
-import fast.rocket.config.ImageRequestBuilder;
+import fast.rocket.config.CacheviewRequestBuilder;
+import fast.rocket.config.ImageviewRequestBuilder;
 import fast.rocket.config.JsonRequestBuilder;
 import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientStack;
@@ -63,7 +65,17 @@ public class Rocket {
      * @param imageView
      * @return
      */
-    public static ImageRequestBuilder with(ImageView imageView) {
+    public static ImageviewRequestBuilder with(ImageView imageView) {
+    	Rocket rocket = getDefault(imageView.getContext());
+        return rocket.build(imageView);
+    }
+    
+    /**
+     * Create a CacheImageView image request builder
+     * @param CacheImageView
+     * @return
+     */
+    public static CacheviewRequestBuilder with(CacheImageView imageView) {
     	Rocket rocket = getDefault(imageView.getContext());
         return rocket.build(imageView);
     }
@@ -160,10 +172,24 @@ public class Rocket {
      * @param imageView
      * @return
      */
-    public ImageRequestBuilder build(ImageView imageView) {
+    public ImageviewRequestBuilder build(ImageView imageView) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread())
             throw new IllegalStateException("must be called from UI thread");
-        final ImageRequestBuilder imageBuilder = new ImageRequestBuilder();
+        final ImageviewRequestBuilder imageBuilder = new ImageviewRequestBuilder();
+        imageBuilder.rocket = this;
+        return imageBuilder.withImageView(imageView);
+    }
+    
+    /**
+     * Create a image request builder that can be used to 
+     * build an network image request
+     * @param imageView
+     * @return
+     */
+    public CacheviewRequestBuilder build(CacheImageView imageView) {
+        if (Thread.currentThread() != Looper.getMainLooper().getThread())
+            throw new IllegalStateException("must be called from UI thread");
+        final CacheviewRequestBuilder imageBuilder = new CacheviewRequestBuilder();
         imageBuilder.rocket = this;
         return imageBuilder.withImageView(imageView);
     }

@@ -8,9 +8,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 
 /**
@@ -18,6 +20,9 @@ import android.widget.ImageView;
  * associated request.
  */
 public class CacheImageView extends ImageView {
+	
+	private boolean skipDiskCache;
+	
     /** The URL of the network image to load */
     private String mUrl;
 
@@ -30,6 +35,16 @@ public class CacheImageView extends ImageView {
      * Resource ID of the image to be used if the network response fails.
      */
     private int mErrorImageId;
+    
+    private int inAnimationResource;
+	
+	private int maxWidth;
+	private int maxHeight;
+	
+	private Drawable placeholderDrawable;
+	private Drawable errorDrawable;
+	
+	private Animation inAnimation;
 
     /** Local copy of the ImageLoader. */
     private ImageLoader mImageLoader;
@@ -61,9 +76,11 @@ public class CacheImageView extends ImageView {
      * @param url The URL that should be loaded into this ImageView.
      * @param imageLoader ImageLoader that will be used to make the request.
      */
-    public void setImageUrl(String url, ImageLoader imageLoader) {
-        mUrl = url;
-        mImageLoader = imageLoader;
+	public void setImageUrl(String url, ImageLoader imageLoader, int maxWidth,
+			int maxHeight, boolean skipDiskCache) {
+        this.mUrl = url;
+        this.mImageLoader = imageLoader;
+        this.skipDiskCache = skipDiskCache;
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
     }
@@ -83,6 +100,55 @@ public class CacheImageView extends ImageView {
     public void setErrorImageResId(int errorImage) {
         mErrorImageId = errorImage;
     }
+    
+    /**
+	 * Placeholder.
+	 *
+	 * @param drawable the drawable
+	 * @return the image request builder
+	 */
+	public void setPlaceholder(Drawable drawable) {
+		if (mDefaultImageId != 0) {
+			throw new IllegalStateException("Placeholder image already set.");
+		}
+		placeholderDrawable = drawable;
+	}
+	
+	/**
+	 * Error.
+	 *
+	 * @param drawable the drawable
+	 * @return the image request builder
+	 */
+	public void setErrorDrawable(Drawable drawable) {
+		if (drawable == null) {
+			throw new IllegalArgumentException("Error image may not be null.");
+		}
+		if (mErrorImageId != 0) {
+			throw new IllegalStateException("Error image already set.");
+		}
+		errorDrawable = drawable;
+	}
+
+	/**
+	 * Animate in.
+	 *
+	 * @param in the in
+	 * @return 
+	 */
+	public void setAnimateIn(Animation in) {
+		inAnimation = in;
+	}
+
+	/**
+	 * Animate in.
+	 *
+	 * @param animationResource the animation resource
+	 * @return 
+	 */
+	public void setAnimateIn(int animationResource) {
+		inAnimationResource = animationResource;
+	}
 
     /**
      * Loads the image for the view if it isn't already loaded.
@@ -132,6 +198,8 @@ public class CacheImageView extends ImageView {
                     public void onErrorResponse(RocketError error) {
                         if (mErrorImageId != 0) {
                             setImageResource(mErrorImageId);
+                        } else {
+                        	setImageDrawable(errorDrawable);
                         }
                     }
 
@@ -153,11 +221,15 @@ public class CacheImageView extends ImageView {
 
                         if (response.getBitmap() != null) {
                             setImageBitmap(response.getBitmap());
+                            RocketUtils.loadAnimation(CacheImageView.this, 
+                            		inAnimation, inAnimationResource);
                         } else if (mDefaultImageId != 0) {
                             setImageResource(mDefaultImageId);
+                        } else {
+                        	setImageDrawable(placeholderDrawable);
                         }
                     }
-                });
+                }, maxWidth, maxHeight, skipDiskCache);
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;

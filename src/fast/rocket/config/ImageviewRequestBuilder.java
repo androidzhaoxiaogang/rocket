@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
-public class ImageRequestBuilder implements LaunchBuilder{
+public class ImageviewRequestBuilder implements LaunchBuilder{
 	
 	private boolean skipMemoryCache;
 	private boolean skipDiskCache;
@@ -46,7 +46,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param imageView the image view
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder withImageView(ImageView imageView) {
+	public ImageviewRequestBuilder withImageView(ImageView imageView) {
 		imageViewRef = new WeakReference<ImageView>(imageView);
 		return this;
 	}
@@ -57,7 +57,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param drawable the drawable
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder placeholder(Drawable drawable) {
+	public ImageviewRequestBuilder placeholder(Drawable drawable) {
 		if (placeholderResource != 0) {
 			throw new IllegalStateException("Placeholder image already set.");
 		}
@@ -71,7 +71,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param resourceId the resource id
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder placeholder(int resourceId) {
+	public ImageviewRequestBuilder placeholder(int resourceId) {
 		if (resourceId == 0) {
 			throw new IllegalArgumentException(
 					"Placeholder image resource invalid.");
@@ -89,8 +89,8 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param drawable the drawable
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder error(Drawable drawable) {
-		if (errorDrawable == null) {
+	public ImageviewRequestBuilder error(Drawable drawable) {
+		if (drawable == null) {
 			throw new IllegalArgumentException("Error image may not be null.");
 		}
 		if (errorResource != 0) {
@@ -106,7 +106,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param resourceId the resource id
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder error(int resourceId) {
+	public ImageviewRequestBuilder error(int resourceId) {
 		errorResource = resourceId;
 		return this;
 	}
@@ -117,7 +117,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param in the in
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder animateIn(Animation in) {
+	public ImageviewRequestBuilder animateIn(Animation in) {
 		inAnimation = in;
 		return this;
 	}
@@ -128,7 +128,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param animationResource the animation resource
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder animateIn(int animationResource) {
+	public ImageviewRequestBuilder animateIn(int animationResource) {
 		inAnimationResource = animationResource;
 		return this;
 	}
@@ -139,7 +139,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param load the load
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder animateLoad(Animation load) {
+	public ImageviewRequestBuilder animateLoad(Animation load) {
 		loadAnimation = load;
 		return this;
 	}
@@ -150,7 +150,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * @param animationResource the animation resource
 	 * @return the image request builder
 	 */
-	public ImageRequestBuilder animateLoad(int animationResource) {
+	public ImageviewRequestBuilder animateLoad(int animationResource) {
 		loadAnimationResource = animationResource;
 		return this;
 	}
@@ -161,7 +161,7 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * only ever be used once (e.g., loading an image from the filesystem and
 	 * uploading to a remote server).
 	 */
-	public ImageRequestBuilder skipMemoryCache() {
+	public ImageviewRequestBuilder skipMemoryCache() {
 		skipMemoryCache = true;
 		return this;
 	}
@@ -172,12 +172,12 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	 * only ever be used once (e.g., loading an image from the filesystem and
 	 * uploading to a remote server).
 	 */
-	public ImageRequestBuilder skipDiskCache() {
+	public ImageviewRequestBuilder skipDiskCache() {
 		skipDiskCache = true;
 		return this;
 	}
 	
-    public ImageRequestBuilder resize(int width, int height) {
+    public ImageviewRequestBuilder resize(int width, int height) {
         resizeWidth = width;
         resizeHeight = height;
         return this;

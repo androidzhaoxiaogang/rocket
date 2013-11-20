@@ -1,7 +1,6 @@
 
 package fast.rocket.cache;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
@@ -104,7 +103,7 @@ public class ImageLoader {
             @Override
             public void onResponse(ImageContainer response, boolean isImmediate) {
                 if (response.getBitmap() != null) {
-                    setImageBitmap(view, response.getBitmap(), null, animation, animationResource);
+                    setImageBitmap(view, response.getBitmap(), animation, animationResource);
                 } else if (defaultImageResId != 0) {
                     view.setImageResource(defaultImageResId);
                 } else {
@@ -121,7 +120,7 @@ public class ImageLoader {
      * Drawable.
      */
 	private static void setImageBitmap(final ImageView imageView, final Bitmap bitmap,
-            Resources resources, Animation animation, int animationResource) {
+			Animation animation, int animationResource) {
     	imageView.setImageBitmap(bitmap);
     	RocketUtils.loadAnimation(imageView, animation, animationResource);
     }
@@ -177,8 +176,9 @@ public class ImageLoader {
      * @param requestUrl The URL of the image to be loaded.
      * @param defaultImage Optional default image to return until the actual image is loaded.
      */
-    public ImageContainer get(String requestUrl, final ImageListener listener) {
-        return get(requestUrl, listener, 0, 0, false, false);
+    public ImageContainer get(String requestUrl, final ImageListener listener, 
+    		int maxWidth, int maxHeight,final boolean skipDiskCache) {
+        return get(requestUrl, listener, maxWidth, maxHeight, false, skipDiskCache);
     }
     
     /**
