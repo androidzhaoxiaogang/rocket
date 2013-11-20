@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package fast.rocket.config;
 
 import java.lang.ref.WeakReference;
@@ -8,18 +11,11 @@ import fast.rocket.cache.ImageLoader;
 import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.utils.RocketUtils;
 
-//import android.graphics.Bitmap;
-//import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
 public class ImageRequestBuilder implements LaunchBuilder{
-	public interface ScaleMode {
-		int FitXY = 0x01;
-		int CenterCrop = 0x02;
-		int CenterInside = 0x03;
-	}
 	
 	private boolean skipMemoryCache;
 	private boolean skipDiskCache;
@@ -44,11 +40,23 @@ public class ImageRequestBuilder implements LaunchBuilder{
 
 	private WeakReference<ImageView> imageViewRef;
 
+	/**
+	 * With image view.
+	 *
+	 * @param imageView the image view
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder withImageView(ImageView imageView) {
 		imageViewRef = new WeakReference<ImageView>(imageView);
 		return this;
 	}
 
+	/**
+	 * Placeholder.
+	 *
+	 * @param drawable the drawable
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder placeholder(Drawable drawable) {
 		if (placeholderResource != 0) {
 			throw new IllegalStateException("Placeholder image already set.");
@@ -57,6 +65,12 @@ public class ImageRequestBuilder implements LaunchBuilder{
 		return this;
 	}
 
+	/**
+	 * Placeholder.
+	 *
+	 * @param resourceId the resource id
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder placeholder(int resourceId) {
 		if (resourceId == 0) {
 			throw new IllegalArgumentException(
@@ -69,6 +83,12 @@ public class ImageRequestBuilder implements LaunchBuilder{
 		return this;
 	}
 
+	/**
+	 * Error.
+	 *
+	 * @param drawable the drawable
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder error(Drawable drawable) {
 		if (errorDrawable == null) {
 			throw new IllegalArgumentException("Error image may not be null.");
@@ -80,26 +100,56 @@ public class ImageRequestBuilder implements LaunchBuilder{
 		return this;
 	}
 
+	/**
+	 * Error.
+	 *
+	 * @param resourceId the resource id
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder error(int resourceId) {
 		errorResource = resourceId;
 		return this;
 	}
 	
+	/**
+	 * Animate in.
+	 *
+	 * @param in the in
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder animateIn(Animation in) {
 		inAnimation = in;
 		return this;
 	}
 
+	/**
+	 * Animate in.
+	 *
+	 * @param animationResource the animation resource
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder animateIn(int animationResource) {
 		inAnimationResource = animationResource;
 		return this;
 	}
 
+	/**
+	 * Animate load.
+	 *
+	 * @param load the load
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder animateLoad(Animation load) {
 		loadAnimation = load;
 		return this;
 	}
 
+	/**
+	 * Animate load.
+	 *
+	 * @param animationResource the animation resource
+	 * @return the image request builder
+	 */
 	public ImageRequestBuilder animateLoad(int animationResource) {
 		loadAnimationResource = animationResource;
 		return this;
@@ -127,20 +177,6 @@ public class ImageRequestBuilder implements LaunchBuilder{
 		return this;
 	}
 	
-//    public ImageRequestBuilder centerCrop() {
-//        if (resizeWidth == 0 || resizeHeight == 0)
-//            throw new IllegalStateException("must call resize first");
-//        scaleMode = ScaleMode.CenterCrop;
-//        return this;
-//    }
-//
-//    public ImageRequestBuilder centerInside() {
-//        if (resizeWidth == 0 || resizeHeight == 0)
-//            throw new IllegalStateException("must call resize first");
-//        scaleMode = ScaleMode.CenterInside;
-//        return this;
-//    }
-
     public ImageRequestBuilder resize(int width, int height) {
         resizeWidth = width;
         resizeHeight = height;
@@ -156,13 +192,14 @@ public class ImageRequestBuilder implements LaunchBuilder{
 	public void load(int method, String uri) {
 		final ImageView imageView = imageViewRef.get();
 		final ImageLoader loader = rocket.getImageLoader();
-		final ImageListener  listener = ImageLoader.getImageListener(imageView, 
-				placeholderDrawable, placeholderResource,
-				errorDrawable, errorResource, inAnimation, inAnimationResource);
-		
-		loader.get(uri, listener, resizeWidth, resizeHeight, 
-				skipMemoryCache, skipDiskCache);
-		RocketUtils.loadAnimation(imageView, loadAnimation, loadAnimationResource);
+		final ImageListener listener = ImageLoader.getImageListener(imageView,
+				placeholderDrawable, placeholderResource, errorDrawable,
+				errorResource, inAnimation, inAnimationResource);
+
+		loader.get(uri, listener, resizeWidth, resizeHeight, skipMemoryCache,
+				skipDiskCache);
+		RocketUtils.loadAnimation(imageView, loadAnimation,
+				loadAnimationResource);
 	}
 	
 	//**************************************private apis***************************************//
