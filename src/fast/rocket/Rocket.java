@@ -181,9 +181,9 @@ public class Rocket {
     }
     
     /**
-     * Create a image request builder that can be used to 
+     * Create a cache image request builder that can be used to 
      * build an network image request
-     * @param imageView
+     * @param CacheImageView
      * @return
      */
     public CacheviewRequestBuilder build(CacheImageView imageView) {

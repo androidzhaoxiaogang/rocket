@@ -15,29 +15,53 @@ import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ImageviewRequestBuilder.
+ */
 public class ImageviewRequestBuilder implements LaunchBuilder{
 	
+	/** The skip memory cache. */
 	private boolean skipMemoryCache;
+	
+	/** The skip disk cache. */
 	private boolean skipDiskCache;
 	
+	/** The placeholder resource. */
 	private int placeholderResource;
+	
+	/** The error resource. */
 	private int errorResource;
+	
+	/** The in animation resource. */
 	private int inAnimationResource;
+	
+	/** The load animation resource. */
 	private int loadAnimationResource;
 	
+	/** The placeholder drawable. */
 	private Drawable placeholderDrawable;
+	
+	/** The error drawable. */
 	private Drawable errorDrawable;
 	
+	/** The in animation. */
 	private Animation inAnimation;
+	
+	/** The load animation. */
 	private Animation loadAnimation;
 	
 	/** The rocket. */
 	public Rocket rocket;
 	
     //private int scaleMode = ScaleMode.FitXY;
+    /** The resize width. */
     private int resizeWidth = 0;
+    
+    /** The resize height. */
     private int resizeHeight = 0;
 
+	/** The image view ref. */
 	private WeakReference<ImageView> imageViewRef;
 
 	/**
@@ -160,6 +184,8 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	 * to load or save the image. This can be useful when you know an image will
 	 * only ever be used once (e.g., loading an image from the filesystem and
 	 * uploading to a remote server).
+	 *
+	 * @return the imageview request builder
 	 */
 	public ImageviewRequestBuilder skipMemoryCache() {
 		skipMemoryCache = true;
@@ -171,23 +197,38 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	 * to load or save the image. This can be useful when you know an image will
 	 * only ever be used once (e.g., loading an image from the filesystem and
 	 * uploading to a remote server).
+	 *
+	 * @return the imageview request builder
 	 */
 	public ImageviewRequestBuilder skipDiskCache() {
 		skipDiskCache = true;
 		return this;
 	}
 	
+    /**
+     * Resize.
+     *
+     * @param width the width
+     * @param height the height
+     * @return the imageview request builder
+     */
     public ImageviewRequestBuilder resize(int width, int height) {
         resizeWidth = width;
         resizeHeight = height;
         return this;
     }
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String)
+	 */
 	@Override
 	public void load(String uri) {
 		load(Method.GET, uri);
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.config.LaunchBuilder#load(int, java.lang.String)
+	 */
 	@Override
 	public void load(int method, String uri) {
 		final ImageView imageView = imageViewRef.get();

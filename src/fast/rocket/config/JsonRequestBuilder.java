@@ -10,6 +10,7 @@ import fast.rocket.Rocket;
 import fast.rocket.error.RocketError;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class RocketRequestBuilder.
  */
@@ -127,6 +128,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * Add the request to the queue.
 	 *
 	 * @param <T> the generic type
+	 * @param method the method
 	 * @param uri the uri
 	 * @param clazz the clazz
 	 */
