@@ -8,15 +8,15 @@ https, supporting from 2.2 and above sdks for image cache(You needn't to worry a
 
 1)Rest apis:
 Rocket.with(this)
-		.setJsonClass(MapInfos.class)
-		.setCallback(new FutureCallback<MapInfos>() {
+.setJsonClass(MapInfos.class)
+.setCallback(new FutureCallback<MapInfos>() {
 
-			@Override
-			public void onCompleted(RocketError error, MapInfos result) {
-				System.out.println("=========result="+result);
+	@Override
+	public void onCompleted(RocketError error, MapInfos result) {
+		System.out.println("=========result="+result);
 				
-			}
-		}).load("http://XXX");
+	}
+}).load("http://XXX");
 		
 		
 2)Image downloader:
