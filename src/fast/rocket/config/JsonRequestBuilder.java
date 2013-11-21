@@ -15,13 +15,13 @@ import fast.rocket.http.RocketX509TrustManager;
 
 
 /**
- * The Class RocketRequestBuilder.
+ * The Class JsonRequestBuilder for json request configuration.
  */
 public class JsonRequestBuilder implements LaunchBuilder {
 	
 	/** The future callback to be invoked after
 	 *  the json string being parsed. 
-	 *  */
+	 **/
 	@SuppressWarnings("rawtypes")
 	private FutureCallback callback ;
 	
@@ -63,7 +63,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	}
 	
 	/**
-	 * Sets the json class type.
+	 * Sets the json class type. The gson parser will put the result to the class object.
 	 *
 	 * @param clazz the clazz
 	 * @return the rocket request builder
@@ -74,7 +74,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	}
 	
 	/**
-	 * Sets the request tag.
+	 * Sets the request tag. Request can be removed by the tag.
 	 *
 	 * @param tag the tag
 	 * @return the rocket request builder
@@ -85,7 +85,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	}
 	
 	/**
-	 * Sets the request params.
+	 * Sets the request params for the http post.
 	 *
 	 * @param params the params
 	 * @return the rocket request builder
@@ -96,7 +96,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	}
 	
 	/**
-	 * Sets the request headers.
+	 * Sets the json request http headers.
 	 *
 	 * @param headers the headers
 	 * @return the rocket request builder
