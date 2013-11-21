@@ -2,15 +2,18 @@ package fast.rocket.config;
 
 import java.util.Map;
 
+import android.os.Build;
+import android.text.TextUtils;
+
 import fast.rocket.GsonRequest;
 import fast.rocket.Request.Method;
 import fast.rocket.Response.ErrorListener;
 import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
 import fast.rocket.error.RocketError;
+import fast.rocket.utils.RocketX509TrustManager;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RocketRequestBuilder.
  */
@@ -116,8 +119,14 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 */
 	@Override
 	public void load(int method, String uri) {
+		if(TextUtils.isEmpty(uri)) return;
+		
 		if(clazz == null || callback == null) {
 			throw new IllegalArgumentException("Initialization params is null");
+		}
+		
+		if (Build.VERSION.SDK_INT >= 9 && uri.startsWith("https")) {
+			RocketX509TrustManager.allowAllSSL();  
 		}
 		
 		addRequest(method, uri, clazz);
