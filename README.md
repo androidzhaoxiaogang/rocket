@@ -7,6 +7,7 @@ https, supporting from 2.2 and above sdks for image cache(You needn't to worry a
 
 
 1)Rest apis:
+
 Rocket.with(this)
 .setJsonClass(MapInfos.class)
 .setCallback(new FutureCallback<MapInfos>() {
