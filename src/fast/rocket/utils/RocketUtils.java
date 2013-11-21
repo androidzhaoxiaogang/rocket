@@ -11,7 +11,7 @@ import android.widget.ImageView;
 public class RocketUtils {
 	
 	/**
-	 * Checks for honeycomb.
+	 * Checks the current building sdk is honeycomb or not.
 	 *
 	 * @return true, if successful
 	 */
@@ -20,7 +20,7 @@ public class RocketUtils {
     }
 	
 	/**
-	 * Load animation.
+	 * Load animation for the imageview.
 	 *
 	 * @param imageView the image view
 	 * @param animation the animation
