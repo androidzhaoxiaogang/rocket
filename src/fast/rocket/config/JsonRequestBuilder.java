@@ -11,7 +11,7 @@ import fast.rocket.Response.ErrorListener;
 import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
 import fast.rocket.error.RocketError;
-import fast.rocket.utils.RocketX509TrustManager;
+import fast.rocket.http.RocketX509TrustManager;
 
 
 /**

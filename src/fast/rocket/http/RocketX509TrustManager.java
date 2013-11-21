@@ -1,4 +1,4 @@
-package fast.rocket.utils;
+package fast.rocket.http;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;

@@ -11,11 +11,11 @@ import fast.rocket.config.CacheviewRequestBuilder;
 import fast.rocket.config.ImageviewRequestBuilder;
 import fast.rocket.config.JsonRequestBuilder;
 import fast.rocket.http.BasicNetwork;
+import fast.rocket.http.HttpClientHelper;
 import fast.rocket.http.HttpClientStack;
 import fast.rocket.http.HttpStack;
 import fast.rocket.http.HurlStack;
 import fast.rocket.http.Network;
-import fast.rocket.utils.HttpClientHelper;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
