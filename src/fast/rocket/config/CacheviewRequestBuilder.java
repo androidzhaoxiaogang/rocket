@@ -14,9 +14,8 @@ import fast.rocket.utils.RocketUtils;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CacheviewRequestBuilder.
+ * The Class CacheviewRequestBuilder for the {@link CacheImageView} configuration.
  */
 public class CacheviewRequestBuilder implements LaunchBuilder{
 	

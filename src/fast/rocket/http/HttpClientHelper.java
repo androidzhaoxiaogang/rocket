@@ -32,11 +32,26 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
+/**
+ * The Class HttpClientHelper.
+ */
 public class HttpClientHelper {
+    
+    /** The Constant DEFAULT_MAX_CONNECTIONS. */
     private static final int DEFAULT_MAX_CONNECTIONS = 30;
+    
+    /** The Constant DEFAULT_SOCKET_TIMEOUT. */
     private static final int DEFAULT_SOCKET_TIMEOUT = 20 * 1000;
+    
+    /** The Constant DEFAULT_SOCKET_BUFFER_SIZE. */
     private static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
 
+    /**
+     * Gets the http client which supporting for both http and https protocols.
+     *
+     * @param userAgent the user agent
+     * @return the http client
+     */
     public  static HttpClient getHttpClient(String userAgent) {
         final HttpParams httpParams = new BasicHttpParams();
 
@@ -72,9 +87,23 @@ public class HttpClientHelper {
         return httpClient;
     }
 
+    /**
+     * A factory for creating MySSLSocket objects.
+     */
     private static class MySSLSocketFactory extends SSLSocketFactory {
+        
+        /** The ssl context. */
         SSLContext sslContext = SSLContext.getInstance("TLS");
 
+        /**
+         * Instantiates a new my ssl socket factory.
+         *
+         * @param truststore the truststore
+         * @throws NoSuchAlgorithmException the no such algorithm exception
+         * @throws KeyManagementException the key management exception
+         * @throws KeyStoreException the key store exception
+         * @throws UnrecoverableKeyException the unrecoverable key exception
+         */
         public MySSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException,
         KeyManagementException, KeyStoreException, UnrecoverableKeyException {
             super(truststore);
@@ -101,12 +130,18 @@ public class HttpClientHelper {
             }, null);
         }
 
+        /* (non-Javadoc)
+         * @see org.apache.http.conn.ssl.SSLSocketFactory#createSocket(java.net.Socket, java.lang.String, int, boolean)
+         */
         @Override
         public Socket createSocket(Socket socket, String host, int port, boolean autoClose)
                 throws IOException, UnknownHostException {
             return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
         }
 
+        /* (non-Javadoc)
+         * @see org.apache.http.conn.ssl.SSLSocketFactory#createSocket()
+         */
         @Override
         public Socket createSocket() throws IOException {
             return sslContext.getSocketFactory().createSocket();
