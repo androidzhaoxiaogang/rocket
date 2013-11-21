@@ -5,11 +5,27 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+/**
+ * The Class RocketUtils.
+ */
 public class RocketUtils {
+	
+	/**
+	 * Checks for honeycomb.
+	 *
+	 * @return true, if successful
+	 */
 	public static boolean hasHoneycomb() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 	
+	/**
+	 * Load animation.
+	 *
+	 * @param imageView the image view
+	 * @param animation the animation
+	 * @param animationResource the animation resource
+	 */
 	public static void loadAnimation(ImageView imageView, Animation animation, int animationResource) {
         if (imageView == null)
             return;

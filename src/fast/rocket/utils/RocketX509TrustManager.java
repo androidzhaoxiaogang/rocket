@@ -12,11 +12,20 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+/**
+ * The Class RocketX509TrustManager.
+ */
 public class RocketX509TrustManager implements X509TrustManager {
 
+	/** The trust managers. */
 	private static TrustManager[] trustManagers;
-	private static final X509Certificate[] _AcceptedIssuers = new X509Certificate[] {};
+	
+	/** The Constant _AcceptedIssuers. */
+	private static final X509Certificate[] acceptedIssuers = new X509Certificate[] {};
 
+	/* (non-Javadoc)
+	 * @see javax.net.ssl.X509TrustManager#checkClientTrusted(java.security.cert.X509Certificate[], java.lang.String)
+	 */
 	@Override
 	public void checkClientTrusted(
 			java.security.cert.X509Certificate[] x509Certificates, String s)
@@ -25,6 +34,9 @@ public class RocketX509TrustManager implements X509TrustManager {
 		// Templates.
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.net.ssl.X509TrustManager#checkServerTrusted(java.security.cert.X509Certificate[], java.lang.String)
+	 */
 	@Override
 	public void checkServerTrusted(
 			java.security.cert.X509Certificate[] x509Certificates, String s)
@@ -33,19 +45,37 @@ public class RocketX509TrustManager implements X509TrustManager {
 		// Templates.
 	}
 
+	/**
+	 * Checks if is client trusted.
+	 *
+	 * @param chain the chain
+	 * @return true, if is client trusted
+	 */
 	public boolean isClientTrusted(X509Certificate[] chain) {
 		return true;
 	}
 
+	/**
+	 * Checks if is server trusted.
+	 *
+	 * @param chain the chain
+	 * @return true, if is server trusted
+	 */
 	public boolean isServerTrusted(X509Certificate[] chain) {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.net.ssl.X509TrustManager#getAcceptedIssuers()
+	 */
 	@Override
 	public X509Certificate[] getAcceptedIssuers() {
-		return _AcceptedIssuers;
+		return acceptedIssuers;
 	}
 
+	/**
+	 * Allow all ssl.
+	 */
 	public static void allowAllSSL() {
 		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
 
