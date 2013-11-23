@@ -34,7 +34,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	/** Http headers. */
 	private Map<String, String> headers;
 	
-	/** The rocket. */
+	/** The rocket instance. */
 	private Rocket rocket;
 	
 	/** The request tag. */
@@ -134,7 +134,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 
 	//***************************private apis***************************************//
 	/**
-	 * Add the request to the queue.
+	 * Add the json request to the request queue.
 	 *
 	 * @param <T> the generic type
 	 * @param method the method

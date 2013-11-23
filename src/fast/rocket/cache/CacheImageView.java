@@ -36,14 +36,24 @@ public class CacheImageView extends ImageView {
      */
     private int mErrorImageId;
     
+    /** The in animation resource. */
     private int inAnimationResource;
 	
+	/** The max width. */
 	private int maxWidth;
+	
+	/** The max height. */
 	private int maxHeight;
 	
+	/** The placeholder drawable. */
 	private Drawable placeholderDrawable;
+	
+	/** The error drawable. */
 	private Drawable errorDrawable;
 	
+	/**
+	 * The inAnimation。
+	 */
 	private Animation inAnimation;
 
     /** Local copy of the ImageLoader. */
