@@ -113,7 +113,7 @@ public class HttpHeaderParser {
         serverEtag = headers.get("ETag");
 
         // in 60 minutes cache will be hit, but also refreshed on background
-        final long cacheHitButRefreshed = 60 * 60 * 1000; 
+        final long cacheHitButRefreshed = 6 * 60 * 60 * 1000; 
         // in 24 hours this cache entry expires completely
         final long cacheExpired = 24 * 60 * 60 * 1000; 
         final long softExpire = now + cacheHitButRefreshed;
