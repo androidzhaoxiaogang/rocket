@@ -66,12 +66,12 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	}
 	
 	/**
-	 * Sets the json class type. The gson parser will put the result to the class object.
+	 * Sets the json parsed class type. The gson parser will put the result to the class object.
 	 *
 	 * @param clazz the clazz
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder parseClass(Class<?> clazz) {
+	public JsonRequestBuilder performParse(Class<?> clazz) {
 		this.clazz = clazz;
 		return this;
 	}
