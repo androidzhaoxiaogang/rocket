@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fast/rocket/http/CookieManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fast/rocket/http/HurlStack.java" afterPath="$PROJECT_DIR$/src/fast/rocket/http/HurlStack.java" />
-    </list>
+    <list default="true" id="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" name="Default" comment="" />
     <ignored path="rocket.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" time="1385082881984" ignored="false" />
@@ -12,6 +9,7 @@
     <file path="/HttpClientStack.java" changelist="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" time="1385292899094" ignored="false" />
     <file path="/CookieManager.java" changelist="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" time="1385294608012" ignored="false" />
     <file path="/HurlStack.java" changelist="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" time="1385296890297" ignored="false" />
+    <file path="/HttpClientHelper.java" changelist="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" time="1385298914767" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,10 +70,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="HttpClientStack.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="HttpClientStack.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientStack.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="32" selection-start="1169" selection-end="1169" vertical-scroll-proportion="0.0">
+            <state line="66" column="54" selection-start="2505" selection-end="2505" vertical-scroll-proportion="0.06891271">
               <folding>
                 <element signature="e#1437#1464#0" expanded="true" />
                 <element signature="e#2739#2771#0" expanded="true" />
@@ -84,10 +82,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HurlStack.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="HurlStack.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HurlStack.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="79" selection-start="3313" selection-end="3313" vertical-scroll-proportion="0.7400319">
+            <state line="86" column="48" selection-start="2723" selection-end="2723" vertical-scroll-proportion="-10.923077">
               <folding>
                 <element signature="e#7942#7974#0" expanded="true" />
               </folding>
@@ -134,7 +132,7 @@
       <file leaf-file-name="Rocket.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fast/rocket/Rocket.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="39" selection-start="939" selection-end="948" vertical-scroll-proportion="0.0">
+            <state line="124" column="54" selection-start="3915" selection-end="3915" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -163,7 +161,7 @@
       <file leaf-file-name="HttpClientHelper.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="29" selection-start="3048" selection-end="3048" vertical-scroll-proportion="0.0">
+            <state line="72" column="51" selection-start="3070" selection-end="3070" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -191,6 +189,7 @@
         <option value="$PROJECT_DIR$/src/fast/rocket/http/HttpClientStack.java" />
         <option value="$PROJECT_DIR$/src/fast/rocket/http/CookieManager.java" />
         <option value="$PROJECT_DIR$/src/fast/rocket/http/HurlStack.java" />
+        <option value="$PROJECT_DIR$/src/fast/rocket/http/HttpClientHelper.java" />
       </list>
     </option>
   </component>
@@ -563,34 +562,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="29" selection-start="3048" selection-end="3048" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fast/rocket/Rocket.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="39" selection-start="939" selection-end="948" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/android-sdks/platforms/android-17/android.jar!/org/apache/http/message/AbstractHttpMessage.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="16" selection-start="981" selection-end="981" vertical-scroll-proportion="0.0">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientStack.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="32" selection-start="1169" selection-end="1169" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#1437#1464#0" expanded="true" />
-            <element signature="e#2739#2771#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -615,6 +590,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HurlStack.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="86" column="48" selection-start="2723" selection-end="2723" vertical-scroll-proportion="-10.923077">
+          <folding>
+            <element signature="e#7942#7974#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fast/rocket/Rocket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="54" selection-start="3915" selection-end="3915" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="51" selection-start="3070" selection-end="3070" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/CookieManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="52" column="35" selection-start="1436" selection-end="1436" vertical-scroll-proportion="0.0">
@@ -624,11 +622,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HurlStack.java">
+    <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientStack.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="79" selection-start="3313" selection-end="3313" vertical-scroll-proportion="0.7400319">
+        <state line="66" column="54" selection-start="2505" selection-end="2505" vertical-scroll-proportion="0.06891271">
           <folding>
-            <element signature="e#7942#7974#0" expanded="true" />
+            <element signature="e#1437#1464#0" expanded="true" />
+            <element signature="e#2739#2771#0" expanded="true" />
           </folding>
         </state>
       </provider>
