@@ -34,7 +34,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * Default encoding for POST or PUT parameters. See {@link #getParamsEncoding()}.
      */
     private static final String DEFAULT_PARAMS_ENCODING = "UTF-8";
-
+    protected boolean mCookieEnabled;
     /**
      * Supported request methods.
      */
@@ -271,6 +271,20 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      */
     public boolean isCanceled() {
         return mCanceled;
+    }
+
+    /**
+     * makes the request as cookie enabled;
+     */
+    public void setCookieEnableOrDisable(boolean enabled) {
+        mCookieEnabled = enabled;
+    }
+
+    /**
+     * Returns true if cookie enabled.
+     */
+    public boolean isCookieEnabled() {
+        return mCookieEnabled;
     }
 
     /**

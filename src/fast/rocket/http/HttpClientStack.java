@@ -66,6 +66,10 @@ public class HttpClientStack implements HttpStack {
         // data collection and possibly different for wifi vs. 3G.
         HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
         HttpConnectionParams.setSoTimeout(httpParams, timeoutMs);
+
+        if (request.isCookieEnabled()) {
+            //TODO: set cookie store
+        }
         return mClient.execute(httpRequest);
     }
 

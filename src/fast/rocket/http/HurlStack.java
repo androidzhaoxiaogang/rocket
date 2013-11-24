@@ -93,7 +93,9 @@ public class HurlStack implements HttpStack {
         for (String headerName : map.keySet()) {
             connection.addRequestProperty(headerName, map.get(headerName));
         }
-        setConnectionCookie(connection, request);
+        if (request.isCookieEnabled()) {
+            setConnectionCookie(connection, request);
+        }
         setConnectionParametersForRequest(connection, request);
         // Initialize HttpResponse with data from the HttpURLConnection.
         ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
@@ -107,7 +109,9 @@ public class HurlStack implements HttpStack {
                 connection.getResponseCode(), connection.getResponseMessage());
         BasicHttpResponse response = new BasicHttpResponse(responseStatus);
         response.setEntity(entityFromConnection(connection));
-        storeConnectionCookie(connection, request);
+        if (request.isCookieEnabled()) {
+            storeConnectionCookie(connection, request);
+        }
         for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
             if (header.getKey() != null) {
                 Header h = new BasicHeader(header.getKey(), header.getValue().get(0));

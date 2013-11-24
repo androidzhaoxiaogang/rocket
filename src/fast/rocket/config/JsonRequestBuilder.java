@@ -39,6 +39,9 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	
 	/** The request tag. */
 	private Object tag;
+
+    /** The enable cookie tag. */
+    private boolean isCookieEnabled;
 	
 
 	/**
@@ -83,6 +86,17 @@ public class JsonRequestBuilder implements LaunchBuilder {
 		this.tag = tag;
 		return this;
 	}
+
+    /**
+     * Sets the request tag. Request can be removed by the tag.
+     *
+     * @param enableCookie the tag
+     * @return the rocket request builder
+     */
+    public JsonRequestBuilder enableCookie(boolean enableCookie) {
+        this.isCookieEnabled = enableCookie;
+        return this;
+    }
 	
 	/**
 	 * Sets the request params for the http post.
@@ -102,10 +116,10 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @return the rocket request builder
 	 */
 	public JsonRequestBuilder requestHeaders(Map<String, String> headers) {
-		this.headers = headers;
-		return this;
+        this.headers = headers;
+        return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String)
 	 */
@@ -168,6 +182,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 		});
 		
 		if(tag != null) request.setTag(tag);
+        request.setCookieEnableOrDisable(isCookieEnabled);
 		rocket.getRequestQueue().add(request);
 	}
 }
