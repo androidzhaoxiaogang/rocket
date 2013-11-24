@@ -82,6 +82,20 @@ public class ImageLoader {
          */
         public void putBitmap(String url, Bitmap bitmap);
     }
+    
+    /**
+     * The Interface ImageCallback.
+     */
+    public interface ImageCallback{
+    	
+	    /**
+	     * On complete.
+	     *
+	     * @param error the error
+	     * @param result the result
+	     */
+	    public void onComplete(RocketError error, Bitmap result);
+    }
 
     /**
      * Constructs a new ImageLoader.
@@ -107,31 +121,42 @@ public class ImageLoader {
      * @param animationResource the animation resource
      * @return the image listener
      */
-    public static ImageListener getImageListener(final ImageView view,
-            final Drawable placeholderDrawable, final int defaultImageResId, final Drawable errorDrawable, 
-            final int errorImageResId, final Animation animation, final int animationResource) {
-        return new ImageListener() {
-            @Override
-            public void onErrorResponse(RocketError error) {
-                if (errorImageResId != 0) {
-                    view.setImageResource(errorImageResId);
-                } else {
-                	view.setImageDrawable(errorDrawable);
-                }
-            }
+	public static ImageListener getImageListener(final ImageView view,
+			final Drawable placeholderDrawable, final int defaultImageResId,
+			final Drawable errorDrawable, final int errorImageResId,
+			final Animation animation, final int animationResource,
+			final ImageCallback callback) {
+		return new ImageListener() {
+			@Override
+			public void onErrorResponse(RocketError error) {
+				if (errorImageResId != 0) {
+					view.setImageResource(errorImageResId);
+				} else {
+					view.setImageDrawable(errorDrawable);
+				}
+				
+				if(callback != null) {
+					callback.onComplete(error, null);
+				}
+			}
 
-            @Override
-            public void onResponse(ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null) {
-                    setImageBitmap(view, response.getBitmap(), animation, animationResource);
-                } else if (defaultImageResId != 0) {
-                    view.setImageResource(defaultImageResId);
-                } else {
-                	view.setImageDrawable(placeholderDrawable);
-                }
-            }
-        };
-    }
+			@Override
+			public void onResponse(ImageContainer response, boolean isImmediate) {
+				if (response.getBitmap() != null) {
+					setImageBitmap(view, response.getBitmap(), animation,
+							animationResource);
+				} else if (defaultImageResId != 0) {
+					view.setImageResource(defaultImageResId);
+				} else {
+					view.setImageDrawable(placeholderDrawable);
+				}
+				
+				if(callback != null) {
+					callback.onComplete(null, response.getBitmap());
+				}
+			}
+		};
+	}
     
     /**
      * Sets a {@link android.graphics.Bitmap} to an {@link android.widget.ImageView} using a

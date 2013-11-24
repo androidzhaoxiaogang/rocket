@@ -84,7 +84,6 @@ public class CacheDispatcher extends Thread {
                 if (request.isCanceled()) {
                     request.finish("cache-discard-canceled");
                     if (DEBUG) Log.v("cache-discard-canceled");
-                    System.out.println("222222222222222222=================");
                     continue;
                 }
 
@@ -95,7 +94,6 @@ public class CacheDispatcher extends Thread {
                     // Cache miss; send off to the network dispatcher.
                     mNetworkQueue.put(request);
                     if (DEBUG) Log.v("cache-miss");
-                    System.out.println("666666666666666666=================");
                     continue;
                 }
 
@@ -105,7 +103,6 @@ public class CacheDispatcher extends Thread {
                     request.setCacheEntry(entry);
                     mNetworkQueue.put(request);
                     if (DEBUG) Log.v("cache-hit-expired");
-                    System.out.println("33333333333333333333=================");
                     continue;
                 }
 
@@ -118,7 +115,6 @@ public class CacheDispatcher extends Thread {
                 if (!entry.refreshNeeded()) {
                     // Completely unexpired cache hit. Just deliver the response.
                     mDelivery.postResponse(request, response);
-                    System.out.println("444444444444444444444=================");
                 } else {
                     // Soft-expired cache hit. We can deliver the cached response,
                     // but we need to also send the request to the network for
@@ -128,7 +124,6 @@ public class CacheDispatcher extends Thread {
 
                     // Mark the response as intermediate.
                     response.intermediate = true;
-                    System.out.println("55555555555555555555555555=================");
 
                     // Post the intermediate response back to the user and have
                     // the delivery then forward the request along to the network.

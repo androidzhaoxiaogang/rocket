@@ -8,9 +8,12 @@ import java.lang.ref.WeakReference;
 import fast.rocket.Request.Method;
 import fast.rocket.Rocket;
 import fast.rocket.cache.ImageLoader;
+import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.ImageLoader.ImageListener;
+import fast.rocket.error.RocketError;
 import fast.rocket.utils.RocketUtils;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -63,6 +66,8 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 
 	/** The image view ref. */
 	private WeakReference<ImageView> imageViewRef;
+	
+	private ImageCallback callback;
 
 	/**
 	 * With image view.
@@ -217,6 +222,15 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
         resizeHeight = height;
         return this;
     }
+    
+    /**
+     * Register a callback when image loading completed.
+     *
+     * @param callback the callback
+     */
+    public void onComplete(ImageCallback callback) {
+    	this.callback = callback;
+    }
 
 	/* (non-Javadoc)
 	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String)
@@ -235,7 +249,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 		final ImageLoader loader = rocket.getImageLoader();
 		final ImageListener listener = ImageLoader.getImageListener(imageView,
 				placeholderDrawable, placeholderResource, errorDrawable,
-				errorResource, inAnimation, inAnimationResource);
+				errorResource, inAnimation, inAnimationResource, callback);
 
 		loader.get(uri, listener, resizeWidth, resizeHeight, skipMemoryCache,
 				skipDiskCache);

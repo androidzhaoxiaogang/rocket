@@ -57,7 +57,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @return the rocket request builder
 	 */
 	@SuppressWarnings("rawtypes")
-	public JsonRequestBuilder setCallback(FutureCallback callback) {
+	public JsonRequestBuilder onComplete(FutureCallback callback) {
 		this.callback = callback;
 		return this;
 	}
@@ -68,7 +68,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param clazz the clazz
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder setJsonClass(Class<?> clazz) {
+	public JsonRequestBuilder parseClass(Class<?> clazz) {
 		this.clazz = clazz;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param tag the tag
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder setRequestTag(Object tag) {
+	public JsonRequestBuilder requestTag(Object tag) {
 		this.tag = tag;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param params the params
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder setRequestParams(Map<String, String> params) {
+	public JsonRequestBuilder requestParams(Map<String, String> params) {
 		this.params = params;
 		return this;
 	}
@@ -101,7 +101,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param headers the headers
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder setRequestHeaders(Map<String, String> headers) {
+	public JsonRequestBuilder requestHeaders(Map<String, String> headers) {
 		this.headers = headers;
 		return this;
 	}
