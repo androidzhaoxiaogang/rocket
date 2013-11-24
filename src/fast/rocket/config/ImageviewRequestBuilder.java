@@ -10,17 +10,17 @@ import fast.rocket.Rocket;
 import fast.rocket.cache.ImageLoader;
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.ImageLoader.ImageListener;
-import fast.rocket.error.RocketError;
 import fast.rocket.utils.RocketUtils;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ImageviewRequestBuilder.
+ * The Class ImageviewRequestBuilder for image download loader configuration.
+ * It's benefit for you if don't wanna the downloaded image put into the LRU 
+ * (L1) cache or the disk cache(L2).
+ * 
  */
 public class ImageviewRequestBuilder implements LaunchBuilder{
 	
@@ -30,16 +30,16 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	/** The skip disk cache. */
 	private boolean skipDiskCache;
 	
-	/** The placeholder resource. */
+	/** The placeholder resource id. */
 	private int placeholderResource;
 	
-	/** The error resource. */
+	/** The error resource id. */
 	private int errorResource;
 	
-	/** The in animation resource. */
+	/** The in animation resource id. */
 	private int inAnimationResource;
 	
-	/** The load animation resource. */
+	/** The load animation resource id. */
 	private int loadAnimationResource;
 	
 	/** The placeholder drawable. */
@@ -57,7 +57,6 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	/** The rocket. */
 	public Rocket rocket;
 	
-    //private int scaleMode = ScaleMode.FitXY;
     /** The resize width. */
     private int resizeWidth = 0;
     
@@ -67,6 +66,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	/** The image view ref. */
 	private WeakReference<ImageView> imageViewRef;
 	
+	/** The callback for image loading completed. */
 	private ImageCallback callback;
 
 	/**
@@ -224,7 +224,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
     }
     
     /**
-     * Register a callback when image loading completed.
+     * Register a callback for image loading completed.
      *
      * @param callback the callback
      */
