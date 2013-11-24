@@ -22,9 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -36,6 +34,11 @@ import javax.net.ssl.SSLSocketFactory;
 public class HurlStack implements HttpStack {
 
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
+    private final String HEADER_SET_COOKIE = "Set-Cookie";
+    private final String HEADER_COOKIE = "Cookie";
+    private final String SET_COOKIE_SEPARATOR = "; ";
+    private final String NAME_VALUE_SEPARATOR = "=";
+    private final String COOKIE_VALUE_DELIMITER = ";";
 
     /**
      * An interface for transforming URLs before use.
@@ -90,6 +93,7 @@ public class HurlStack implements HttpStack {
         for (String headerName : map.keySet()) {
             connection.addRequestProperty(headerName, map.get(headerName));
         }
+        setConnectionCookie(connection, request);
         setConnectionParametersForRequest(connection, request);
         // Initialize HttpResponse with data from the HttpURLConnection.
         ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
@@ -103,6 +107,7 @@ public class HurlStack implements HttpStack {
                 connection.getResponseCode(), connection.getResponseMessage());
         BasicHttpResponse response = new BasicHttpResponse(responseStatus);
         response.setEntity(entityFromConnection(connection));
+        storeConnectionCookie(connection, request);
         for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
             if (header.getKey() != null) {
                 Header h = new BasicHeader(header.getKey(), header.getValue().get(0));
@@ -160,6 +165,38 @@ public class HurlStack implements HttpStack {
         }
 
         return connection;
+    }
+
+    private void setConnectionCookie(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
+        HashMap<String, String> cookie = CookieManager.getInstance().getCookie(request.getUrl());
+        if (cookie != null) {
+            StringBuffer cookieStringBuffer = new StringBuffer();
+            Iterator<String> cookieNames = cookie.keySet().iterator();
+            while (cookieNames.hasNext()) {
+                String cookieName = cookieNames.next();
+                cookieStringBuffer.append(cookieName);
+                cookieStringBuffer.append("=");
+                cookieStringBuffer.append((String) cookie.get(cookieName));
+                if (cookieNames.hasNext())
+                    cookieStringBuffer.append(SET_COOKIE_SEPARATOR);
+            }
+            connection.setRequestProperty(HEADER_COOKIE, cookieStringBuffer.toString());
+        }
+    }
+
+    public void storeConnectionCookie(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
+        CookieManager cookieManager = CookieManager.getInstance();
+        String cookieHeader = connection.getHeaderField(HEADER_SET_COOKIE);
+        if (null != cookieHeader) {
+            StringTokenizer st = new StringTokenizer(cookieHeader, COOKIE_VALUE_DELIMITER);
+            if (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                String name = token.substring(0, token.indexOf(NAME_VALUE_SEPARATOR));
+                String value = token.substring(token.indexOf(NAME_VALUE_SEPARATOR) + 1, token.length());
+                cookieManager.buildCookie(name, value, true);
+            }
+            cookieManager.commitCookie2Store(request.getUrl());
+        }
     }
 
     @SuppressWarnings("deprecation")
