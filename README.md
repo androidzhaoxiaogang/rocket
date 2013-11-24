@@ -33,3 +33,6 @@ Rocket.with(this)
 
 
 3)Image cache:
+Rocket.with(holder.image)
+.placeholder(R.drawable.bg_row_icon)
+.load(url);
