@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" name="Default" comment="" />
+    <list default="true" id="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/libs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="rocket.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="94b3a720-2f60-4b83-aa99-1cfc9b478ee3" time="1385082881984" ignored="false" />
@@ -70,14 +83,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="HttpClientStack.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="HttpClientStack.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientStack.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="66" column="54" selection-start="2505" selection-end="2505" vertical-scroll-proportion="0.06891271">
+            <state line="66" column="54" selection-start="2505" selection-end="2505" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#1437#1464#0" expanded="true" />
                 <element signature="e#2739#2771#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="98" selection-start="2365" selection-end="2365" vertical-scroll-proportion="0.65625">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -149,15 +171,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ByteArrayPool.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fast/rocket/utils/ByteArrayPool.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="13" selection-start="2185" selection-end="2185" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="HttpClientHelper.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientHelper.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -190,6 +203,7 @@
         <option value="$PROJECT_DIR$/src/fast/rocket/http/CookieManager.java" />
         <option value="$PROJECT_DIR$/src/fast/rocket/http/HurlStack.java" />
         <option value="$PROJECT_DIR$/src/fast/rocket/http/HttpClientHelper.java" />
+        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
       </list>
     </option>
   </component>
@@ -271,15 +285,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rocket" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="http" />
+              <option name="myItemId" value=".idea" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -513,13 +519,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fast/rocket/config/CacheviewRequestBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="22" selection-start="650" selection-end="650" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fast/rocket/cache/BitmapLruCache.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="25" column="52" selection-start="756" selection-end="765" vertical-scroll-proportion="0.0">
@@ -624,11 +623,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fast/rocket/http/HttpClientStack.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="66" column="54" selection-start="2505" selection-end="2505" vertical-scroll-proportion="0.06891271">
+        <state line="66" column="54" selection-start="2505" selection-end="2505" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#1437#1464#0" expanded="true" />
             <element signature="e#2739#2771#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="98" selection-start="2365" selection-end="2365" vertical-scroll-proportion="0.65625">
+          <folding />
         </state>
       </provider>
     </entry>
