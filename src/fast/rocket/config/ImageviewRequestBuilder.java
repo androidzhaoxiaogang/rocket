@@ -228,8 +228,9 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
      *
      * @param callback the callback
      */
-    public void onComplete(ImageCallback callback) {
+    public ImageviewRequestBuilder invoke(ImageCallback callback) {
     	this.callback = callback;
+    	return this;
     }
 
 	/* (non-Javadoc)
