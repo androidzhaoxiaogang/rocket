@@ -23,13 +23,19 @@ Rocket.with(getActivity())
 2)Image downloader:
 
 
-
-
-
-
-
-
-
+Rocket.with(mImageView)
+.placeholder(R.drawable.bg_list_header)
+.skipMemoryCache()
+.invoke(new ImageCallback() {
+					
+	@Override
+	public void onComplete(RocketError error, Bitmap result) {
+		if(error == null) {
+			hasFetched = true;
+		}
+	}
+})
+.load(requestUrl);
 
 
 3)Image cache:
