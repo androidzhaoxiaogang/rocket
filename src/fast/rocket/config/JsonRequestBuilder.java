@@ -60,7 +60,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @return the rocket request builder
 	 */
 	@SuppressWarnings("rawtypes")
-	public JsonRequestBuilder onComplete(FutureCallback callback) {
+	public JsonRequestBuilder invoke(FutureCallback callback) {
 		this.callback = callback;
 		return this;
 	}
@@ -71,7 +71,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param clazz the clazz
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder performParse(Class<?> clazz) {
+	public JsonRequestBuilder targetType(Class<?> clazz) {
 		this.clazz = clazz;
 		return this;
 	}
