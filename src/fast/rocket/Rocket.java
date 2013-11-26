@@ -135,6 +135,39 @@ public class Rocket {
         return queue;
     }
     
+	/**
+	 * Invalidate the disk cache data by the url individually.
+	 *
+	 * @param url the url
+	 */
+	public void invalidate(String url) {
+		if(requestQueue == null) {
+			throw new IllegalStateException("request queue must be init first"); 
+		}
+		
+		final Cache.Entry entry = requestQueue.getCache().get(url);
+		if (entry != null && entry.data != null && entry.data.length > 0) {
+			if (!entry.isExpired()) {
+				requestQueue.getCache().invalidate(url, true);
+			}
+		}
+	}
+	
+	/**
+	 * Gets the bytes data in the disk cache.
+	 *
+	 * @param key the key
+	 * @return the data in disk cache
+	 */
+	public byte[] getDiskCacheData(String key) {
+		if(requestQueue == null) {
+			throw new IllegalStateException("request queue must be init first"); 
+		}
+		
+		Cache.Entry entry = requestQueue.getCache().get(key);
+		return entry == null ? null : entry.data;
+	}
+    
     /**
      * Get a usable cache directory (external if available, internal otherwise).
      *
