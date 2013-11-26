@@ -8,28 +8,34 @@ https, supporting from 2.2 and above sdks for image cache(You needn't to worry a
 
 1)Rest apis:
 
-Rocket.with(this)
-.setJsonClass(MapInfos.class)
-.setCallback(new FutureCallback<MapInfos>() {
+Rocket.with(getActivity())
+.targetType(IntrosInfo.class)
+.invoke(new FutureCallback<IntrosInfo>() {
 
 	@Override
-	public void onCompleted(RocketError error, MapInfos result) {
-		System.out.println("=========result="+result);
-				
+	public void onCompleted(RocketError error, IntrosInfo result) {
+		handleResult(error, result);
 	}
-}).load("http://XXX");
+})
+.load(uri);
 		
 		
 2)Image downloader:
 
 
-
-
-
-
-
-
-
+Rocket.with(mImageView)
+.placeholder(R.drawable.bg_list_header)
+.skipMemoryCache()
+.invoke(new ImageCallback() {
+					
+	@Override
+	public void onComplete(RocketError error, Bitmap result) {
+		if(error == null) {
+			hasFetched = true;
+		}
+	}
+})
+.load(requestUrl);
 
 
 3)Image cache:
