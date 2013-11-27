@@ -167,6 +167,7 @@ public class DiskBasedCache implements Cache {
             if (fullExpire) {
                 entry.ttl = 0;
             }
+            entry.cacheStrategy = null;
             put(key, entry);
         }
 
@@ -337,6 +338,16 @@ public class DiskBasedCache implements Cache {
         /** Headers from the response resulting in this cache entry. */
         public Map<String, String> responseHeaders;
 
+        /** Cache Strategy for this record. */
+        public APICacheStrategy cacheStrategy;
+
+        /** Cache Strategy type for this record. */
+        public int cacheStrategyType;
+
+        /** Cache Strategy expires for this record. */
+        public long cacheStrategyExpires;
+
+
         private CacheHeader() { }
 
         /**
@@ -352,6 +363,11 @@ public class DiskBasedCache implements Cache {
             this.ttl = entry.ttl;
             this.softTtl = entry.softTtl;
             this.responseHeaders = entry.responseHeaders;
+            this.cacheStrategy = entry.cacheStrategy;
+            if (null != this.cacheStrategy) {
+                this.cacheStrategyType = this.cacheStrategy.getCacheType();
+                this.cacheStrategyExpires = this.cacheStrategy.getExpires();
+            }
         }
 
         /**
@@ -375,6 +391,12 @@ public class DiskBasedCache implements Cache {
             entry.ttl = readLong(is);
             entry.softTtl = readLong(is);
             entry.responseHeaders = readStringStringMap(is);
+            int cacheStrategyType = readInt(is);
+            if (cacheStrategyType == APICacheStrategy.CACHE_TYPE_MILLIS_INTERVAL || cacheStrategyType == APICacheStrategy.CACHE_TYPE_DAYS_INTERVAL) {
+                entry.cacheStrategy = new APICacheStrategy(cacheStrategyType);
+                entry.cacheStrategyType = cacheStrategyType;
+                entry.cacheStrategyExpires = readLong(is);
+            }
             return entry;
         }
 
@@ -389,6 +411,7 @@ public class DiskBasedCache implements Cache {
             e.ttl = ttl;
             e.softTtl = softTtl;
             e.responseHeaders = responseHeaders;
+            e.cacheStrategy = cacheStrategy;
             return e;
         }
 
@@ -405,6 +428,10 @@ public class DiskBasedCache implements Cache {
                 writeLong(os, ttl);
                 writeLong(os, softTtl);
                 writeStringStringMap(responseHeaders, os);
+                if (cacheStrategy != null) {
+                    writeInt(os, cacheStrategy.getCacheType());
+                    writeLong(os, cacheStrategy.getExpires());
+                }
                 os.flush();
                 return true;
             } catch (IOException e) {

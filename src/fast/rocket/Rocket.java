@@ -2,11 +2,7 @@ package fast.rocket;
 
 import java.io.File;
 
-import fast.rocket.cache.BitmapLruCache;
-import fast.rocket.cache.Cache;
-import fast.rocket.cache.CacheImageView;
-import fast.rocket.cache.DiskBasedCache;
-import fast.rocket.cache.ImageLoader;
+import fast.rocket.cache.*;
 import fast.rocket.config.CacheviewRequestBuilder;
 import fast.rocket.config.ImageviewRequestBuilder;
 import fast.rocket.config.JsonRequestBuilder;
