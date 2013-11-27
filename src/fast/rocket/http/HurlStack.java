@@ -12,6 +12,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 
+import android.text.TextUtils;
+
 import fast.rocket.Request;
 import fast.rocket.Request.Method;
 import fast.rocket.error.AuthFailureError;
@@ -34,11 +36,10 @@ import javax.net.ssl.SSLSocketFactory;
 public class HurlStack implements HttpStack {
 
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
-    private final String HEADER_SET_COOKIE = "Set-Cookie";
-    private final String HEADER_COOKIE = "Cookie";
-    private final String SET_COOKIE_SEPARATOR = "; ";
-    private final String NAME_VALUE_SEPARATOR = "=";
-    private final String COOKIE_VALUE_DELIMITER = ";";
+    private static final String HEADER_SET_COOKIE = "Set-Cookie";
+    private static final String HEADER_COOKIE = "Cookie";
+    
+    private String cookie;
 
     /**
      * An interface for transforming URLs before use.
@@ -94,7 +95,7 @@ public class HurlStack implements HttpStack {
             connection.addRequestProperty(headerName, map.get(headerName));
         }
         if (request.isCookieEnabled()) {
-            setConnectionCookie(connection, request);
+            setConnectionCookie(connection, this.cookie);
         }
         setConnectionParametersForRequest(connection, request);
         // Initialize HttpResponse with data from the HttpURLConnection.
@@ -171,35 +172,16 @@ public class HurlStack implements HttpStack {
         return connection;
     }
 
-    private void setConnectionCookie(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
-        HashMap<String, String> cookie = CookieManager.getInstance().getCookie(request.getUrl());
-        if (cookie != null) {
-            StringBuffer cookieStringBuffer = new StringBuffer();
-            Iterator<String> cookieNames = cookie.keySet().iterator();
-            while (cookieNames.hasNext()) {
-                String cookieName = cookieNames.next();
-                cookieStringBuffer.append(cookieName);
-                cookieStringBuffer.append("=");
-                cookieStringBuffer.append((String) cookie.get(cookieName));
-                if (cookieNames.hasNext())
-                    cookieStringBuffer.append(SET_COOKIE_SEPARATOR);
-            }
-            connection.setRequestProperty(HEADER_COOKIE, cookieStringBuffer.toString());
+    private void setConnectionCookie(HttpURLConnection connection, String cookie) throws IOException, AuthFailureError {
+        if (!TextUtils.isEmpty(cookie)) {
+            connection.setRequestProperty(HEADER_COOKIE, cookie);
         }
     }
 
     public void storeConnectionCookie(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
-        CookieManager cookieManager = CookieManager.getInstance();
         String cookieHeader = connection.getHeaderField(HEADER_SET_COOKIE);
-        if (null != cookieHeader) {
-            StringTokenizer st = new StringTokenizer(cookieHeader, COOKIE_VALUE_DELIMITER);
-            if (st.hasMoreTokens()) {
-                String token = st.nextToken();
-                String name = token.substring(0, token.indexOf(NAME_VALUE_SEPARATOR));
-                String value = token.substring(token.indexOf(NAME_VALUE_SEPARATOR) + 1, token.length());
-                cookieManager.buildCookie(name, value, true);
-            }
-            cookieManager.commitCookie2Store(request.getUrl());
+        if (!TextUtils.isEmpty(cookieHeader)) {
+        	this.cookie = cookieHeader.substring(0, cookieHeader.indexOf(";"));
         }
     }
 

@@ -11,10 +11,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+
+import android.text.TextUtils;
 
 import fast.rocket.Request;
 import fast.rocket.Request.Method;
@@ -68,7 +72,7 @@ public class HttpClientStack implements HttpStack {
         HttpConnectionParams.setSoTimeout(httpParams, timeoutMs);
 
         if (request.isCookieEnabled()) {
-            //TODO: set cookie store
+        	setCookie(mClient);
         }
         return mClient.execute(httpRequest);
     }
@@ -134,4 +138,22 @@ public class HttpClientStack implements HttpStack {
     protected void onPrepareRequest(HttpUriRequest request) throws IOException {
         // Nothing.
     }
+    
+    private String setCookie(HttpClient httpClient) {
+        List<Cookie> cookies = ((AbstractHttpClient) httpClient).getCookieStore().getCookies();
+        StringBuilder sb = new StringBuilder();
+        final int size = cookies.size();
+        for (int i = 0; i < size; i++) {
+            Cookie cookie = cookies.get(i);
+            String cookieName = cookie.getName();
+            String cookieValue = cookie.getValue();
+            if (!TextUtils.isEmpty(cookieName)
+                     && !TextUtils.isEmpty(cookieValue)) {
+                sb.append(cookieName + "=" );
+                sb.append(cookieValue + ";" );
+           }
+       }
+        
+       return sb.toString();
+  }
 }
