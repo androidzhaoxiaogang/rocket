@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import fast.rocket.cache.DiskCacheStrategy.Strategy;
 import fast.rocket.utils.Log;
 
 
@@ -392,10 +393,18 @@ public class DiskBasedCache implements Cache {
             entry.softTtl = readLong(is);
             entry.responseHeaders = readStringStringMap(is);
             final int cacheStrategyType = readInt(is);
+            
+            Log.d("%s", "[cacheStrategyType] "+cacheStrategyType);
             final long expires = readLong(is);
-            entry.cacheStrategy = new DiskCacheStrategy(cacheStrategyType, expires);
-            entry.cacheStrategyType = cacheStrategyType;
-            entry.cacheStrategyExpires = expires;
+			if (cacheStrategyType == Strategy.DAYS_INTERVAL
+					|| cacheStrategyType == Strategy.HOURS_INTERVAL
+					|| cacheStrategyType == Strategy.MINUTES_INTERVAL) {
+				entry.cacheStrategy = new DiskCacheStrategy(cacheStrategyType, expires);
+				entry.cacheStrategyType = cacheStrategyType;
+				entry.cacheStrategyExpires = expires;
+			}
+			
+			Log.d("%s", "===readHeader==="+entry.toString());
             return entry;
         }
 
@@ -439,6 +448,16 @@ public class DiskBasedCache implements Cache {
             }
         }
 
+		@Override
+		public String toString() {
+			return "CacheHeader [size=" + size + ", key=" + key + ", etag="
+					+ etag + ", serverDate=" + serverDate + ", ttl=" + ttl
+					+ ", softTtl=" + softTtl + ", responseHeaders="
+					+ responseHeaders + ", cacheStrategy=" + cacheStrategy
+					+ ", cacheStrategyType=" + cacheStrategyType
+					+ ", cacheStrategyExpires=" + cacheStrategyExpires + "]";
+		}
+        
     }
 
     private static class CountingInputStream extends FilterInputStream {

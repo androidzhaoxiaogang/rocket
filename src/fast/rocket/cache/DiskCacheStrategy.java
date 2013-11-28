@@ -3,7 +3,6 @@ package fast.rocket.cache;
 import java.util.Calendar;
 import java.util.Date;
 
-// TODO: Auto-generated Javadoc
 /**
  * Created with IntelliJ IDEA.
  * User: haozi
@@ -11,17 +10,13 @@ import java.util.Date;
  * Time: 下午2:51
  * To change this template use File | Settings | File Templates.
  */
-/**
- * @author hp
- *
- */
+
 public class DiskCacheStrategy {
-	
-	/** The Constant EXPIRE_MINUTES. */
-	private static final int EXPIRE_MINUTES = 5;
 	
 	/** The Constant ONE_DAY. */
 	private static final int ONE_DAY = 1;
+	
+	private static final int ONE_HOUR = ONE_DAY;
     
     /** The m cache expires. */
     private long mCacheExpires; //ms
@@ -41,7 +36,7 @@ public class DiskCacheStrategy {
         int HOURS_INTERVAL = -2;
         
         /** The exactly time. */
-        int MILLIS_INTERVAL = -1;
+        int MINUTES_INTERVAL = -1;
     }
 
     /**
@@ -68,11 +63,11 @@ public class DiskCacheStrategy {
      * @return the APICacheStrategy
      */
     public DiskCacheStrategy(int cacheType, long expires) {
-    	if(expires != Strategy.DAYS_INTERVAL && expires != Strategy.DAYS_INTERVAL 
-    			&& expires != Strategy.DAYS_INTERVAL && (expires >> 16) < EXPIRE_MINUTES  
-    			) {
-    		throw new IllegalArgumentException("Unreasonable expire value set.");
-    	}
+		if (cacheType != Strategy.DAYS_INTERVAL
+				&& cacheType != Strategy.HOURS_INTERVAL
+				&& cacheType != Strategy.MINUTES_INTERVAL) {
+			throw new IllegalArgumentException("Cache type not support yet.");
+		}
     	
         switch (mCacheType) {
             case Strategy.DAYS_INTERVAL:
@@ -81,8 +76,8 @@ public class DiskCacheStrategy {
             case Strategy.HOURS_INTERVAL:
                 mCacheExpires = getExpiresLong(ONE_DAY, expires, 60);
                 break;
-            case Strategy.MILLIS_INTERVAL:
-                mCacheExpires = getExpiresLong(ONE_DAY, 1, expires);
+            case Strategy.MINUTES_INTERVAL:
+                mCacheExpires = getExpiresLong(ONE_DAY, ONE_HOUR, expires);
                 break;
         }
     }
