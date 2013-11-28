@@ -339,7 +339,7 @@ public class DiskBasedCache implements Cache {
         public Map<String, String> responseHeaders;
 
         /** Cache Strategy for this record. */
-        public APICacheStrategy cacheStrategy;
+        public DiskCacheStrategy cacheStrategy;
 
         /** Cache Strategy type for this record. */
         public int cacheStrategyType;
@@ -391,12 +391,11 @@ public class DiskBasedCache implements Cache {
             entry.ttl = readLong(is);
             entry.softTtl = readLong(is);
             entry.responseHeaders = readStringStringMap(is);
-            int cacheStrategyType = readInt(is);
-            if (cacheStrategyType == APICacheStrategy.CACHE_TYPE_MILLIS_INTERVAL || cacheStrategyType == APICacheStrategy.CACHE_TYPE_DAYS_INTERVAL) {
-                entry.cacheStrategy = new APICacheStrategy(cacheStrategyType);
-                entry.cacheStrategyType = cacheStrategyType;
-                entry.cacheStrategyExpires = readLong(is);
-            }
+            final int cacheStrategyType = readInt(is);
+            final long expires = readLong(is);
+            entry.cacheStrategy = new DiskCacheStrategy(cacheStrategyType, expires);
+            entry.cacheStrategyType = cacheStrategyType;
+            entry.cacheStrategyExpires = expires;
             return entry;
         }
 

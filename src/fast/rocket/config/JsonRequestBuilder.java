@@ -10,7 +10,7 @@ import fast.rocket.Request.Method;
 import fast.rocket.Response.ErrorListener;
 import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
-import fast.rocket.cache.APICacheStrategy;
+import fast.rocket.cache.DiskCacheStrategy;
 import fast.rocket.error.RocketError;
 import fast.rocket.http.RocketX509TrustManager;
 
@@ -45,7 +45,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
     private boolean isCookieEnabled;
 
     /** The Cache Strategy. */
-    private APICacheStrategy cacheStrategy;
+    private DiskCacheStrategy cacheStrategy;
 	
 
 	/**
@@ -108,7 +108,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
      * @param cacheStrategy the cache strategy
      * @return the rocket request builder
      */
-    public JsonRequestBuilder setCacheStrategy(APICacheStrategy cacheStrategy) {
+    public JsonRequestBuilder setCacheStrategy(DiskCacheStrategy cacheStrategy) {
         this.cacheStrategy = cacheStrategy;
         return this;
     }
