@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
 
+import fast.rocket.cache.APICacheStrategy;
 import fast.rocket.cache.Cache;
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.error.RocketError;
@@ -84,6 +85,9 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     /** The retry policy for this request. */
     private RetryPolicy mRetryPolicy;
+
+    /** The cache strategy for this request. */
+    private APICacheStrategy mCacheStrategy;
 
     /**
      * When a request can be retrieved from cache but must be refreshed from
@@ -157,6 +161,13 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      */
     public void setRetryPolicy(RetryPolicy retryPolicy) {
         mRetryPolicy = retryPolicy;
+    }
+
+    /**
+     * Sets the cache strategy for this request.
+     */
+    public void setCacheStrategy(APICacheStrategy cacheStrategy) {
+        mCacheStrategy = cacheStrategy;
     }
 
     /**
@@ -465,6 +476,13 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      */
     public RetryPolicy getRetryPolicy() {
         return mRetryPolicy;
+    }
+
+    /**
+     * Returns the cache strategy that should be used  for this request.
+     */
+    public APICacheStrategy getCacheStrategy() {
+        return mCacheStrategy;
     }
 
     /**

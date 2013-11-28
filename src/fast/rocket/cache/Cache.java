@@ -68,9 +68,16 @@ public interface Cache {
         /** Immutable response headers as received from server; must be non-null. */
         public Map<String, String> responseHeaders = Collections.emptyMap();
 
+        /** Cache Strategy for this record. */
+        public APICacheStrategy cacheStrategy;
+
         /** True if the entry is expired. */
         public boolean isExpired() {
-            return this.ttl < System.currentTimeMillis();
+            if (this.cacheStrategy != null) {
+                return this.cacheStrategy.isCacheExpired();
+            } else {
+                return this.ttl < System.currentTimeMillis();
+            }
         }
 
         /** True if a refresh is needed from the original data source. */

@@ -10,6 +10,7 @@ import fast.rocket.Request.Method;
 import fast.rocket.Response.ErrorListener;
 import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
+import fast.rocket.cache.APICacheStrategy;
 import fast.rocket.error.RocketError;
 import fast.rocket.http.RocketX509TrustManager;
 
@@ -42,6 +43,9 @@ public class JsonRequestBuilder implements LaunchBuilder {
 
     /** The enable cookie tag. */
     private boolean isCookieEnabled;
+
+    /** The Cache Strategy. */
+    private APICacheStrategy cacheStrategy;
 	
 
 	/**
@@ -88,13 +92,24 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	}
 
     /**
-     * Sets the request tag. Request can be removed by the tag.
+     * Sets the request cookie tag. Request can be removed by the tag.
      *
      * @param enableCookie the tag
      * @return the rocket request builder
      */
     public JsonRequestBuilder enableCookie(boolean enableCookie) {
         this.isCookieEnabled = enableCookie;
+        return this;
+    }
+
+    /**
+     * Sets the request api cache strategy. Request can be removed by the tag.
+     *
+     * @param cacheStrategy the cache strategy
+     * @return the rocket request builder
+     */
+    public JsonRequestBuilder setCacheStrategy(APICacheStrategy cacheStrategy) {
+        this.cacheStrategy = cacheStrategy;
         return this;
     }
 	
@@ -183,6 +198,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 		
 		if(tag != null) request.setTag(tag);
         request.setCookieEnableOrDisable(isCookieEnabled);
+        request.setCacheStrategy(cacheStrategy);
 		rocket.getRequestQueue().add(request);
 	}
 }
