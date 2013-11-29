@@ -439,7 +439,11 @@ public class DiskBasedCache implements Cache {
                 if (cacheStrategy != null) {
                     writeInt(os, cacheStrategy.getCacheType());
                     writeLong(os, cacheStrategy.getExpires());
+                } else {
+                	writeInt(os, 0);
+                    writeLong(os, 0);
                 }
+                	 
                 os.flush();
                 return true;
             } catch (IOException e) {
