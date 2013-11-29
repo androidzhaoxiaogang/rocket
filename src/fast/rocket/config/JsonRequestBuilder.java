@@ -24,7 +24,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 *  the json string being parsed. 
 	 **/
 	@SuppressWarnings("rawtypes")
-	private FutureCallback callback ;
+	private JsonCallback callback ;
 	
 	/** The class type to be parsed. */
 	private Class<?> clazz;
@@ -46,8 +46,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 
     /** The Cache Strategy. */
     private DiskCacheStrategy cacheStrategy;
-	
-
+    
 	/**
 	 * Instantiates a new rocket request builder.
 	 *
@@ -64,7 +63,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @return the rocket request builder
 	 */
 	@SuppressWarnings("rawtypes")
-	public JsonRequestBuilder invoke(FutureCallback callback) {
+	public JsonRequestBuilder invoke(JsonCallback callback) {
 		this.callback = callback;
 		return this;
 	}
