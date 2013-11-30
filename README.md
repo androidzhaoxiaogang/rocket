@@ -7,14 +7,16 @@ https, supporting from 2.2 and above sdks for image cache(You needn't to worry a
 
 ## Features:
 
-### rest apis
-### image downloader
-### image cache(LRU)
-### https
-### cokkie
-### cache strategy
+* rest apis
+* image downloader
+* image cache(LRU)
+* https
+* cookie
+* cache strategy
 
-## Rest apis:
+## Usage
+
+### Rest apis:
 
 ``` java
 Rocket.with(getActivity())
@@ -29,7 +31,7 @@ Rocket.with(getActivity())
 .load(uri);
 ```		
 		
-## Image downloader:
+### Image downloader:
 
 ``` java
 Rocket.with(mImageView)
@@ -47,13 +49,18 @@ Rocket.with(mImageView)
 .load(requestUrl);
 ```
 
-## Image cache:
+### Image cache:
 
 ``` java
 Rocket.with(holder.image)
 .placeholder(R.drawable.bg_row_icon)
 .load(url);
 ```
+
+
+## realease
+
+current version ： V1.0beta
 
 ## support 
 android 2.2sdk and above
