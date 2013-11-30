@@ -10,7 +10,7 @@ https, supporting from 2.2 and above sdks for image cache(You needn't to worry a
 
 Rocket.with(getActivity())
 .targetType(IntrosInfo.class)
-.invoke(new FutureCallback<IntrosInfo>() {
+.invoke(new JsonCallback<IntrosInfo>() {
 
 	@Override
 	public void onCompleted(RocketError error, IntrosInfo result) {
