@@ -6,7 +6,7 @@ For better convenience, we wrapped the volley and do some extra updates. And we 
 https, supporting from 2.2 and above sdks for image cache(You needn't to worry about the OOM issue below 3.0 sdks). 
 
 
-1)Rest apis:
+## Rest apis:
 
 Rocket.with(getActivity())
 .targetType(IntrosInfo.class)
@@ -20,7 +20,7 @@ Rocket.with(getActivity())
 .load(uri);
 		
 		
-2)Image downloader:
+## Image downloader:
 
 
 Rocket.with(mImageView)
@@ -38,7 +38,7 @@ Rocket.with(mImageView)
 .load(requestUrl);
 
 
-3)Image cache:
+## Image cache:
 
 Rocket.with(holder.image)
 .placeholder(R.drawable.bg_row_icon)
