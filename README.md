@@ -58,11 +58,11 @@ Rocket.with(holder.image)
 ```
 
 
-## realease
+## Changelog
 
 current version ： V1.0beta
 
-## support 
+## Support 
 android 2.2sdk and above
 
 ## Contributors
