@@ -125,7 +125,7 @@ public class Rocket {
         network = new BasicNetwork(stack);
         cache = new DiskBasedCache(getDiskCacheDir(context, DEFAULT_CACHE_DIR));
 
-        RequestQueue queue = new RequestQueue(cache, network);
+        final RequestQueue queue = new RequestQueue(cache, network);
         queue.start();
 
         return queue;
@@ -134,7 +134,7 @@ public class Rocket {
 	/**
 	 * Invalidate the disk cache data by the url individually.
 	 *
-	 * @param url the url
+	 * @param url the request url
 	 */
 	public void invalidate(String url) {
 		if(requestQueue == null) {
@@ -175,7 +175,7 @@ public class Rocket {
     }
     
     /**
-     * Cancel all pending requests.
+     * Cancel all pending requests in the request queue.
      *
      * @param tag the tag
      */
@@ -186,7 +186,7 @@ public class Rocket {
 	}
     
     /**
-     * Builds the rocket request builder.
+     * Builds the json request builder.
      *
      * @return the rocket request builder
      */
@@ -197,8 +197,9 @@ public class Rocket {
     /**
      * Create a image request builder that can be used to 
      * build an network image request
+     * 
      * @param imageView
-     * @return
+     * @return ImageviewRequestBuilder
      */
     public ImageviewRequestBuilder build(ImageView imageView) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread())
@@ -259,6 +260,11 @@ public class Rocket {
 		return cache;
 	}
 	
+	/**
+	 * Gets the image loader.
+	 *
+	 * @return the image loader
+	 */
 	public ImageLoader getImageLoader() {
 		return imageLoader;
 	}
