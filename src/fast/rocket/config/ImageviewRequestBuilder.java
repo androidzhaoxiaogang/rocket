@@ -18,8 +18,9 @@ import android.widget.ImageView;
 
 /**
  * The Class ImageviewRequestBuilder for image download loader configuration.
- * It's benefit for you if don't wanna the downloaded image put into the LRU 
- * (L1) cache or the disk cache(L2).
+ * It's benefit for you if don't wanna the download image put into the LRU 
+ * cache (L1) or the disk cache(L2). This is fit for self-manage the image
+ * strong reference.  
  * 
  */
 public class ImageviewRequestBuilder implements LaunchBuilder{

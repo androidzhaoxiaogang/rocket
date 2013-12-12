@@ -19,7 +19,7 @@ import android.view.animation.Animation;
  */
 public class CacheviewRequestBuilder implements LaunchBuilder{
 	
-	/** The skip disk cache. */
+	/** Skip the disk cache. */
 	private boolean skipDiskCache;
 	
 	/** The placeholder resource. */
