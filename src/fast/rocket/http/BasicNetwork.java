@@ -105,8 +105,10 @@ public class BasicNetwork implements Network {
                 }
                 return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
             } catch (SocketTimeoutException e) {
+            	e.printStackTrace();
                 attemptRetryOnException("socket", request, new TimeoutError());
             } catch (ConnectTimeoutException e) {
+            	e.printStackTrace();
                 attemptRetryOnException("connection", request, new TimeoutError());
             } catch (MalformedURLException e) {
                 throw new RuntimeException("Bad URL " + request.getUrl(), e);

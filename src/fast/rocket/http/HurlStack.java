@@ -35,6 +35,9 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public class HurlStack implements HttpStack {
 
+	/** The default socket timeout in milliseconds */
+    public static final int DEFAULT_TIMEOUT_MS = 10000;
+    
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static final String HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HEADER_COOKIE = "Cookie";
@@ -159,7 +162,7 @@ public class HurlStack implements HttpStack {
         HttpURLConnection connection = createConnection(url);
 
         int timeoutMs = request.getTimeoutMs();
-        connection.setConnectTimeout(timeoutMs);
+        connection.setConnectTimeout(DEFAULT_TIMEOUT_MS);
         connection.setReadTimeout(timeoutMs);
         connection.setUseCaches(false);
         connection.setDoInput(true);

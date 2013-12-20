@@ -2,7 +2,6 @@ package fast.rocket.config;
 
 import java.util.Map;
 
-import android.os.Build;
 import android.text.TextUtils;
 
 import fast.rocket.GsonRequest;
@@ -12,7 +11,6 @@ import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
 import fast.rocket.cache.DiskCacheStrategy;
 import fast.rocket.error.RocketError;
-import fast.rocket.http.RocketX509TrustManager;
 
 
 /**
@@ -153,10 +151,10 @@ public class JsonRequestBuilder implements LaunchBuilder {
 			throw new IllegalArgumentException("Initialization params is null");
 		}
 		
-		if (Build.VERSION.SDK_INT >= 9 && uri.startsWith("https")) {
-			RocketX509TrustManager.allowAllSSL();  
-		}
-		
+//		if (Build.VERSION.SDK_INT >= 9 && uri.startsWith("https")) {
+//			RocketX509TrustManager.allowAllSSL();  
+//		}
+//		
 		addRequest(method, uri, clazz);
 	}
 
