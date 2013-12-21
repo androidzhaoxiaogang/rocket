@@ -118,13 +118,14 @@ public class Rocket {
 
         if (stack == null) {
 //            if (Build.VERSION.SDK_INT >= 9) {
-//               stack = new HurlStack(null, RocketUtils.getSSLSocketFactory(context, R.raw.yylc));
+//            	stack = new OkHttpStack();
 //            } else {
 //                // Prior to Gingerbread, HttpUrlConnection was unreliable.
 //                // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-//                stack = new HttpClientStack(HttpClientHelper.getHttpClient(userAgent));
+//                
 //            }
-        	stack = OkHttpStack.withSslWorkaround();
+        	//stack = new HttpClientStack(HttpClientHelper.getHttpClient());
+        	stack = new OkHttpStack();
         }
 
         network = new BasicNetwork(stack);

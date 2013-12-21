@@ -24,13 +24,8 @@ public class OkHttpStack extends HurlStack {
 		if (client == null) {
 			throw new NullPointerException("Client must not be null.");
 		}
-		this.client = client;
-	}
-
-	public static OkHttpStack withSslWorkaround() {
-		OkHttpClient client = new OkHttpClient();
 		client.setSslSocketFactory(getSslSocketFactory());
-		return new OkHttpStack(client);
+		this.client = client;
 	}
 
 	@Override

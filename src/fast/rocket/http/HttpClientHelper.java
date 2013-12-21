@@ -1,37 +1,26 @@
 package fast.rocket.http;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.params.ConnPerRouteBean;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-
+import ch.boye.httpclientandroidlib.HttpVersion;
+import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.params.HttpClientParams;
+import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
+import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
+import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
+import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
+import ch.boye.httpclientandroidlib.params.BasicHttpParams;
+import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
+import ch.boye.httpclientandroidlib.params.HttpParams;
+import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
 /**
  * The Class HttpClientHelper.
  */
@@ -45,19 +34,14 @@ public class HttpClientHelper {
     
     /** The Constant DEFAULT_SOCKET_BUFFER_SIZE. */
     private static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-
-    /**
-     * Gets the http client which supporting for both http and https protocols.
-     *
-     * @param userAgent the user agent
-     * @return the http client
-     */
-    public  static HttpClient getHttpClient(String userAgent) {
+    
+    
+    private static DefaultHttpClient sHttpClient = null;
+    static {
         final HttpParams httpParams = new BasicHttpParams();
-
-        ConnManagerParams.setTimeout(httpParams, 1000);
-        ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(10));
-        ConnManagerParams.setMaxTotalConnections(httpParams, DEFAULT_MAX_CONNECTIONS);
+        //ConnManagerParams.setTimeout(httpParams, 1000);
+        //ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(10));
+        //ConnManagerParams.setMaxTotalConnections(httpParams, DEFAULT_MAX_CONNECTIONS);
 
         HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(httpParams, "UTF-8");
@@ -68,84 +52,71 @@ public class HttpClientHelper {
         HttpConnectionParams.setConnectionTimeout(httpParams, DEFAULT_SOCKET_TIMEOUT);
         HttpConnectionParams.setTcpNoDelay(httpParams, true);
         HttpConnectionParams.setSocketBufferSize(httpParams, DEFAULT_SOCKET_BUFFER_SIZE);
-        HttpProtocolParams.setUserAgent(httpParams, userAgent);
 
         SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        schemeRegistry.register(new Scheme("http", 80 , PlainSocketFactory.getSocketFactory()));
+        SSLContext sslContext;
         try {
-            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            trustStore.load(null, null);
-            SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            schemeRegistry.register(new Scheme("https", sf, 443));
+            sslContext = SSLContext.getInstance("TLS");
+
+            // set up a TrustManager that trusts everything
+            try {
+                sslContext.init(null,
+                        new TrustManager[] { new X509TrustManager() {
+                            @Override
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return null;
+                            }
+
+                            @Override
+                            public void checkClientTrusted(
+                                    X509Certificate[] certs, String authType) {
+                            }
+
+                            @Override
+                            public void checkServerTrusted(
+                                    X509Certificate[] certs, String authType) {
+                            }
+                        } }, new SecureRandom());
+            } catch (KeyManagementException e) {
+            }
+            SSLSocketFactory ssf = new SSLSocketFactory(sslContext,SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            schemeRegistry.register(new Scheme("https", 8443, ssf));
         } catch (Exception ex) {
             // do nothing, just keep not crash
         }
 
-        ClientConnectionManager manager = new ThreadSafeClientConnManager(httpParams, schemeRegistry);
-        DefaultHttpClient httpClient = new DefaultHttpClient(manager, httpParams);
-        return httpClient;
+        PoolingClientConnectionManager manager = new PoolingClientConnectionManager(schemeRegistry);
+        manager.setMaxTotal(DEFAULT_MAX_CONNECTIONS);
+        manager.setDefaultMaxPerRoute(15);
+        sHttpClient = new DefaultHttpClient(manager, httpParams);
+        HttpProtocolParams.setUseExpectContinue(httpParams, false);
+//        HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
+//
+//            @Override
+//            public boolean retryRequest(IOException arg0, int arg1, HttpContext arg2) {
+//                // retry a max of 5 times
+//                if (arg1 >= 3) {
+//                    return false;
+//                }
+//                if (arg0 instanceof ch.boye.httpclientandroidlib.NoHttpResponseException) {
+//                    return true;
+//                } else if (arg0 instanceof ch.boye.httpclientandroidlib.client.ClientProtocolException) {
+//                    return true;
+//                }
+//                return false;
+//            }
+//        };
+//        sHttpClient.setHttpRequestRetryHandler(retryHandler);
     }
 
     /**
-     * A factory for creating MySSLSocket objects.
+     * Gets the http client which supporting for both http and https protocols.
+     *
+     * @return the http client
      */
-    private static class MySSLSocketFactory extends SSLSocketFactory {
-        
-        /** The ssl context. */
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-
-        /**
-         * Instantiates a new my ssl socket factory.
-         *
-         * @param truststore the truststore
-         * @throws NoSuchAlgorithmException the no such algorithm exception
-         * @throws KeyManagementException the key management exception
-         * @throws KeyStoreException the key store exception
-         * @throws UnrecoverableKeyException the unrecoverable key exception
-         */
-        public MySSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException,
-        KeyManagementException, KeyStoreException, UnrecoverableKeyException {
-            super(truststore);
-
-            TrustManager tm = new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType)
-                        throws CertificateException {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain, String authType)
-                        throws CertificateException {
-                }
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-
-            sslContext.init(null, new TrustManager[] {
-                    tm
-            }, null);
-        }
-
-        /* (non-Javadoc)
-         * @see org.apache.http.conn.ssl.SSLSocketFactory#createSocket(java.net.Socket, java.lang.String, int, boolean)
-         */
-        @Override
-        public Socket createSocket(Socket socket, String host, int port, boolean autoClose)
-                throws IOException, UnknownHostException {
-            return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
-        }
-
-        /* (non-Javadoc)
-         * @see org.apache.http.conn.ssl.SSLSocketFactory#createSocket()
-         */
-        @Override
-        public Socket createSocket() throws IOException {
-            return sslContext.getSocketFactory().createSocket();
-        }
+    public  static HttpClient getHttpClient() {
+        return sHttpClient;
     }
 }
 
