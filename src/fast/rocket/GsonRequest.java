@@ -1,7 +1,6 @@
 package fast.rocket;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -42,10 +41,6 @@ public class GsonRequest<T> extends Request<T> {
 
 	@Override
 	public Map<String, String> getHeaders() throws AuthFailureError {
-//		if(headers == null) {
-//			headers = new HashMap<String, String>();
-//		}
-//		headers.put("Connection", "close");
 		return headers != null ? headers : super.getHeaders();
 	}
 	

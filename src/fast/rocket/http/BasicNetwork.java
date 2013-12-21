@@ -136,8 +136,6 @@ public class BasicNetwork implements Network {
                 } else {
                     throw new NetworkError(networkResponse);
                 }
-            } finally {
-            	HttpClientHelper.getHttpClient().getConnectionManager().closeExpiredConnections();
             }
         }
     }
@@ -197,7 +195,8 @@ public class BasicNetwork implements Network {
     }
 
     /** Reads the contents of HttpEntity into a byte[]. */
-    private byte[] entityToBytes(HttpEntity entity) throws IOException, ServerError {
+    @SuppressWarnings("deprecation")
+	private byte[] entityToBytes(HttpEntity entity) throws IOException, ServerError {
         PoolingByteArrayOutputStream bytes =
                 new PoolingByteArrayOutputStream(mPool, (int) entity.getContentLength());
         byte[] buffer = null;

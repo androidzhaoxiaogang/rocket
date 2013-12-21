@@ -37,8 +37,14 @@ public class HttpClientHelper {
     
     
     private static DefaultHttpClient sHttpClient = null;
-    static {
-        final HttpParams httpParams = new BasicHttpParams();
+
+    /**
+     * Gets the http client which supporting for both http and https protocols.
+     *
+     * @return the http client
+     */
+    public  static HttpClient getHttpClient(String userAgent) {
+    	final HttpParams httpParams = new BasicHttpParams();
         //ConnManagerParams.setTimeout(httpParams, 1000);
         //ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(10));
         //ConnManagerParams.setMaxTotalConnections(httpParams, DEFAULT_MAX_CONNECTIONS);
@@ -91,31 +97,6 @@ public class HttpClientHelper {
         manager.setDefaultMaxPerRoute(15);
         sHttpClient = new DefaultHttpClient(manager, httpParams);
         HttpProtocolParams.setUseExpectContinue(httpParams, false);
-//        HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
-//
-//            @Override
-//            public boolean retryRequest(IOException arg0, int arg1, HttpContext arg2) {
-//                // retry a max of 5 times
-//                if (arg1 >= 3) {
-//                    return false;
-//                }
-//                if (arg0 instanceof ch.boye.httpclientandroidlib.NoHttpResponseException) {
-//                    return true;
-//                } else if (arg0 instanceof ch.boye.httpclientandroidlib.client.ClientProtocolException) {
-//                    return true;
-//                }
-//                return false;
-//            }
-//        };
-//        sHttpClient.setHttpRequestRetryHandler(retryHandler);
-    }
-
-    /**
-     * Gets the http client which supporting for both http and https protocols.
-     *
-     * @return the http client
-     */
-    public  static HttpClient getHttpClient() {
         return sHttpClient;
     }
 }

@@ -2,8 +2,6 @@ package fast.rocket;
 
 import java.io.File;
 
-import com.android.rocket.R;
-
 import fast.rocket.cache.*;
 import fast.rocket.config.CacheviewRequestBuilder;
 import fast.rocket.config.ImageviewRequestBuilder;
@@ -12,10 +10,8 @@ import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientHelper;
 import fast.rocket.http.HttpClientStack;
 import fast.rocket.http.HttpStack;
-import fast.rocket.http.HurlStack;
 import fast.rocket.http.Network;
 import fast.rocket.http.OkHttpStack;
-import fast.rocket.utils.RocketUtils;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -117,15 +113,13 @@ public class Rocket {
         }
 
         if (stack == null) {
-//            if (Build.VERSION.SDK_INT >= 9) {
-//            	stack = new OkHttpStack();
-//            } else {
-//                // Prior to Gingerbread, HttpUrlConnection was unreliable.
-//                // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-//                
-//            }
-        	//stack = new HttpClientStack(HttpClientHelper.getHttpClient());
-        	stack = new OkHttpStack();
+            if (Build.VERSION.SDK_INT >= 9) {
+            	stack = new OkHttpStack();
+            } else {
+                // Prior to Gingerbread, HttpUrlConnection was unreliable.
+                // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+            	stack = new HttpClientStack(HttpClientHelper.getHttpClient(userAgent));
+            }
         }
 
         network = new BasicNetwork(stack);
