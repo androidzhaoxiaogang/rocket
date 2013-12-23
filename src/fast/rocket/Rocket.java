@@ -11,12 +11,10 @@ import fast.rocket.http.HttpClientHelper;
 import fast.rocket.http.HttpClientStack;
 import fast.rocket.http.HttpStack;
 import fast.rocket.http.Network;
-import fast.rocket.http.OkHttpStack;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Looper;
 import android.widget.ImageView;
@@ -112,14 +110,8 @@ public class Rocket {
         } catch (NameNotFoundException e) {
         }
 
-        if (stack == null) {
-            if (Build.VERSION.SDK_INT >= 9) {
-            	stack = new OkHttpStack();
-            } else {
-                // Prior to Gingerbread, HttpUrlConnection was unreliable.
-                // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-            	stack = new HttpClientStack(HttpClientHelper.getHttpClient(userAgent));
-            }
+        if (stack == null) {	
+        	stack = new HttpClientStack(HttpClientHelper.getHttpClient(userAgent));
         }
 
         network = new BasicNetwork(stack);
