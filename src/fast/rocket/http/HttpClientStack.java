@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.NameValuePair;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.methods.HttpDelete;
@@ -75,7 +74,7 @@ public class HttpClientStack implements HttpStack {
     }
 
     @Override
-    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         HttpUriRequest httpRequest = createHttpRequest(request, additionalHeaders);
         addHeaders(httpRequest, additionalHeaders);
@@ -91,7 +90,8 @@ public class HttpClientStack implements HttpStack {
         if (request.isCookieEnabled()) {
         	setCookie(mClient);
         }
-        return mClient.execute(httpRequest);
+        
+        return new WrappedResponse(mClient.execute(httpRequest), httpRequest);
     }
 
     /**

@@ -18,12 +18,15 @@ import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import ch.boye.httpclientandroidlib.Header;
 import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.ProtocolVersion;
 import ch.boye.httpclientandroidlib.StatusLine;
 import ch.boye.httpclientandroidlib.entity.BasicHttpEntity;
@@ -44,6 +47,29 @@ public class HurlStack implements HttpStack {
     private static final String HEADER_COOKIE = "Cookie";
     
     private String cookie;
+    
+    public class NullHostNameVerifier implements HostnameVerifier {
+
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    }
+    
+    private TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+    };
 
     /**
      * An interface for transforming URLs before use.
@@ -57,7 +83,7 @@ public class HurlStack implements HttpStack {
     }
 
     private final UrlRewriter mUrlRewriter;
-    private final SSLSocketFactory mSslSocketFactory;
+    //private final SSLSocketFactory mSslSocketFactory;
 
     public HurlStack() {
         this(null);
@@ -67,20 +93,20 @@ public class HurlStack implements HttpStack {
      * @param urlRewriter Rewriter to use for request URLs
      */
     public HurlStack(UrlRewriter urlRewriter) {
-        this(urlRewriter, null);
+    	mUrlRewriter = urlRewriter;
     }
 
     /**
      * @param urlRewriter Rewriter to use for request URLs
      * @param sslSocketFactory SSL factory to use for HTTPS connections
      */
-    public HurlStack(UrlRewriter urlRewriter, SSLSocketFactory sslSocketFactory) {
-        mUrlRewriter = urlRewriter;
-        mSslSocketFactory = sslSocketFactory;
-    }
+//    public HurlStack(UrlRewriter urlRewriter) {
+//        mUrlRewriter = urlRewriter;
+//        mSslSocketFactory = sslSocketFactory;
+//    }
 
     @Override
-    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         String url = request.getUrl();
         HashMap<String, String> map = new HashMap<String, String>();
@@ -124,7 +150,8 @@ public class HurlStack implements HttpStack {
             }
         }
         
-        return response;
+        //return response;
+        return new WrappedResponse(response, connection);
     }
 
     /**
@@ -164,14 +191,26 @@ public class HurlStack implements HttpStack {
         HttpURLConnection connection = createConnection(url);
 
         int timeoutMs = request.getTimeoutMs();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setUseCaches(false);
         connection.setConnectTimeout(DEFAULT_TIMEOUT_MS);
         connection.setReadTimeout(timeoutMs);
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestProperty("Connection", "Keep-Alive");
+        connection.setRequestProperty("Charset", "UTF-8");
 
         // use caller-provided custom SslSocketFactory, if any, for HTTPS
-        if ("https".equals(url.getProtocol()) && mSslSocketFactory != null) {
-            ((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
+        if ("https".equals(url.getProtocol())) {
+            //((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
+            HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+			try {
+				SSLContext sc = SSLContext.getInstance("SSL");
+				sc.init(null, trustAllCerts, new java.security.SecureRandom());
+				HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			} catch (Exception e) {
+			}
         }
 
         return connection;

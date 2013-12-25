@@ -27,14 +27,15 @@ import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
 public class HttpClientHelper {
     
     /** The Constant DEFAULT_MAX_CONNECTIONS. */
-    private static final int DEFAULT_MAX_CONNECTIONS = 30;
+    private static final int DEFAULT_MAX_CONNECTIONS = 60;
+    
+    private static final int DEFAULT_MAX_PERROUTE = 20;
     
     /** The Constant DEFAULT_SOCKET_TIMEOUT. */
     private static final int DEFAULT_SOCKET_TIMEOUT = 20 * 1000;
     
     /** The Constant DEFAULT_SOCKET_BUFFER_SIZE. */
     private static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-    
     
     private static DefaultHttpClient sHttpClient = null;
 
@@ -43,12 +44,8 @@ public class HttpClientHelper {
      *
      * @return the http client
      */
-    public  static HttpClient getHttpClient(String userAgent) {
+	public  static HttpClient getHttpClient(String userAgent) {
     	final HttpParams httpParams = new BasicHttpParams();
-        //ConnManagerParams.setTimeout(httpParams, 1000);
-        //ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(10));
-        //ConnManagerParams.setMaxTotalConnections(httpParams, DEFAULT_MAX_CONNECTIONS);
-
         HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(httpParams, "UTF-8");
         HttpConnectionParams.setStaleCheckingEnabled(httpParams, false);
@@ -87,14 +84,14 @@ public class HttpClientHelper {
             } catch (KeyManagementException e) {
             }
             SSLSocketFactory ssf = new SSLSocketFactory(sslContext,SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            schemeRegistry.register(new Scheme("https", 8443, ssf));
+            schemeRegistry.register(new Scheme("https", 7443, ssf));
         } catch (Exception ex) {
             // do nothing, just keep not crash
         }
 
         PoolingClientConnectionManager manager = new PoolingClientConnectionManager(schemeRegistry);
         manager.setMaxTotal(DEFAULT_MAX_CONNECTIONS);
-        manager.setDefaultMaxPerRoute(15);
+        manager.setDefaultMaxPerRoute(DEFAULT_MAX_PERROUTE);
         sHttpClient = new DefaultHttpClient(manager, httpParams);
         HttpProtocolParams.setUseExpectContinue(httpParams, false);
         return sHttpClient;
