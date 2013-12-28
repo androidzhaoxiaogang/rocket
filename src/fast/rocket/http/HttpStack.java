@@ -9,6 +9,8 @@ import fast.rocket.error.AuthFailureError;
 import java.io.IOException;
 import java.util.Map;
 
+import ch.boye.httpclientandroidlib.HttpResponse;
+
 /**
  * An HTTP stack abstraction.
  */
@@ -24,7 +26,7 @@ public interface HttpStack {
      *         {@link Request#getHeaders()}
      * @return the HTTP response
      */
-    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
         throws IOException, AuthFailureError;
 
 }

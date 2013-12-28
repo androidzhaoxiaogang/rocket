@@ -27,6 +27,7 @@ import javax.net.ssl.X509TrustManager;
 
 import ch.boye.httpclientandroidlib.Header;
 import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.ProtocolVersion;
 import ch.boye.httpclientandroidlib.StatusLine;
 import ch.boye.httpclientandroidlib.entity.BasicHttpEntity;
@@ -106,7 +107,7 @@ public class HurlStack implements HttpStack {
 //    }
 
     @Override
-    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         String url = request.getUrl();
         HashMap<String, String> map = new HashMap<String, String>();
@@ -151,7 +152,7 @@ public class HurlStack implements HttpStack {
         }
         
         //return response;
-        return new WrappedResponse(response, connection);
+        return response;
     }
 
     /**
