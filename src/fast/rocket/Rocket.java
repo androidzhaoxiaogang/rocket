@@ -67,10 +67,10 @@ public class Rocket {
     
     /**
      * Create a CacheImageView image request builder
-     * @param CacheImageView
+     * @param NetworkCacheView
      * @return
      */
-    public static CacheviewRequestBuilder with(CacheImageView imageView) {
+    public static CacheviewRequestBuilder with(NetworkCacheView imageView) {
     	Rocket rocket = getDefault(imageView.getContext());
         return rocket.build(imageView);
     }
@@ -215,10 +215,10 @@ public class Rocket {
     /**
      * Create a cache image request builder that can be used to 
      * build an network image request
-     * @param CacheImageView
+     * @param NetworkCacheView
      * @return
      */
-    public CacheviewRequestBuilder build(CacheImageView imageView) {
+    public CacheviewRequestBuilder build(NetworkCacheView imageView) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread())
             throw new IllegalStateException("must be called from UI thread");
         final CacheviewRequestBuilder imageBuilder = new CacheviewRequestBuilder();

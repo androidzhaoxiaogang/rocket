@@ -20,7 +20,7 @@ import android.widget.ImageView;
  * Handles fetching an image from a URL as well as the life-cycle of the
  * associated request.
  */
-public class CacheImageView extends ImageView {
+public class NetworkCacheView extends ImageView {
 	
 	private boolean skipDiskCache;
 	
@@ -65,25 +65,25 @@ public class CacheImageView extends ImageView {
     
     private ImageCallback callback;
 
-    public CacheImageView(Context context) {
+    public NetworkCacheView(Context context) {
         this(context, null);
     }
 
-    public CacheImageView(Context context, AttributeSet attrs) {
+    public NetworkCacheView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CacheImageView(Context context, AttributeSet attrs, int defStyle) {
+    public NetworkCacheView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     /**
      * Sets URL of the image that should be loaded into this view. Note that calling this will
      * immediately either set the cached image (if available) or the default image specified by
-     * {@link CacheImageView#setDefaultImageResId(int)} on the view.
+     * {@link NetworkCacheView#setDefaultImageResId(int)} on the view.
      *
-     * NOTE: If applicable, {@link CacheImageView#setDefaultImageResId(int)} and
-     * {@link CacheImageView#setErrorImageResId(int)} should be called prior to calling
+     * NOTE: If applicable, {@link NetworkCacheView#setDefaultImageResId(int)} and
+     * {@link NetworkCacheView#setErrorImageResId(int)} should be called prior to calling
      * this function.
      *
      * @param url The URL that should be loaded into this ImageView.
@@ -242,7 +242,7 @@ public class CacheImageView extends ImageView {
                             if(callback != null) {
             					callback.onComplete(null, response.getBitmap());
             				}else {
-            					RocketUtils.loadAnimation(CacheImageView.this, 
+            					RocketUtils.loadAnimation(NetworkCacheView.this, 
             							inAnimation, inAnimationResource);
             				}
                         } else if (mDefaultImageId != 0) {

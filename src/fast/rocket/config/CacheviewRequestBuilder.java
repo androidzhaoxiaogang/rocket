@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference;
 
 import fast.rocket.Request.Method;
 import fast.rocket.Rocket;
-import fast.rocket.cache.CacheImageView;
+import fast.rocket.cache.NetworkCacheView;
 import fast.rocket.cache.ImageLoader;
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.utils.RocketUtils;
@@ -16,7 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 
 /**
- * The Class CacheviewRequestBuilder for the {@link CacheImageView} configuration.
+ * The Class CacheviewRequestBuilder for the {@link NetworkCacheView} configuration.
  */
 public class CacheviewRequestBuilder implements LaunchBuilder{
 	
@@ -57,7 +57,7 @@ public class CacheviewRequestBuilder implements LaunchBuilder{
     private int resizeHeight = 0;
 
 	/** The image view ref. */
-	private WeakReference<CacheImageView> imageViewRef;
+	private WeakReference<NetworkCacheView> imageViewRef;
 	
 	/** The callback for image loading completed. */
 	private ImageCallback callback;
@@ -68,8 +68,8 @@ public class CacheviewRequestBuilder implements LaunchBuilder{
 	 * @param imageView the image view
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder withImageView(CacheImageView imageView) {
-		imageViewRef = new WeakReference<CacheImageView>(imageView);
+	public CacheviewRequestBuilder withImageView(NetworkCacheView imageView) {
+		imageViewRef = new WeakReference<NetworkCacheView>(imageView);
 		return this;
 	}
 
@@ -226,7 +226,7 @@ public class CacheviewRequestBuilder implements LaunchBuilder{
 	 */
 	@Override
 	public void load(int method, String uri) {
-		final CacheImageView imageView = imageViewRef.get();
+		final NetworkCacheView imageView = imageViewRef.get();
 		final ImageLoader loader = rocket.getImageLoader();
 		
 		initCacheView(imageView, placeholderDrawable, placeholderResource,
@@ -251,7 +251,7 @@ public class CacheviewRequestBuilder implements LaunchBuilder{
 	 * @param in the in
 	 * @param animationResource the animation resource
 	 */
-	private void initCacheView(CacheImageView imageView, Drawable drawable,
+	private void initCacheView(NetworkCacheView imageView, Drawable drawable,
 			int resourceId, Drawable errDrawable, int errResourceId,
 			Animation in, int animationResource) {
 		if(resourceId != 0) {
