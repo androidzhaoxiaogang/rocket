@@ -70,7 +70,19 @@ public class Rocket {
      * @param NetworkCacheView
      * @return
      */
-    public static CacheviewRequestBuilder with(NetworkCacheView imageView) {
+    @SuppressWarnings("rawtypes")
+	public static CacheviewRequestBuilder with(NetworkCacheView imageView) {
+    	Rocket rocket = getDefault(imageView.getContext());
+        return rocket.build(imageView);
+    }
+    
+    /**
+     * Create a CacheImageView image request builder
+     * @param NetworkCacheView
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+	public static CacheviewRequestBuilder with(CircularCacheView imageView) {
     	Rocket rocket = getDefault(imageView.getContext());
         return rocket.build(imageView);
     }
@@ -218,10 +230,26 @@ public class Rocket {
      * @param NetworkCacheView
      * @return
      */
-    public CacheviewRequestBuilder build(NetworkCacheView imageView) {
+    public CacheviewRequestBuilder<NetworkCacheView> build(NetworkCacheView imageView) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread())
             throw new IllegalStateException("must be called from UI thread");
-        final CacheviewRequestBuilder imageBuilder = new CacheviewRequestBuilder();
+        final CacheviewRequestBuilder<NetworkCacheView> imageBuilder = 
+        		new CacheviewRequestBuilder<NetworkCacheView>();
+        imageBuilder.rocket = this;
+        return imageBuilder.withImageView(imageView);
+    }
+    
+    /**
+     * Create a cache image request builder that can be used to 
+     * build an network image request
+     * @param CircularCacheView
+     * @return
+     */
+    public CacheviewRequestBuilder<CircularCacheView> build(CircularCacheView imageView) {
+        if (Thread.currentThread() != Looper.getMainLooper().getThread())
+            throw new IllegalStateException("must be called from UI thread");
+        final CacheviewRequestBuilder<CircularCacheView> imageBuilder = 
+        		new CacheviewRequestBuilder<CircularCacheView>();
         imageBuilder.rocket = this;
         return imageBuilder.withImageView(imageView);
     }
