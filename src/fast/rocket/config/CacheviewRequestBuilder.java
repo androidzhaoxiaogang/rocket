@@ -246,26 +246,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 */
 	@Override
 	public void load(int method, String uri) {
-		final T imageView = imageViewRef.get();
-		final ImageLoader loader = rocket.getImageLoader();
-
-		if (imageView instanceof NetworkCacheView) {
-			initCacheView(imageView, placeholderDrawable, placeholderResource,
-					errorDrawable, errorResource, inAnimation,
-					inAnimationResource);
-			((NetworkCacheView) imageView).setImageUrl(uri, loader,
-					resizeWidth, resizeHeight, skipDiskCache, callback);
-		} else if (imageView instanceof CircularCacheView) {
-			initCacheView(imageView, placeholderDrawable, placeholderResource,
-					errorDrawable, errorResource, inAnimation,
-					inAnimationResource);
-			((CircularCacheView) imageView).setImageUrl(uri, loader,
-					resizeWidth, resizeHeight, skipDiskCache, callback);
-		}
-
-		// loading animation
-		RocketUtils.loadAnimation(imageView, loadAnimation,
-				loadAnimationResource);
+		initCacheView(uri);		
 	}
 
 	// **************************************private
@@ -288,61 +269,47 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 * @param animationResource
 	 *            the animation resource
 	 */
-	private void initCacheView(T imageView, Drawable drawable, int resourceId,
-			Drawable errDrawable, int errResourceId, Animation in,
-			int animationResource) {
+	private void initCacheView(String uri) {
+		final T imageView = imageViewRef.get();
+		final ImageLoader loader = rocket.getImageLoader();
+		
 		if (imageView instanceof NetworkCacheView) {
-			if (resourceId != 0) {
-				((NetworkCacheView) imageView).setDefaultImageResId(resourceId);
-			}
-
-			if (drawable != null) {
-				((NetworkCacheView) imageView).setPlaceholder(drawable);
-			}
-
-			if (errResourceId != 0) {
-				((NetworkCacheView) imageView)
-						.setErrorImageResId(errResourceId);
-			}
-
-			if (errorDrawable != null) {
-				((NetworkCacheView) imageView).setErrorDrawable(errorDrawable);
-			}
-
-			if (inAnimation != null) {
-				((NetworkCacheView) imageView).setAnimateIn(inAnimation);
-			}
-
-			if (animationResource != 0) {
-				((NetworkCacheView) imageView).setAnimateIn(animationResource);
-			}
+			((NetworkCacheView) imageView).setImageUrl(uri, loader,
+					resizeWidth, resizeHeight, skipDiskCache, callback, config);
 		} else if (imageView instanceof CircularCacheView) {
-			if (resourceId != 0) {
-				((CircularCacheView) imageView)
-						.setDefaultImageResId(resourceId);
-			}
-
-			if (drawable != null) {
-				((CircularCacheView) imageView).setPlaceholder(drawable);
-			}
-
-			if (errResourceId != 0) {
-				((CircularCacheView) imageView)
-						.setErrorImageResId(errResourceId);
-			}
-
-			if (errorDrawable != null) {
-				((CircularCacheView) imageView).setErrorDrawable(errorDrawable);
-			}
-
-			if (inAnimation != null) {
-				((CircularCacheView) imageView).setAnimateIn(inAnimation);
-			}
-
-			if (animationResource != 0) {
-				((CircularCacheView) imageView).setAnimateIn(animationResource);
-			}
+			((CircularCacheView) imageView).setImageUrl(uri, loader, resizeWidth, 
+					resizeHeight, skipDiskCache, callback, config);
 		}
+		
+		RocketUtils.loadAnimation(imageView, inAnimation,
+				inAnimationResource);
 
 	}
+	
+	private ImageViewConfig config = new ImageViewConfig() {
+		
+		@Override
+		public void placeholder() {
+			if (placeholderResource != 0) {
+				imageViewRef.get().setImageResource(placeholderResource);
+            } else {
+            	imageViewRef.get().setImageDrawable(placeholderDrawable);
+            }
+		}
+		
+		@Override
+		public void error() {
+			if (errorResource != 0) {
+				imageViewRef.get().setImageResource(errorResource);
+			} else {
+				imageViewRef.get().setImageDrawable(errorDrawable);
+			}
+		}
+		
+		@Override
+		public void animateLoad() {
+			RocketUtils.loadAnimation(imageViewRef.get(), 
+					loadAnimation, loadAnimationResource);
+		}
+	};
 }
