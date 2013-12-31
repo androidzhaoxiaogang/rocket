@@ -9,6 +9,7 @@ import fast.rocket.Request.Method;
 import fast.rocket.Rocket;
 import fast.rocket.cache.CacheImageView;
 import fast.rocket.cache.ImageLoader;
+import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.utils.RocketUtils;
 
 import android.graphics.drawable.Drawable;
@@ -57,6 +58,9 @@ public class CacheviewRequestBuilder implements LaunchBuilder{
 
 	/** The image view ref. */
 	private WeakReference<CacheImageView> imageViewRef;
+	
+	/** The callback for image loading completed. */
+	private ImageCallback callback;
 
 	/**
 	 * With cache image view.
@@ -198,6 +202,16 @@ public class CacheviewRequestBuilder implements LaunchBuilder{
         resizeHeight = height;
         return this;
     }
+    
+    /**
+     * Register a callback for image loading completed.
+     *
+     * @param callback the callback
+     */
+    public CacheviewRequestBuilder invoke(ImageCallback callback) {
+    	this.callback = callback;
+    	return this;
+    }
 
 	/* (non-Javadoc)
 	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String)
@@ -218,7 +232,7 @@ public class CacheviewRequestBuilder implements LaunchBuilder{
 		initCacheView(imageView, placeholderDrawable, placeholderResource,
 				errorDrawable, errorResource, inAnimation, inAnimationResource);
 		imageView.setImageUrl(uri, loader, resizeWidth, resizeHeight,
-				skipDiskCache);
+				skipDiskCache, callback);
 
 		//loading animation
 		RocketUtils.loadAnimation(imageView, loadAnimation,

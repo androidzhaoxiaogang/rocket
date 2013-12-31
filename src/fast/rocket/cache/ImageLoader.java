@@ -233,7 +233,7 @@ public class ImageLoader {
      * @return the image container
      */
     public ImageContainer get(String requestUrl, final ImageListener listener, 
-    		int maxWidth, int maxHeight,final boolean skipDiskCache) {
+    		int maxWidth, int maxHeight,final boolean skipDiskCache, final ImageCallback callback) {
         return get(requestUrl, listener, maxWidth, maxHeight, false, skipDiskCache);
     }
     

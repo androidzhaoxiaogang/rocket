@@ -1,5 +1,6 @@
 package fast.rocket.cache;
 
+import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.error.RocketError;
@@ -61,6 +62,8 @@ public class CacheImageView extends ImageView {
 
     /** Current ImageContainer. (either in-flight or finished) */
     private ImageContainer mImageContainer;
+    
+    private ImageCallback callback;
 
     public CacheImageView(Context context) {
         this(context, null);
@@ -87,10 +90,11 @@ public class CacheImageView extends ImageView {
      * @param imageLoader ImageLoader that will be used to make the request.
      */
 	public void setImageUrl(String url, ImageLoader imageLoader, int maxWidth,
-			int maxHeight, boolean skipDiskCache) {
+			int maxHeight, boolean skipDiskCache, final ImageCallback callback) {
         this.mUrl = url;
         this.mImageLoader = imageLoader;
         this.skipDiskCache = skipDiskCache;
+        this.callback = callback;
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
     }
@@ -211,6 +215,10 @@ public class CacheImageView extends ImageView {
                         } else {
                         	setImageDrawable(errorDrawable);
                         }
+                        
+                        if(callback != null) {
+        					callback.onComplete(error, null);
+        				}
                     }
 
                     @Override
@@ -231,15 +239,19 @@ public class CacheImageView extends ImageView {
 
                         if (response.getBitmap() != null) {
                             setImageBitmap(response.getBitmap());
-                            RocketUtils.loadAnimation(CacheImageView.this, 
-                            		inAnimation, inAnimationResource);
+                            if(callback != null) {
+            					callback.onComplete(null, response.getBitmap());
+            				}else {
+            					RocketUtils.loadAnimation(CacheImageView.this, 
+            							inAnimation, inAnimationResource);
+            				}
                         } else if (mDefaultImageId != 0) {
                             setImageResource(mDefaultImageId);
                         } else {
                         	setImageDrawable(placeholderDrawable);
                         }
                     }
-                }, maxWidth, maxHeight, skipDiskCache);
+                }, maxWidth, maxHeight, skipDiskCache, callback);
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
