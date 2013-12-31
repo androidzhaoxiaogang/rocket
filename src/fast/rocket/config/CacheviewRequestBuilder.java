@@ -286,7 +286,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 
 	}
 	
-	private ImageViewConfig config = new ImageViewConfig() {
+	private CacheViewConfig config = new CacheViewConfig() {
 		
 		@Override
 		public void placeholder() {

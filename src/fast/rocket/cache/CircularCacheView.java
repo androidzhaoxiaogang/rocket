@@ -3,7 +3,7 @@ package fast.rocket.cache;
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
-import fast.rocket.config.ImageViewConfig;
+import fast.rocket.config.CacheViewConfig;
 import fast.rocket.error.RocketError;
 import fast.rocket.utils.RocketUtils;
 import android.content.Context;
@@ -64,7 +64,7 @@ private boolean skipDiskCache;
     private ImageContainer mImageContainer;
     
     private ImageCallback callback;
-    private ImageViewConfig config;
+    private CacheViewConfig config;
     
     
 	private Bitmap bitmap;
@@ -149,7 +149,7 @@ private boolean skipDiskCache;
      * @param imageLoader ImageLoader that will be used to make the request.
      */
 	public void setImageUrl(String url, ImageLoader imageLoader, int maxWidth, int maxHeight, 
-			boolean skipDiskCache, final ImageCallback callback, ImageViewConfig config) {
+			boolean skipDiskCache, final ImageCallback callback, CacheViewConfig config) {
         this.mUrl = url;
         this.mImageLoader = imageLoader;
         this.skipDiskCache = skipDiskCache;

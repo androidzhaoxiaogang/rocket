@@ -1,7 +1,7 @@
 package fast.rocket.config;
 
 
-public interface ImageViewConfig {
+public interface CacheViewConfig {
 
     /**
      * Set a placeholder on the ImageView while the request is loading
