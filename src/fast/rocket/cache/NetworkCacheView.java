@@ -10,11 +10,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 
 /**
@@ -27,36 +25,12 @@ public class NetworkCacheView extends ImageView {
 	
     /** The URL of the network image to load */
     private String mUrl;
-
-    /**
-     * Resource ID of the image to be used as a placeholder until the network image is loaded.
-     */
-//    private int mDefaultImageId;
-//
-//    /**
-//     * Resource ID of the image to be used if the network response fails.
-//     */
-//    private int mErrorImageId;
-//    
-//    /** The in animation resource. */
-//    private int inAnimationResource;
 	
 	/** The max width. */
 	private int maxWidth;
 	
 	/** The max height. */
 	private int maxHeight;
-	
-	/** The placeholder drawable. */
-//	private Drawable placeholderDrawable;
-//	
-//	/** The error drawable. */
-//	private Drawable errorDrawable;
-//	
-//	/**
-//	 * The inAnimation。
-//	 */
-//	private Animation inAnimation;
 
     /** Local copy of the ImageLoader. */
     private ImageLoader mImageLoader;
@@ -102,71 +76,6 @@ public class NetworkCacheView extends ImageView {
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
     }
-
-//    /**
-//     * Sets the default image resource ID to be used for this view until the attempt to load it
-//     * completes.
-//     */
-//    public void setDefaultImageResId(int defaultImage) {
-//        mDefaultImageId = defaultImage;
-//    }
-//
-//    /**
-//     * Sets the error image resource ID to be used for this view in the event that the image
-//     * requested fails to load.
-//     */
-//    public void setErrorImageResId(int errorImage) {
-//        mErrorImageId = errorImage;
-//    }
-//    
-//    /**
-//	 * Placeholder.
-//	 *
-//	 * @param drawable the drawable
-//	 * @return the image request builder
-//	 */
-//	public void setPlaceholder(Drawable drawable) {
-//		if (mDefaultImageId != 0) {
-//			throw new IllegalStateException("Placeholder image already set.");
-//		}
-//		placeholderDrawable = drawable;
-//	}
-//	
-//	/**
-//	 * Error.
-//	 *
-//	 * @param drawable the drawable
-//	 * @return the image request builder
-//	 */
-//	public void setErrorDrawable(Drawable drawable) {
-//		if (drawable == null) {
-//			throw new IllegalArgumentException("Error image may not be null.");
-//		}
-//		if (mErrorImageId != 0) {
-//			throw new IllegalStateException("Error image already set.");
-//		}
-//		errorDrawable = drawable;
-//	}
-//
-//	/**
-//	 * Animate in.
-//	 *
-//	 * @param in the in
-//	 * @return 
-//	 */
-//	public void setAnimateIn(Animation in) {
-//		inAnimation = in;
-//	}
-//
-//	/**
-//	 * Animate in.
-//	 *
-//	 * @param animationResource the animation resource
-//	 * @return 
-//	 */
-//	public void setAnimateIn(int animationResource) {
-//		inAnimationResource = animationResource;
-//	}
 
     /**
      * Loads the image for the view if it isn't already loaded.
