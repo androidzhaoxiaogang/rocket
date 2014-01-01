@@ -7,11 +7,11 @@ import fast.rocket.config.CacheviewRequestBuilder;
 import fast.rocket.config.ImageviewRequestBuilder;
 import fast.rocket.config.JsonRequestBuilder;
 import fast.rocket.http.BasicNetwork;
-import fast.rocket.http.HttpClientHelper;
 import fast.rocket.http.HttpClientStack;
 import fast.rocket.http.HttpStack;
 import fast.rocket.http.HurlStack;
 import fast.rocket.http.Network;
+import fast.rocket.utils.AndroidHttpClient;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -125,17 +125,16 @@ public class Rocket {
         }
 
         
-        if (Build.VERSION.SDK_INT >= 9) {
-            stack = new HurlStack();
-        } else {
-            // Prior to Gingerbread, HttpUrlConnection was unreliable.
-            // See:
-            // http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-        	stack = new HttpClientStack(HttpClientHelper.getHttpClient(userAgent));
+        if (stack == null) {
+            if (Build.VERSION.SDK_INT >= 9) {
+                stack = new HurlStack();
+            } else {
+                // Prior to Gingerbread, HttpUrlConnection was unreliable.
+                // See:
+                // http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+                stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
+            }
         }
-//        if (stack == null) {	
-//        	stack = new HttpClientStack(HttpClientHelper.getHttpClient(userAgent));
-//        }
 
         network = new BasicNetwork(stack);
         cache = new DiskBasedCache(getDiskCacheDir(context, DEFAULT_CACHE_DIR));

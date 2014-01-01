@@ -1,11 +1,12 @@
 package fast.rocket.cache;
 
+import com.android.rocket.R;
+
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.config.CacheViewConfig;
 import fast.rocket.error.RocketError;
-import fast.rocket.utils.RocketUtils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -70,6 +71,11 @@ private boolean skipDiskCache;
 	}
 
 	private void setShader() {
+		BitmapDrawable drawable = (BitmapDrawable) getDrawable();
+		if(drawable != null) {
+			this.bitmap = drawable.getBitmap();
+		}
+		
 		if ((this.bitmap != null) && (this.width > 0) && (this.height > 0)) {
 			this.shader = new BitmapShader(Bitmap.createScaledBitmap(
 					this.bitmap, this.width, this.height, false),
@@ -85,27 +91,23 @@ private boolean skipDiskCache;
 		this.paint = new Paint();
 		this.paint.setAntiAlias(true);
 		this.paintBorder = new Paint();
-		this.paintBorder.setColor(localResources.getColor(2131034123));
+		this.paintBorder.setColor(localResources.getColor(R.color.paint_border));
 		this.paintBorder.setStyle(Paint.Style.STROKE);
 		this.paintBorder.setStrokeWidth(this.borderWidth);
 		this.paintBorder.setAntiAlias(true);
 	}
 
 	public void onDraw(Canvas paramCanvas) {
-		if (RocketUtils.hasHoneycomb()) {
+		BitmapDrawable drawable = (BitmapDrawable) getDrawable();
+		if (drawable == null) {
+			config.placeholder();
+		} else if ((drawable.getBitmap() == null)
+				|| (drawable.getBitmap().isRecycled())) {
+			config.placeholder();
+		}
+		try {
 			drawCircle(paramCanvas);
-		} else {
-			BitmapDrawable drawable = (BitmapDrawable) getDrawable();
-			if (drawable == null) {
-				config.placeholder();
-			} else if ((drawable.getBitmap() == null)
-					|| (drawable.getBitmap().isRecycled())) {
-				config.placeholder();
-			}
-			try {
-				drawCircle(paramCanvas);
-			} catch (RuntimeException localRuntimeException) {
-			}
+		} catch (RuntimeException localRuntimeException) {
 		}
 	}
 	

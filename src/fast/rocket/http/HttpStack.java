@@ -9,7 +9,7 @@ import fast.rocket.error.AuthFailureError;
 import java.io.IOException;
 import java.util.Map;
 
-import ch.boye.httpclientandroidlib.HttpResponse;
+import org.apache.http.HttpResponse;
 
 /**
  * An HTTP stack abstraction.

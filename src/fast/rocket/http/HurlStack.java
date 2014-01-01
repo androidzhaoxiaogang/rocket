@@ -25,15 +25,15 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import ch.boye.httpclientandroidlib.Header;
-import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.ProtocolVersion;
-import ch.boye.httpclientandroidlib.StatusLine;
-import ch.boye.httpclientandroidlib.entity.BasicHttpEntity;
-import ch.boye.httpclientandroidlib.message.BasicHeader;
-import ch.boye.httpclientandroidlib.message.BasicHttpResponse;
-import ch.boye.httpclientandroidlib.message.BasicStatusLine;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
 
 /**
  * An {@link HttpStack} based on {@link HttpURLConnection}.
@@ -47,16 +47,14 @@ public class HurlStack implements HttpStack {
     private static final String HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HEADER_COOKIE = "Cookie";
     
-    private String cookie;
-    
-    public class NullHostNameVerifier implements HostnameVerifier {
+    static class TrustHostNameVerifier implements HostnameVerifier {
 
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
     }
     
-    private TrustManager[] trustAllCerts = new TrustManager[]{
+    static TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -84,7 +82,8 @@ public class HurlStack implements HttpStack {
     }
 
     private final UrlRewriter mUrlRewriter;
-    //private final SSLSocketFactory mSslSocketFactory;
+    
+    private String cookie;
 
     public HurlStack() {
         this(null);
@@ -96,15 +95,6 @@ public class HurlStack implements HttpStack {
     public HurlStack(UrlRewriter urlRewriter) {
     	mUrlRewriter = urlRewriter;
     }
-
-    /**
-     * @param urlRewriter Rewriter to use for request URLs
-     * @param sslSocketFactory SSL factory to use for HTTPS connections
-     */
-//    public HurlStack(UrlRewriter urlRewriter) {
-//        mUrlRewriter = urlRewriter;
-//        mSslSocketFactory = sslSocketFactory;
-//    }
 
     @Override
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
@@ -203,9 +193,9 @@ public class HurlStack implements HttpStack {
         connection.setRequestProperty("Charset", "UTF-8");
 
         // use caller-provided custom SslSocketFactory, if any, for HTTPS
-        if ("https".equals(url.getProtocol())) {
+        if (null != null && "https".equals(url.getProtocol())) {
             //((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
-            HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+            HttpsURLConnection.setDefaultHostnameVerifier(new TrustHostNameVerifier());
 			try {
 				SSLContext sc = SSLContext.getInstance("SSL");
 				sc.init(null, trustAllCerts, new java.security.SecureRandom());

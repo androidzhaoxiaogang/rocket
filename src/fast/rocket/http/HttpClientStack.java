@@ -1,22 +1,22 @@
 
 package fast.rocket.http;
 
-//import org.apache.http.HttpEntity;
-//import org.apache.http.HttpResponse;
-//import org.apache.http.NameValuePair;
-//import org.apache.http.client.HttpClient;
-//import org.apache.http.client.methods.HttpDelete;
-//import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-//import org.apache.http.client.methods.HttpGet;
-//import org.apache.http.client.methods.HttpPost;
-//import org.apache.http.client.methods.HttpPut;
-//import org.apache.http.client.methods.HttpUriRequest;
-//import org.apache.http.cookie.Cookie;
-//import org.apache.http.entity.ByteArrayEntity;
-//import org.apache.http.impl.client.AbstractHttpClient;
-//import org.apache.http.message.BasicNameValuePair;
-//import org.apache.http.params.HttpConnectionParams;
-//import org.apache.http.params.HttpParams;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.text.TextUtils;
 
@@ -30,22 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.NameValuePair;
-import ch.boye.httpclientandroidlib.client.HttpClient;
-import ch.boye.httpclientandroidlib.client.methods.HttpDelete;
-import ch.boye.httpclientandroidlib.client.methods.HttpEntityEnclosingRequestBase;
-import ch.boye.httpclientandroidlib.client.methods.HttpGet;
-import ch.boye.httpclientandroidlib.client.methods.HttpPost;
-import ch.boye.httpclientandroidlib.client.methods.HttpPut;
-import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
-import ch.boye.httpclientandroidlib.cookie.Cookie;
-import ch.boye.httpclientandroidlib.entity.ByteArrayEntity;
-import ch.boye.httpclientandroidlib.impl.client.AbstractHttpClient;
-import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
-import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
-import ch.boye.httpclientandroidlib.params.HttpParams;
 
 /**
  * An HttpStack that performs request over an {@link HttpClient}.
@@ -83,7 +67,7 @@ public class HttpClientStack implements HttpStack {
         onPrepareRequest(httpRequest);
         HttpParams httpParams = httpRequest.getParams();
         int timeoutMs = request.getTimeoutMs();
-        // TODO: Reevaluate this connection timeout based on more wide-scale
+        // Reevaluate this connection timeout based on more wide-scale
         // data collection and possibly different for wifi vs. 3G.
         HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
         HttpConnectionParams.setSoTimeout(httpParams, timeoutMs);
