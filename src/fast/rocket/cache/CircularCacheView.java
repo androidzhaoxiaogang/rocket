@@ -194,7 +194,7 @@ private boolean skipDiskCache;
                         config.error();
                     	
                         if(callback != null) {
-        					callback.onComplete(error, null);
+        					callback.onComplete(error, CircularCacheView.this, null);
         				}
                     }
 
@@ -217,7 +217,9 @@ private boolean skipDiskCache;
                         if (response.getBitmap() != null) {
                             setImageBitmap(response.getBitmap());
                             if(callback != null) {
-            					callback.onComplete(null, response.getBitmap());
+								callback.onComplete(null,
+										CircularCacheView.this,
+										response.getBitmap());
             				}else {
             					config.animateLoad();
             				}
