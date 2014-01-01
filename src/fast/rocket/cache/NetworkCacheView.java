@@ -21,9 +21,10 @@ import android.widget.ImageView;
  */
 public class NetworkCacheView extends ImageView {
 	
+	/** The skip disk cache. */
 	private boolean skipDiskCache;
 	
-    /** The URL of the network image to load */
+    /** The URL of the network image to load. */
     private String mUrl;
 	
 	/** The max width. */
@@ -38,18 +39,38 @@ public class NetworkCacheView extends ImageView {
     /** Current ImageContainer. (either in-flight or finished) */
     private ImageContainer mImageContainer;
     
+    /** The callback. */
     private ImageCallback callback;
     
+    /** The config. */
     private CacheViewConfig config;
 
+    /**
+     * Instantiates a new network cache view.
+     *
+     * @param context the context
+     */
     public NetworkCacheView(Context context) {
         this(context, null);
     }
 
+    /**
+     * Instantiates a new network cache view.
+     *
+     * @param context the context
+     * @param attrs the attrs
+     */
     public NetworkCacheView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
+    /**
+     * Instantiates a new network cache view.
+     *
+     * @param context the context
+     * @param attrs the attrs
+     * @param defStyle the def style
+     */
     public NetworkCacheView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -57,14 +78,19 @@ public class NetworkCacheView extends ImageView {
     /**
      * Sets URL of the image that should be loaded into this view. Note that calling this will
      * immediately either set the cached image (if available) or the default image specified by
-     * {@link NetworkCacheView#setDefaultImageResId(int)} on the view.
-     *
-     * NOTE: If applicable, {@link NetworkCacheView#setDefaultImageResId(int)} and
-     * {@link NetworkCacheView#setErrorImageResId(int)} should be called prior to calling
-     * this function.
      *
      * @param url The URL that should be loaded into this ImageView.
      * @param imageLoader ImageLoader that will be used to make the request.
+     * @param maxWidth the max width
+     * @param maxHeight the max height
+     * @param skipDiskCache the skip disk cache
+     * @param callback the callback
+     * @param config the config
+     * {@link NetworkCacheView#setDefaultImageResId(int)} on the view.
+     * 
+     * NOTE: If applicable, {@link NetworkCacheView#setDefaultImageResId(int)} and
+     * {@link NetworkCacheView#setErrorImageResId(int)} should be called prior to calling
+     * this function.
      */
 	public void setImageUrl(String url, ImageLoader imageLoader, int maxWidth,int maxHeight, 
 			boolean skipDiskCache, final ImageCallback callback, CacheViewConfig config) {
@@ -165,6 +191,9 @@ public class NetworkCacheView extends ImageView {
         mImageContainer = newContainer;
     }
 
+    /* (non-Javadoc)
+     * @see android.view.View#onLayout(boolean, int, int, int, int)
+     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -173,8 +202,10 @@ public class NetworkCacheView extends ImageView {
     
     /**
      * Handle the OOM issue before 3.0, and to avoid the used the recycled bitmap
-     * runtime exception {@link  BitmapLruCache#entryRemoved(boolean , 
+     * runtime exception {@link  BitmapLruCache#entryRemoved(boolean ,
      * String , Bitmap , Bitmap )}.
+     *
+     * @param canvas the canvas
      */
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -195,6 +226,9 @@ public class NetworkCacheView extends ImageView {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.ImageView#onDetachedFromWindow()
+	 */
 	@Override
     protected void onDetachedFromWindow() {
         if (mImageContainer != null) {
@@ -208,6 +242,9 @@ public class NetworkCacheView extends ImageView {
         super.onDetachedFromWindow();
     }
 
+    /* (non-Javadoc)
+     * @see android.widget.ImageView#drawableStateChanged()
+     */
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();

@@ -31,6 +31,7 @@ public class Rocket {
 	/** The request queue. */
 	private RequestQueue requestQueue;
 	
+	/** The image loader. */
 	private ImageLoader imageLoader;
 	
 	/** The Rocket instance. */
@@ -56,19 +57,21 @@ public class Rocket {
 	}
 	
 	/**
-     * Create a ImageView image request builder
-     * @param imageView
-     * @return
-     */
+	 * Create a ImageView image request builder.
+	 *
+	 * @param imageView the image view
+	 * @return the imageview request builder
+	 */
     public static ImageviewRequestBuilder with(ImageView imageView) {
     	Rocket rocket = getDefault(imageView.getContext());
         return rocket.build(imageView);
     }
     
     /**
-     * Create a CacheImageView image request builder
-     * @param NetworkCacheView
-     * @return
+     * Create a CacheImageView image request builder.
+     *
+     * @param imageView the image view
+     * @return the cacheview request builder
      */
     @SuppressWarnings("rawtypes")
 	public static CacheviewRequestBuilder with(NetworkCacheView imageView) {
@@ -77,9 +80,10 @@ public class Rocket {
     }
     
     /**
-     * Create a CacheImageView image request builder
-     * @param NetworkCacheView
-     * @return
+     * Create a CacheImageView image request builder.
+     *
+     * @param imageView the image view
+     * @return the cacheview request builder
      */
     @SuppressWarnings("rawtypes")
 	public static CacheviewRequestBuilder with(CircularCacheView imageView) {
@@ -123,7 +127,6 @@ public class Rocket {
             userAgent = packageName + "/" + info.versionCode;
         } catch (NameNotFoundException e) {
         }
-
         
         if (stack == null) {
             if (Build.VERSION.SDK_INT >= 9) {
@@ -209,10 +212,10 @@ public class Rocket {
     }
     
     /**
-     * Create a image request builder that can be used to 
-     * build an network image request
-     * 
-     * @param imageView
+     * Create a image request builder that can be used to
+     * build an network image request.
+     *
+     * @param imageView the image view
      * @return ImageviewRequestBuilder
      */
     public ImageviewRequestBuilder build(ImageView imageView) {
@@ -224,10 +227,11 @@ public class Rocket {
     }
     
     /**
-     * Create a cache image request builder that can be used to 
-     * build an network image request
-     * @param NetworkCacheView
-     * @return
+     * Create a cache image request builder that can be used to
+     * build an network image request.
+     *
+     * @param imageView the image view
+     * @return the cacheview request builder
      */
     public CacheviewRequestBuilder<NetworkCacheView> build(NetworkCacheView imageView) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread())
@@ -239,10 +243,11 @@ public class Rocket {
     }
     
     /**
-     * Create a cache image request builder that can be used to 
-     * build an network image request
-     * @param CircularCacheView
-     * @return
+     * Create a cache image request builder that can be used to
+     * build an network image request.
+     *
+     * @param imageView the image view
+     * @return the cacheview request builder
      */
     public CacheviewRequestBuilder<CircularCacheView> build(CircularCacheView imageView) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread())

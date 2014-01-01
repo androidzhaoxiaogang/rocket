@@ -21,10 +21,15 @@ import android.util.TypedValue;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
+/**
+ * The Class CircularCacheView.
+ */
 public class CircularCacheView extends ImageView {
+
+/** The skip disk cache. */
 private boolean skipDiskCache;
 	
-    /** The URL of the network image to load */
+    /** The URL of the network image to load. */
     private String mUrl;
 
 	/** The max width. */
@@ -39,37 +44,78 @@ private boolean skipDiskCache;
     /** Current ImageContainer. (either in-flight or finished) */
     private ImageContainer mImageContainer;
     
+    /** The callback. */
     private ImageCallback callback;
+    
+    /** The config. */
     private CacheViewConfig config;
     
     
+	/** The bitmap. */
 	private Bitmap bitmap;
+	
+	/** The border width. */
 	private float borderWidth = 2.0F;
+	
+	/** The center. */
 	private float center;
+	
+	/** The draw border. */
 	private boolean drawBorder = true;
+	
+	/** The height. */
 	private int height;
+	
+	/** The paint. */
 	private Paint paint;
+	
+	/** The paint border. */
 	private Paint paintBorder;
+	
+	/** The shader. */
 	private BitmapShader shader;
+	
+	/** The width. */
 	private int width;
 
+	/**
+	 * Instantiates a new circular cache view.
+	 *
+	 * @param paramContext the param context
+	 */
 	public CircularCacheView(Context paramContext) {
 		super(paramContext);
 		setup();
 	}
 
+	/**
+	 * Instantiates a new circular cache view.
+	 *
+	 * @param paramContext the param context
+	 * @param paramAttributeSet the param attribute set
+	 */
 	public CircularCacheView(Context paramContext,
 			AttributeSet paramAttributeSet) {
 		super(paramContext, paramAttributeSet);
 		setup();
 	}
 
+	/**
+	 * Instantiates a new circular cache view.
+	 *
+	 * @param paramContext the param context
+	 * @param paramAttributeSet the param attribute set
+	 * @param paramInt the param int
+	 */
 	public CircularCacheView(Context paramContext,
 			AttributeSet paramAttributeSet, int paramInt) {
 		super(paramContext, paramAttributeSet, paramInt);
 		setup();
 	}
 
+	/**
+	 * Sets the shader.
+	 */
 	private void setShader() {
 		BitmapDrawable drawable = (BitmapDrawable) getDrawable();
 		if(drawable != null) {
@@ -84,6 +130,9 @@ private boolean skipDiskCache;
 		}
 	}
 
+	/**
+	 * Setup.
+	 */
 	private void setup() {
 		Resources localResources = getResources();
 		this.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
@@ -97,6 +146,9 @@ private boolean skipDiskCache;
 		this.paintBorder.setAntiAlias(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.ImageView#onDraw(android.graphics.Canvas)
+	 */
 	public void onDraw(Canvas paramCanvas) {
 		BitmapDrawable drawable = (BitmapDrawable) getDrawable();
 		if (drawable == null) {
@@ -112,17 +164,22 @@ private boolean skipDiskCache;
 	}
 	
 	/**
-     * Sets URL of the image that should be loaded into this view. Note that calling this will
-     * immediately either set the cached image (if available) or the default image specified by
-     * {@link NetworkCacheView#setDefaultImageResId(int)} on the view.
-     *
-     * NOTE: If applicable, {@link NetworkCacheView#setDefaultImageResId(int)} and
-     * {@link NetworkCacheView#setErrorImageResId(int)} should be called prior to calling
-     * this function.
-     *
-     * @param url The URL that should be loaded into this ImageView.
-     * @param imageLoader ImageLoader that will be used to make the request.
-     */
+	 * Sets URL of the image that should be loaded into this view. Note that calling this will
+	 * immediately either set the cached image (if available) or the default image specified by
+	 *
+	 * @param url The URL that should be loaded into this ImageView.
+	 * @param imageLoader ImageLoader that will be used to make the request.
+	 * @param maxWidth the max width
+	 * @param maxHeight the max height
+	 * @param skipDiskCache the skip disk cache
+	 * @param callback the callback
+	 * @param config the config
+	 * {@link NetworkCacheView#setDefaultImageResId(int)} on the view.
+	 * 
+	 * NOTE: If applicable, {@link NetworkCacheView#setDefaultImageResId(int)} and
+	 * {@link NetworkCacheView#setErrorImageResId(int)} should be called prior to calling
+	 * this function.
+	 */
 	public void setImageUrl(String url, ImageLoader imageLoader, int maxWidth, int maxHeight, 
 			boolean skipDiskCache, final ImageCallback callback, CacheViewConfig config) {
         this.mUrl = url;
@@ -134,6 +191,11 @@ private boolean skipDiskCache;
         loadImageIfNecessary(false);
     }
 	
+	/**
+	 * Draw circle.
+	 *
+	 * @param paramCanvas the param canvas
+	 */
 	private void drawCircle(Canvas paramCanvas) {
 		if ((this.bitmap != null) && (this.shader != null)) {
 			float f1 = this.center - 2 * (int) this.borderWidth;
@@ -233,12 +295,18 @@ private boolean skipDiskCache;
         mImageContainer = newContainer;
     }
 
+    /* (non-Javadoc)
+     * @see android.view.View#onLayout(boolean, int, int, int, int)
+     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         loadImageIfNecessary(true);
     }
 
+	/* (non-Javadoc)
+	 * @see android.view.View#onSizeChanged(int, int, int, int)
+	 */
 	protected void onSizeChanged(int paramInt1, int paramInt2, int paramInt3,
 			int paramInt4) {
 		super.onSizeChanged(paramInt1, paramInt2, paramInt3, paramInt4);
@@ -248,11 +316,19 @@ private boolean skipDiskCache;
 		setShader();
 	}
 
+	/**
+	 * Sets the draw border.
+	 *
+	 * @param paramBoolean the new draw border
+	 */
 	public void setDrawBorder(boolean paramBoolean) {
 		this.drawBorder = paramBoolean;
 		invalidate();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.ImageView#setImageDrawable(android.graphics.drawable.Drawable)
+	 */
 	public void setImageDrawable(Drawable paramDrawable) {
 		super.setImageDrawable(paramDrawable);
 		if ((paramDrawable instanceof BitmapDrawable)) {

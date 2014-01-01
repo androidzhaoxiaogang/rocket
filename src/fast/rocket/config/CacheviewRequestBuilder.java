@@ -20,6 +20,8 @@ import android.widget.ImageView;
 /**
  * The Class CacheviewRequestBuilder for the {@link NetworkCacheView}
  * configuration.
+ *
+ * @param <T> the generic type
  */
 public class CacheviewRequestBuilder<T extends ImageView> implements
 		LaunchBuilder {
@@ -220,9 +222,9 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 
 	/**
 	 * Register a callback for image loading completed.
-	 * 
-	 * @param callback
-	 *            the callback
+	 *
+	 * @param callback the callback
+	 * @return the cacheview request builder
 	 */
 	public CacheviewRequestBuilder<T> invoke(ImageCallback callback) {
 		this.callback = callback;
@@ -253,21 +255,8 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	// apis***************************************//
 	/**
 	 * Inits the cache view.
-	 * 
-	 * @param imageView
-	 *            the image view
-	 * @param drawable
-	 *            the drawable
-	 * @param resourceId
-	 *            the resource id
-	 * @param errDrawable
-	 *            the err drawable
-	 * @param errResourceId
-	 *            the err resource id
-	 * @param in
-	 *            the in
-	 * @param animationResource
-	 *            the animation resource
+	 *
+	 * @param uri the uri
 	 */
 	private void initCacheView(String uri) {
 		final T imageView = imageViewRef.get();
@@ -286,6 +275,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 
 	}
 	
+	/** The config. */
 	private CacheViewConfig config = new CacheViewConfig() {
 		
 		@Override
