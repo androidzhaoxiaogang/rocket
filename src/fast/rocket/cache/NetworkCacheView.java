@@ -97,6 +97,8 @@ public class NetworkCacheView extends ImageView {
         this.mUrl = url;
         this.mImageLoader = imageLoader;
         this.skipDiskCache = skipDiskCache;
+        this.maxHeight = maxHeight;
+        this.maxWidth = maxWidth;
         this.callback = callback;
         this.config = config;
         // The URL has potentially changed. See if we need to load it.

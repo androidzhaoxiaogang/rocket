@@ -39,10 +39,6 @@ import org.apache.http.message.BasicStatusLine;
  * An {@link HttpStack} based on {@link HttpURLConnection}.
  */
 public class HurlStack implements HttpStack {
-
-	/** The default socket timeout in milliseconds */
-    public static final int DEFAULT_TIMEOUT_MS = 10000;
-    
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static final String HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HEADER_COOKIE = "Cookie";
@@ -182,18 +178,13 @@ public class HurlStack implements HttpStack {
         HttpURLConnection connection = createConnection(url);
 
         int timeoutMs = request.getTimeoutMs();
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
-        connection.setUseCaches(false);
-        connection.setConnectTimeout(DEFAULT_TIMEOUT_MS);
+        connection.setConnectTimeout(timeoutMs);
         connection.setReadTimeout(timeoutMs);
-        connection.setInstanceFollowRedirects(false);
-        connection.setRequestProperty("Connection", "Keep-Alive");
-        connection.setRequestProperty("Charset", "UTF-8");
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
 
         // use caller-provided custom SslSocketFactory, if any, for HTTPS
-        if (null != null && "https".equals(url.getProtocol())) {
+        if (null != url && "https".equals(url.getProtocol())) {
             //((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
             HttpsURLConnection.setDefaultHostnameVerifier(new TrustHostNameVerifier());
 			try {
