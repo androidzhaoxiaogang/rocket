@@ -154,7 +154,7 @@ public class NetworkCacheView extends ImageView {
                         config.error();
                         
                         if(callback != null) {
-							callback.onComplete(error, NetworkCacheView.this, null);
+							callback.onComplete(NetworkCacheView.this, null, false);
         				}
                     }
 
@@ -177,9 +177,8 @@ public class NetworkCacheView extends ImageView {
                         if (response.getBitmap() != null) {
                             setImageBitmap(response.getBitmap());
                             if(callback != null) {
-								callback.onComplete(null,
-										NetworkCacheView.this,
-										response.getBitmap());
+								callback.onComplete(NetworkCacheView.this,
+										response.getBitmap(), isImmediate);
             				}else {
             					config.animateLoad();
             				}

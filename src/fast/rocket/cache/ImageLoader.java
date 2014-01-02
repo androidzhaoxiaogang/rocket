@@ -94,7 +94,7 @@ public class ImageLoader {
 	     * @param error the error
 	     * @param result the result
 	     */
-	    public void onComplete(RocketError error, ImageView view, Bitmap result);
+	    public void onComplete(ImageView view, Bitmap result, boolean isImmediate);
     }
 
     /**
@@ -136,7 +136,7 @@ public class ImageLoader {
 				}
 				
 				if(callback != null) {
-					callback.onComplete(error, view, null);
+					callback.onComplete(view, null, false);
 				}
 			}
 
@@ -152,7 +152,7 @@ public class ImageLoader {
 				}
 				
 				if(callback != null) {
-					callback.onComplete(null, view, response.getBitmap());
+					callback.onComplete(view, response.getBitmap(), isImmediate);
 				}
 			}
 		};
