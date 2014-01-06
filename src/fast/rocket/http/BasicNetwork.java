@@ -6,6 +6,7 @@ import android.os.SystemClock;
 
 import fast.rocket.NetworkResponse;
 import fast.rocket.Request;
+import fast.rocket.WrappedResponse;
 import fast.rocket.cache.Cache;
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.error.NetworkError;
@@ -19,7 +20,6 @@ import fast.rocket.utils.PoolingByteArrayOutputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -70,7 +70,7 @@ public class BasicNetwork implements Network {
     public NetworkResponse performRequest(Request<?> request) throws RocketError {
         long requestStart = SystemClock.elapsedRealtime();
         while (true) {
-        	HttpResponse httpResponse = null;
+        	WrappedResponse httpResponse = null;
             byte[] responseContents = null;
             Map<String, String> responseHeaders = new HashMap<String, String>();
             try {
@@ -78,10 +78,10 @@ public class BasicNetwork implements Network {
                 Map<String, String> headers = new HashMap<String, String>();
                 addCacheHeaders(headers, request.getCacheEntry());
                 httpResponse = mHttpStack.performRequest(request, headers);
-                StatusLine statusLine = httpResponse.getStatusLine();
+                StatusLine statusLine = httpResponse.httResonpse.getStatusLine();
                 int statusCode = statusLine.getStatusCode();
 
-                responseHeaders = convertHeaders(httpResponse.getAllHeaders());
+                responseHeaders = convertHeaders(httpResponse.httResonpse.getAllHeaders());
                 // Handle cache validation.
                 if (statusCode == HttpStatus.SC_NOT_MODIFIED) {
                     return new NetworkResponse(HttpStatus.SC_NOT_MODIFIED,
@@ -89,8 +89,8 @@ public class BasicNetwork implements Network {
                 }
 
                 // Some responses such as 204s do not have content.  We must check.
-                if (httpResponse.getEntity() != null) {
-                  responseContents = entityToBytes(httpResponse.getEntity());
+                if (httpResponse.httResonpse.getEntity() != null) {
+                  responseContents = entityToBytes(httpResponse.httResonpse.getEntity());
                 } else {
                   // Add 0 byte response as a way of honestly representing a
                   // no-content request.
@@ -117,7 +117,7 @@ public class BasicNetwork implements Network {
                 int statusCode = 0;
                 NetworkResponse networkResponse = null;
                 if (httpResponse != null) {
-                    statusCode = httpResponse.getStatusLine().getStatusCode();
+                    statusCode = httpResponse.httResonpse.getStatusLine().getStatusCode();
                 } else {
                     throw new NoConnectionError(e);
                 }
@@ -136,7 +136,11 @@ public class BasicNetwork implements Network {
                 } else {
                     throw new NetworkError(networkResponse);
                 }
-            } 
+            } finally {
+            	if( httpResponse != null ) {
+            		httpResponse.close();
+            	}
+            }
         }
     }
 

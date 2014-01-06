@@ -88,6 +88,8 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     /** The cache strategy for this request. */
     private DiskCacheStrategy mCacheStrategy;
+    
+    private boolean isSSLRequest = false;
 
     /**
      * When a request can be retrieved from cache but must be refreshed from
@@ -565,4 +567,12 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return (mCanceled ? "[X] " : "[ ] ") + getUrl() + " " + trafficStatsTag + " "
                 + getPriority() + " " + mSequence;
     }
+
+	public boolean isSSLRequest() {
+		return isSSLRequest;
+	}
+
+	public void setSSLRequest(boolean isSSLRequest) {
+		this.isSSLRequest = isSSLRequest;
+	}
 }

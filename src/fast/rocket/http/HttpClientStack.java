@@ -2,7 +2,6 @@
 package fast.rocket.http;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -22,6 +21,7 @@ import android.text.TextUtils;
 
 import fast.rocket.Request;
 import fast.rocket.Request.Method;
+import fast.rocket.WrappedResponse;
 import fast.rocket.error.AuthFailureError;
 
 
@@ -59,7 +59,7 @@ public class HttpClientStack implements HttpStack {
     }
 
     @Override
-    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         HttpUriRequest httpRequest = createHttpRequest(request, additionalHeaders);
         addHeaders(httpRequest, additionalHeaders);
@@ -76,7 +76,7 @@ public class HttpClientStack implements HttpStack {
         	setCookie(mClient);
         }
         
-        return mClient.execute(httpRequest);
+        return new WrappedResponse(mClient.execute(httpRequest), httpRequest);
     }
 
     /**
@@ -85,6 +85,7 @@ public class HttpClientStack implements HttpStack {
     @SuppressWarnings("deprecation")
     /* protected */ static HttpUriRequest createHttpRequest(Request<?> request,
             Map<String, String> additionalHeaders) throws AuthFailureError {
+    	final String requestUrl = request.getUrl();
         switch (request.getMethod()) {
             case Method.DEPRECATED_GET_OR_POST: {
                 // This is the deprecated way that needs to be handled for backwards compatibility.
@@ -92,28 +93,30 @@ public class HttpClientStack implements HttpStack {
                 // GET.  Otherwise, it is assumed that the request is a POST.
                 byte[] postBody = request.getPostBody();
                 if (postBody != null) {
-                    HttpPost postRequest = new HttpPost(request.getUrl());
+                    HttpPost postRequest = new HttpPost(requestUrl);
                     postRequest.addHeader(HEADER_CONTENT_TYPE, request.getPostBodyContentType());
                     HttpEntity entity;
                     entity = new ByteArrayEntity(postBody);
                     postRequest.setEntity(entity);
                     return postRequest;
                 } else {
-                    return new HttpGet(request.getUrl());
+                    return new HttpGet(requestUrl);
                 }
             }
             case Method.GET:
-                return new HttpGet(request.getUrl());
+            	request.setSSLRequest(requestUrl.startsWith("https"));
+                return new HttpGet(requestUrl);
             case Method.DELETE:
-                return new HttpDelete(request.getUrl());
+                return new HttpDelete(requestUrl);
             case Method.POST: {
-                HttpPost postRequest = new HttpPost(request.getUrl());
+            	request.setSSLRequest(requestUrl.startsWith("https"));
+                HttpPost postRequest = new HttpPost(requestUrl);
                 postRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
                 setEntityIfNonEmptyBody(postRequest, request);
                 return postRequest;
             }
             case Method.PUT: {
-                HttpPut putRequest = new HttpPut(request.getUrl());
+                HttpPut putRequest = new HttpPut(requestUrl);
                 putRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
                 setEntityIfNonEmptyBody(putRequest, request);
                 return putRequest;
