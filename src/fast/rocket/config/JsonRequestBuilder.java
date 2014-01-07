@@ -137,7 +137,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 */
 	@Override
 	public void load(String uri) {
-		load(Method.GET, uri);
+		load(Method.POST, uri);
 	}
 	
 	/* (non-Javadoc)

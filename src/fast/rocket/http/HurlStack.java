@@ -184,15 +184,17 @@ public class HurlStack implements HttpStack {
         connection.setDoInput(true);
 
         // use caller-provided custom SslSocketFactory, if any, for HTTPS
-        if (null != url && "https".equals(url.getProtocol())) {
+        if (null != url && "https".equals(url.getProtocol().toLowerCase(Locale.getDefault()))) {
             //((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
             HttpsURLConnection.setDefaultHostnameVerifier(new TrustHostNameVerifier());
 			try {
-				SSLContext sc = SSLContext.getInstance("SSL");
+				SSLContext sc = SSLContext.getInstance("TLS");
 				sc.init(null, trustAllCerts, new java.security.SecureRandom());
 				HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 			} catch (Exception e) {
 			}
+			
+			connection.setRequestProperty("Connection", "close");
         }
 
         return connection;
