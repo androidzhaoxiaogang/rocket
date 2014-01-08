@@ -78,10 +78,10 @@ public class BasicNetwork implements Network {
                 Map<String, String> headers = new HashMap<String, String>();
                 addCacheHeaders(headers, request.getCacheEntry());
                 httpResponse = mHttpStack.performRequest(request, headers);
-                StatusLine statusLine = httpResponse.httResonpse.getStatusLine();
+                StatusLine statusLine = httpResponse.httpResonpse.getStatusLine();
                 int statusCode = statusLine.getStatusCode();
 
-                responseHeaders = convertHeaders(httpResponse.httResonpse.getAllHeaders());
+                responseHeaders = convertHeaders(httpResponse.httpResonpse.getAllHeaders());
                 // Handle cache validation.
                 if (statusCode == HttpStatus.SC_NOT_MODIFIED) {
                     return new NetworkResponse(HttpStatus.SC_NOT_MODIFIED,
@@ -89,8 +89,8 @@ public class BasicNetwork implements Network {
                 }
 
                 // Some responses such as 204s do not have content.  We must check.
-                if (httpResponse.httResonpse.getEntity() != null) {
-                  responseContents = entityToBytes(httpResponse.httResonpse.getEntity());
+                if (httpResponse.httpResonpse.getEntity() != null) {
+                  responseContents = entityToBytes(httpResponse.httpResonpse.getEntity());
                 } else {
                   // Add 0 byte response as a way of honestly representing a
                   // no-content request.
@@ -117,7 +117,7 @@ public class BasicNetwork implements Network {
                 int statusCode = 0;
                 NetworkResponse networkResponse = null;
                 if (httpResponse != null) {
-                    statusCode = httpResponse.httResonpse.getStatusLine().getStatusCode();
+                    statusCode = httpResponse.httpResonpse.getStatusLine().getStatusCode();
                 } else {
                     throw new NoConnectionError(e);
                 }
