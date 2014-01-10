@@ -28,7 +28,7 @@ public class Rocket {
 	/** Default on-disk cache directory. */
     private static final String DEFAULT_CACHE_DIR = "rocket";
 
-	/** The request queue. */
+	/** The request dispatch queue. */
 	private RequestQueue requestQueue;
 	
 	/** The image loader. */
@@ -37,10 +37,10 @@ public class Rocket {
 	/** The Rocket instance. */
 	private static Rocket instance;
 	
-	/** The Rocket name. */
+	/** The Rocket library name. */
 	private String name;
 	
-    /** The network. */
+    /** The network for network request and response. */
     private Network network;
     
     /** The cache. */
