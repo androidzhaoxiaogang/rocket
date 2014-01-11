@@ -2,10 +2,9 @@
 <resources>
 
     <declare-styleable name="rocket">
-        <attr name="circleBorderColor" format="reference" />
         <attr name="drawCircle" format="boolean" />
         <attr name="drawCircleBorder" format="boolean" />
-         <attr name="borderColor" format="color" />
+        <attr name="borderColor" format="color" />
     </declare-styleable>
 
 </resources>
