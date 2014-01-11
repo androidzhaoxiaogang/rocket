@@ -7,7 +7,6 @@ import java.lang.ref.WeakReference;
 
 import fast.rocket.Request.Method;
 import fast.rocket.Rocket;
-import fast.rocket.cache.CircularCacheView;
 import fast.rocket.cache.NetworkCacheView;
 import fast.rocket.cache.ImageLoader;
 import fast.rocket.cache.ImageLoader.ImageCallback;
@@ -15,7 +14,6 @@ import fast.rocket.utils.RocketUtils;
 
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
-import android.widget.ImageView;
 
 /**
  * The Class CacheviewRequestBuilder for the {@link NetworkCacheView}
@@ -23,8 +21,7 @@ import android.widget.ImageView;
  *
  * @param <T> the generic type
  */
-public class CacheviewRequestBuilder<T extends ImageView> implements
-		LaunchBuilder {
+public class CacheviewRequestBuilder implements LaunchBuilder {
 
 	/** Skip the disk cache. */
 	private boolean skipDiskCache;
@@ -63,7 +60,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	private int resizeHeight = 0;
 
 	/** The image view ref. */
-	private WeakReference<T> imageViewRef;
+	private WeakReference<NetworkCacheView> imageViewRef;
 
 	/** The callback for image loading completed. */
 	private ImageCallback callback;
@@ -75,8 +72,8 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the image view
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> withImageView(T imageView) {
-		imageViewRef = new WeakReference<T>(imageView);
+	public CacheviewRequestBuilder withImageView(NetworkCacheView imageView) {
+		imageViewRef = new WeakReference<NetworkCacheView>(imageView);
 		return this;
 	}
 
@@ -87,7 +84,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the drawable
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> placeholder(Drawable drawable) {
+	public CacheviewRequestBuilder placeholder(Drawable drawable) {
 		if (placeholderResource != 0) {
 			throw new IllegalStateException("Placeholder image already set.");
 		}
@@ -102,7 +99,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the resource id
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> placeholder(int resourceId) {
+	public CacheviewRequestBuilder placeholder(int resourceId) {
 		if (resourceId == 0) {
 			throw new IllegalArgumentException(
 					"Placeholder image resource invalid.");
@@ -121,7 +118,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the drawable
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> error(Drawable drawable) {
+	public CacheviewRequestBuilder error(Drawable drawable) {
 		if (errorDrawable == null) {
 			throw new IllegalArgumentException("Error image may not be null.");
 		}
@@ -139,7 +136,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the resource id
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> error(int resourceId) {
+	public CacheviewRequestBuilder error(int resourceId) {
 		errorResource = resourceId;
 		return this;
 	}
@@ -151,7 +148,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the in
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> animateIn(Animation in) {
+	public CacheviewRequestBuilder animateIn(Animation in) {
 		inAnimation = in;
 		return this;
 	}
@@ -163,7 +160,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the animation resource
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> animateIn(int animationResource) {
+	public CacheviewRequestBuilder animateIn(int animationResource) {
 		inAnimationResource = animationResource;
 		return this;
 	}
@@ -175,7 +172,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the load
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> animateLoad(Animation load) {
+	public CacheviewRequestBuilder animateLoad(Animation load) {
 		loadAnimation = load;
 		return this;
 	}
@@ -187,7 +184,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the animation resource
 	 * @return the image request builder
 	 */
-	public CacheviewRequestBuilder<T> animateLoad(int animationResource) {
+	public CacheviewRequestBuilder animateLoad(int animationResource) {
 		loadAnimationResource = animationResource;
 		return this;
 	}
@@ -200,7 +197,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 * 
 	 * @return the cacheview request builder
 	 */
-	public CacheviewRequestBuilder<T> skipDiskCache() {
+	public CacheviewRequestBuilder skipDiskCache() {
 		skipDiskCache = true;
 		return this;
 	}
@@ -214,7 +211,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 *            the height
 	 * @return the cacheview request builder
 	 */
-	public CacheviewRequestBuilder<T> resize(int width, int height) {
+	public CacheviewRequestBuilder resize(int width, int height) {
 		resizeWidth = width;
 		resizeHeight = height;
 		return this;
@@ -226,7 +223,7 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	 * @param callback the callback
 	 * @return the cacheview request builder
 	 */
-	public CacheviewRequestBuilder<T> invoke(ImageCallback callback) {
+	public CacheviewRequestBuilder invoke(ImageCallback callback) {
 		this.callback = callback;
 		return this;
 	}
@@ -250,29 +247,20 @@ public class CacheviewRequestBuilder<T extends ImageView> implements
 	public void load(int method, String uri) {
 		initCacheView(uri);		
 	}
-
-	// **************************************private
-	// apis***************************************//
+	
+	// ************************private***apis*******************************//
 	/**
 	 * Inits the cache view.
 	 *
 	 * @param uri the uri
 	 */
 	private void initCacheView(String uri) {
-		final T imageView = imageViewRef.get();
+		final NetworkCacheView imageView = imageViewRef.get();
 		final ImageLoader loader = rocket.getImageLoader();
-		
-		if (imageView instanceof NetworkCacheView) {
-			((NetworkCacheView) imageView).setImageUrl(uri, loader,
-					resizeWidth, resizeHeight, skipDiskCache, callback, config);
-		} else if (imageView instanceof CircularCacheView) {
-			((CircularCacheView) imageView).setImageUrl(uri, loader, resizeWidth, 
-					resizeHeight, skipDiskCache, callback, config);
-		}
-		
-		RocketUtils.loadAnimation(imageView, inAnimation,
-				inAnimationResource);
 
+		imageView.setImageUrl(uri, loader, resizeWidth, resizeHeight,
+				skipDiskCache, callback, config);
+		RocketUtils.loadAnimation(imageView, inAnimation, inAnimationResource);
 	}
 	
 	/** The config. */

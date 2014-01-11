@@ -73,20 +73,7 @@ public class Rocket {
      * @param imageView the image view
      * @return the cacheview request builder
      */
-    @SuppressWarnings("rawtypes")
-	public static CacheviewRequestBuilder with(NetworkCacheView imageView) {
-    	Rocket rocket = getDefault(imageView.getContext());
-        return rocket.build(imageView);
-    }
-    
-    /**
-     * Create a CacheImageView image request builder.
-     *
-     * @param imageView the image view
-     * @return the cacheview request builder
-     */
-    @SuppressWarnings("rawtypes")
-	public static CacheviewRequestBuilder with(CircularCacheView imageView) {
+    public static CacheviewRequestBuilder with(NetworkCacheView imageView) {
     	Rocket rocket = getDefault(imageView.getContext());
         return rocket.build(imageView);
     }
@@ -233,27 +220,11 @@ public class Rocket {
      * @param imageView the image view
      * @return the cacheview request builder
      */
-    public CacheviewRequestBuilder<NetworkCacheView> build(NetworkCacheView imageView) {
+    public CacheviewRequestBuilder build(NetworkCacheView imageView) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread())
             throw new IllegalStateException("must be called from UI thread");
-        final CacheviewRequestBuilder<NetworkCacheView> imageBuilder = 
-        		new CacheviewRequestBuilder<NetworkCacheView>();
-        imageBuilder.rocket = this;
-        return imageBuilder.withImageView(imageView);
-    }
-    
-    /**
-     * Create a cache image request builder that can be used to
-     * build an network image request.
-     *
-     * @param imageView the image view
-     * @return the cacheview request builder
-     */
-    public CacheviewRequestBuilder<CircularCacheView> build(CircularCacheView imageView) {
-        if (Thread.currentThread() != Looper.getMainLooper().getThread())
-            throw new IllegalStateException("must be called from UI thread");
-        final CacheviewRequestBuilder<CircularCacheView> imageBuilder = 
-        		new CacheviewRequestBuilder<CircularCacheView>();
+        final CacheviewRequestBuilder imageBuilder = 
+        		new CacheviewRequestBuilder();
         imageBuilder.rocket = this;
         return imageBuilder.withImageView(imageView);
     }

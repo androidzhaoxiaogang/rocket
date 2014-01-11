@@ -1,5 +1,7 @@
 package fast.rocket.cache;
 
+import com.android.rocket.R;
+
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
@@ -7,11 +9,17 @@ import fast.rocket.config.CacheViewConfig;
 import fast.rocket.error.RocketError;
 import fast.rocket.utils.RocketUtils;
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
@@ -26,12 +34,31 @@ public class NetworkCacheView extends ImageView {
 	
     /** The URL of the network image to load. */
     private String mUrl;
+    
+    /** The border width. */
+	private float borderWidth = 2.0F;
 	
 	/** The max width. */
 	private int maxWidth;
 	
 	/** The max height. */
 	private int maxHeight;
+	
+	/** The width. */
+	private int width;
+	
+	/** The height. */
+	private int height;
+	
+	private boolean drawCircle = false;
+	
+	/** The draw border. */
+	private boolean drawBorder = false;
+	
+	private int borderColor = Color.parseColor("#129fcd");
+	
+	/** The center. */
+	private float center;
 
     /** Local copy of the ImageLoader. */
     private ImageLoader mImageLoader;
@@ -44,6 +71,18 @@ public class NetworkCacheView extends ImageView {
     
     /** The config. */
     private CacheViewConfig config;
+    
+    /** The bitmap. */
+	private Bitmap bitmap;
+	
+	/** The paint. */
+	private Paint paint;
+	
+	/** The paint border. */
+	private Paint paintBorder;
+	
+	/** The shader. */
+	private BitmapShader shader;
 
     /**
      * Instantiates a new network cache view.
@@ -72,8 +111,53 @@ public class NetworkCacheView extends ImageView {
      * @param defStyle the def style
      */
     public NetworkCacheView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    	super(context, attrs, defStyle);
+    	initialize(context, attrs);
     }
+    
+    private void initialize(Context context, AttributeSet attrs) {
+         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.rocket);
+         drawCircle = a.getBoolean(R.styleable.rocket_drawCircle, drawCircle);
+         drawBorder = a.getBoolean(R.styleable.rocket_drawCircleBorder, drawBorder);
+         borderColor = a.getInt(R.styleable.rocket_borderColor, borderColor);
+         a.recycle();
+         
+         if(drawCircle) setup();
+    }
+    
+    /**
+	 * Sets the shader.
+	 */
+	private void setShader() {
+		BitmapDrawable drawable = (BitmapDrawable) getDrawable();
+		if(drawable != null) {
+			this.bitmap = drawable.getBitmap();
+		}
+		
+		if ((this.bitmap != null) && (this.width > 0) && (this.height > 0)) {
+			this.shader = new BitmapShader(Bitmap.createScaledBitmap(
+					this.bitmap, this.width, this.height, false),
+					BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+			this.paint.setShader(this.shader);
+		}
+	}
+
+	/**
+	 * Setup.
+	 */
+	private void setup() {
+		Resources localResources = getResources();
+		this.borderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
+				this.borderWidth, localResources.getDisplayMetrics());
+		this.paint = new Paint();
+		this.paint.setAntiAlias(true);
+		this.paintBorder = new Paint();
+		this.paintBorder.setColor(borderColor);
+		this.paintBorder.setStyle(Paint.Style.STROKE);
+		this.paintBorder.setStrokeWidth(this.borderWidth);
+		this.paintBorder.setAntiAlias(true);
+	}
+    
 
     /**
      * Sets URL of the image that should be loaded into this view. Note that calling this will
@@ -211,7 +295,11 @@ public class NetworkCacheView extends ImageView {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		if (RocketUtils.hasHoneycomb()) {
-			super.onDraw(canvas);
+			if(drawCircle) {
+				drawCircle(canvas);
+			} else {
+				super.onDraw(canvas);
+			}
 		} else {
 			BitmapDrawable drawable = (BitmapDrawable) getDrawable();
 			if (drawable == null) {
@@ -221,7 +309,11 @@ public class NetworkCacheView extends ImageView {
 				config.placeholder();
 			}
 			try {
-				super.onDraw(canvas);
+				if(drawCircle) {
+					drawCircle(canvas);
+				} else {
+					super.onDraw(canvas);
+				}
 			} catch (RuntimeException localRuntimeException) {
 			}
 		}
@@ -251,4 +343,34 @@ public class NetworkCacheView extends ImageView {
         super.drawableStateChanged();
         invalidate();
     }
+    
+    /* (non-Javadoc)
+	 * @see android.view.View#onSizeChanged(int, int, int, int)
+	 */
+	protected void onSizeChanged(int paramInt1, int paramInt2, int paramInt3,
+			int paramInt4) {
+		if(drawCircle) {
+			this.width = paramInt1;
+			this.height = paramInt2;
+			this.center = (this.width >> 1);
+			setShader();
+		} else  super.onSizeChanged(paramInt1, paramInt2, paramInt3, paramInt4);
+	}
+    
+    /**
+	 * Draw circle.
+	 *
+	 * @param paramCanvas the param canvas
+	 */
+	private void drawCircle(Canvas paramCanvas) {
+		if ((this.bitmap != null) && (this.shader != null)) {
+			float f1 = this.center - 2 * (int) this.borderWidth;
+			float f2 = this.center - ((int) this.borderWidth >> 1);
+			paramCanvas.drawCircle(this.center, this.center, f1, this.paint);
+			if (this.drawBorder)
+				paramCanvas.drawCircle(this.center, this.center, f2
+						- this.borderWidth, this.paintBorder);
+		}
+	}
+
 }
