@@ -43,14 +43,13 @@ public class HurlStack implements HttpStack {
     private static final String HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HEADER_COOKIE = "Cookie";
     
-    static class TrustHostNameVerifier implements HostnameVerifier {
-
+    final static HostnameVerifier NOT_VERIFY = new HostnameVerifier() {
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
-    }
+    };
     
-    static TrustManager[] trustAllCerts = new TrustManager[]{
+    final static TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -185,19 +184,21 @@ public class HurlStack implements HttpStack {
 
         // use caller-provided custom SslSocketFactory, if any, for HTTPS
         if (null != url && "https".equals(url.getProtocol().toLowerCase(Locale.getDefault()))) {
-            //((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
-            HttpsURLConnection.setDefaultHostnameVerifier(new TrustHostNameVerifier());
-			try {
-				SSLContext sc = SSLContext.getInstance("TLS");
-				sc.init(null, trustAllCerts, new java.security.SecureRandom());
-				HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-			} catch (Exception e) {
-			}
-			
-			request.setSSLRequest(true);
+        	trustAllHosts();
+        	request.setSSLRequest(true);
+            ((HttpsURLConnection)connection).setHostnameVerifier(NOT_VERIFY);
         }
 
         return connection;
+    }
+    
+    private static void trustAllHosts() {
+    	try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+		}
     }
 
     private void setConnectionCookie(HttpURLConnection connection, String cookie) throws IOException, AuthFailureError {
