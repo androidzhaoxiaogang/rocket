@@ -15,6 +15,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
@@ -43,17 +45,16 @@ public class HurlStack implements HttpStack {
     private static final String HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HEADER_COOKIE = "Cookie";
     
-    static class TrustHostNameVerifier implements HostnameVerifier {
-
+    final static HostnameVerifier NOT_VERIFY = new HostnameVerifier() {
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
-    }
+    };
     
-    static TrustManager[] trustAllCerts = new TrustManager[]{
+    final static TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
+                	return new java.security.cert.X509Certificate[] {};
                 }
 
                 public void checkClientTrusted(
@@ -106,6 +107,12 @@ public class HurlStack implements HttpStack {
             }
             url = rewritten;
         }
+        
+        if (null != url && url.startsWith("https")) {
+        	trustAllHosts();
+        	request.setSSLRequest(true);
+        }
+        
         URL parsedUrl = new URL(url);
         HttpURLConnection connection = openConnection(parsedUrl, request);
         for (String headerName : map.keySet()) {
@@ -165,7 +172,11 @@ public class HurlStack implements HttpStack {
      * Create an {@link HttpURLConnection} for the specified {@code url}.
      */
     protected HttpURLConnection createConnection(URL url) throws IOException {
-        return (HttpURLConnection) url.openConnection();
+    	Proxy proxy = getProxy();
+    	if (proxy != null)
+            return (HttpURLConnection) url.openConnection(proxy);
+        else
+        	return (HttpURLConnection) url.openConnection();
     }
 
     /**
@@ -183,30 +194,38 @@ public class HurlStack implements HttpStack {
         connection.setUseCaches(false);
         connection.setDoInput(true);
 
-        // use caller-provided custom SslSocketFactory, if any, for HTTPS
-        if (null != url && "https".equals(url.getProtocol().toLowerCase(Locale.getDefault()))) {
-            //((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
-            HttpsURLConnection.setDefaultHostnameVerifier(new TrustHostNameVerifier());
-			try {
-				SSLContext sc = SSLContext.getInstance("TLS");
-				sc.init(null, trustAllCerts, new java.security.SecureRandom());
-				HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-			} catch (Exception e) {
-			}
-			
-			request.setSSLRequest(true);
-        }
-
         return connection;
     }
+    
+    private static void trustAllHosts() {
+		try {
+			HttpsURLConnection.setDefaultHostnameVerifier(NOT_VERIFY);
+			SSLContext sc = SSLContext.getInstance("TLS");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+		}
+    }
+    
+    private static Proxy getProxy() {
+        String proxyHost = System.getProperty("http.proxyHost");
+        String proxyPort = System.getProperty("http.proxyPort");
+        if (!TextUtils.isEmpty(proxyHost) && !TextUtils.isEmpty(proxyPort))
+            return new Proxy(java.net.Proxy.Type.HTTP, 
+            		new InetSocketAddress(proxyHost, Integer.valueOf(proxyPort)));
+        else
+            return null;
+    }
 
-    private void setConnectionCookie(HttpURLConnection connection, String cookie) throws IOException, AuthFailureError {
+    private void setConnectionCookie(HttpURLConnection connection, String cookie) 
+    		throws IOException, AuthFailureError {
         if (!TextUtils.isEmpty(cookie)) {
             connection.setRequestProperty(HEADER_COOKIE, cookie);
         }
     }
 
-    public void storeConnectionCookie(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
+    public void storeConnectionCookie(HttpURLConnection connection, Request<?> request) 
+    		throws IOException, AuthFailureError {
         String cookieHeader = connection.getHeaderField(HEADER_SET_COOKIE);
         if (!TextUtils.isEmpty(cookieHeader)) {
         	this.cookie = cookieHeader.substring(0, cookieHeader.indexOf(";"));
