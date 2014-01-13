@@ -51,29 +51,27 @@ public class HurlStack implements HttpStack {
     /** The Constant HEADER_COOKIE. */
     private static final String HEADER_COOKIE = "Cookie";
     
-    /** The Constant NOT_VERIFY. */
-    final static HostnameVerifier NOT_VERIFY = new HostnameVerifier() {
+    /** Not verify the host. */
+    final static HostnameVerifier notVerify = new HostnameVerifier() {
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
     };
     
-    /** The Constant trustAllCerts. */
-    final static TrustManager[] trustAllCerts = new TrustManager[]{
-            new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                	return new java.security.cert.X509Certificate[] {};
-                }
+    /** Trust all certifications. */
+	final static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+		public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+			return new java.security.cert.X509Certificate[] {};
+		}
 
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
+		public void checkClientTrusted(
+				java.security.cert.X509Certificate[] certs, String authType) {
+		}
 
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
-            }
-    };
+		public void checkServerTrusted(
+				java.security.cert.X509Certificate[] certs, String authType) {
+		}
+	} };
 
     /**
      * An interface for transforming URLs before use.
@@ -227,11 +225,11 @@ public class HurlStack implements HttpStack {
     }
     
     /**
-     * Trust all hosts.
+     * Set trust all https hosts.
      */
     private static void trustAllHosts() {
 		try {
-			HttpsURLConnection.setDefaultHostnameVerifier(NOT_VERIFY);
+			HttpsURLConnection.setDefaultHostnameVerifier(notVerify);
 			SSLContext sc = SSLContext.getInstance("TLS");
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -255,7 +253,7 @@ public class HurlStack implements HttpStack {
     }
 
     /**
-     * Sets the connection cookie.
+     * Sets the connection cookie if cookie is's empty.
      *
      * @param connection the connection
      * @param cookie the cookie
@@ -270,7 +268,7 @@ public class HurlStack implements HttpStack {
     }
 
     /**
-     * Store connection cookie.
+     * Store connection cookie if cookie is't empty.
      *
      * @param connection the connection
      * @param request the request
