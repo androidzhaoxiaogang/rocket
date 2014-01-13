@@ -37,7 +37,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 
-// TODO: Auto-generated Javadoc
 /**
  * An {@link HttpStack} based on {@link HttpURLConnection}.
  */
