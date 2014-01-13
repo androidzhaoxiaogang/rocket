@@ -37,20 +37,29 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 
+// TODO: Auto-generated Javadoc
 /**
  * An {@link HttpStack} based on {@link HttpURLConnection}.
  */
 public class HurlStack implements HttpStack {
+    
+    /** The Constant HEADER_CONTENT_TYPE. */
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
+    
+    /** The Constant HEADER_SET_COOKIE. */
     private static final String HEADER_SET_COOKIE = "Set-Cookie";
+    
+    /** The Constant HEADER_COOKIE. */
     private static final String HEADER_COOKIE = "Cookie";
     
+    /** The Constant NOT_VERIFY. */
     final static HostnameVerifier NOT_VERIFY = new HostnameVerifier() {
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
     };
     
+    /** The Constant trustAllCerts. */
     final static TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -71,28 +80,42 @@ public class HurlStack implements HttpStack {
      * An interface for transforming URLs before use.
      */
     public interface UrlRewriter {
+        
         /**
          * Returns a URL to use instead of the provided one, or null to indicate
          * this URL should not be used at all.
+         *
+         * @param originalUrl the original url
+         * @return the string
          */
         public String rewriteUrl(String originalUrl);
     }
 
+    /** The m url rewriter. */
     private final UrlRewriter mUrlRewriter;
     
+    /** The cookie. */
     private String cookie;
 
+    /**
+     * Instantiates a new hurl stack.
+     */
     public HurlStack() {
         this(null);
     }
 
     /**
+     * Instantiates a new hurl stack.
+     *
      * @param urlRewriter Rewriter to use for request URLs
      */
     public HurlStack(UrlRewriter urlRewriter) {
     	mUrlRewriter = urlRewriter;
     }
 
+    /* (non-Javadoc)
+     * @see fast.rocket.http.HttpStack#performRequest(fast.rocket.Request, java.util.Map)
+     */
     @Override
     public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
@@ -150,7 +173,8 @@ public class HurlStack implements HttpStack {
 
     /**
      * Initializes an {@link HttpEntity} from the given {@link HttpURLConnection}.
-     * @param connection
+     *
+     * @param connection the connection
      * @return an HttpEntity populated with data from <code>connection</code>.
      */
     private static HttpEntity entityFromConnection(HttpURLConnection connection) {
@@ -170,6 +194,10 @@ public class HurlStack implements HttpStack {
 
     /**
      * Create an {@link HttpURLConnection} for the specified {@code url}.
+     *
+     * @param url the url
+     * @return the http url connection
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     protected HttpURLConnection createConnection(URL url) throws IOException {
     	Proxy proxy = getProxy();
@@ -181,9 +209,11 @@ public class HurlStack implements HttpStack {
 
     /**
      * Opens an {@link HttpURLConnection} with parameters.
-     * @param url
+     *
+     * @param url the url
+     * @param request the request
      * @return an open connection
-     * @throws IOException
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private HttpURLConnection openConnection(URL url, Request<?> request) throws IOException {
         HttpURLConnection connection = createConnection(url);
@@ -197,6 +227,9 @@ public class HurlStack implements HttpStack {
         return connection;
     }
     
+    /**
+     * Trust all hosts.
+     */
     private static void trustAllHosts() {
 		try {
 			HttpsURLConnection.setDefaultHostnameVerifier(NOT_VERIFY);
@@ -207,6 +240,11 @@ public class HurlStack implements HttpStack {
 		}
     }
     
+    /**
+     * Gets the proxy.
+     *
+     * @return the proxy
+     */
     private static Proxy getProxy() {
         String proxyHost = System.getProperty("http.proxyHost");
         String proxyPort = System.getProperty("http.proxyPort");
@@ -217,6 +255,14 @@ public class HurlStack implements HttpStack {
             return null;
     }
 
+    /**
+     * Sets the connection cookie.
+     *
+     * @param connection the connection
+     * @param cookie the cookie
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws AuthFailureError the auth failure error
+     */
     private void setConnectionCookie(HttpURLConnection connection, String cookie) 
     		throws IOException, AuthFailureError {
         if (!TextUtils.isEmpty(cookie)) {
@@ -224,6 +270,14 @@ public class HurlStack implements HttpStack {
         }
     }
 
+    /**
+     * Store connection cookie.
+     *
+     * @param connection the connection
+     * @param request the request
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws AuthFailureError the auth failure error
+     */
     public void storeConnectionCookie(HttpURLConnection connection, Request<?> request) 
     		throws IOException, AuthFailureError {
         String cookieHeader = connection.getHeaderField(HEADER_SET_COOKIE);
@@ -232,6 +286,14 @@ public class HurlStack implements HttpStack {
         }
     }
 
+    /**
+     * Sets the connection parameters for request.
+     *
+     * @param connection the connection
+     * @param request the request
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws AuthFailureError the auth failure error
+     */
     @SuppressWarnings("deprecation")
     /* package */ static void setConnectionParametersForRequest(HttpURLConnection connection,
             Request<?> request) throws IOException, AuthFailureError {
@@ -275,6 +337,14 @@ public class HurlStack implements HttpStack {
         }
     }
 
+    /**
+     * Adds the body if exists.
+     *
+     * @param connection the connection
+     * @param request the request
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws AuthFailureError the auth failure error
+     */
     private static void addBodyIfExists(HttpURLConnection connection, Request<?> request)
             throws IOException, AuthFailureError {
         byte[] body = request.getBody();
