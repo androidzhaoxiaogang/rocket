@@ -227,7 +227,7 @@ public class HurlStack implements HttpStack {
     }
     
     /**
-     * Trust all hosts.
+     * Set trust all https hosts.
      */
     private static void trustAllHosts() {
 		try {
@@ -255,7 +255,7 @@ public class HurlStack implements HttpStack {
     }
 
     /**
-     * Sets the connection cookie.
+     * Sets the connection cookie if cookie is's empty.
      *
      * @param connection the connection
      * @param cookie the cookie
@@ -270,7 +270,7 @@ public class HurlStack implements HttpStack {
     }
 
     /**
-     * Store connection cookie.
+     * Store connection cookie if cookie is't empty.
      *
      * @param connection the connection
      * @param request the request
