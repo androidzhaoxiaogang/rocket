@@ -7,6 +7,7 @@ https, supporting from 2.2 and above sdks for image cache(You needn't to worry a
 
 ## Features:
 
+* without OOM 
 * rest apis
 * image downloader
 * image cache(LRU)
