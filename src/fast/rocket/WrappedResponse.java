@@ -11,14 +11,14 @@ import org.apache.http.client.methods.HttpUriRequest;
 import android.os.Build;
 
 /**
- * The Class WrappedResponse.
+ * The Class WrappedResponse to close the https connection after response.
  */
 public class WrappedResponse {
 	
 	/** The http request. */
 	public HttpUriRequest httpRequest;
 	
-	/** The connection. */
+	/** The http url connection. */
 	public HttpURLConnection connection;
 	
 	/** The http resonpse. */
