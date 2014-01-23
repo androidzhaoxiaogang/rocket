@@ -142,7 +142,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	}
 	
 	/**
-	 * Animate in.
+	 * Animation for image sliding in.
 	 *
 	 * @param in the in
 	 * @return the image request builder
@@ -153,7 +153,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	}
 
 	/**
-	 * Animate in.
+	 * Animation for image sliding in.
 	 *
 	 * @param animationResource the animation resource
 	 * @return the image request builder
@@ -164,7 +164,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	}
 
 	/**
-	 * Animate load.
+	 * Animation for image sliding out.
 	 *
 	 * @param load the load
 	 * @return the image request builder
@@ -175,7 +175,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	}
 
 	/**
-	 * Animate load.
+	 * Animation for image sliding out.
 	 *
 	 * @param animationResource the animation resource
 	 * @return the image request builder
@@ -212,7 +212,7 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
 	}
 	
     /**
-     * Resize.
+     * Set proper image width and height then resize the image view.
      *
      * @param width the width
      * @param height the height
@@ -225,7 +225,8 @@ public class ImageviewRequestBuilder implements LaunchBuilder{
     }
     
     /**
-     * Register a callback for image loading completed.
+     * Register a callback after image loading completed. Then can 
+     * manage the image reference yourselves.
      *
      * @param callback the callback
      * @return the imageview request builder
