@@ -36,11 +36,17 @@ public class NetworkCacheView extends ImageView {
 	/** The URL of the network image to load. */
 	private String mUrl;
 
-	/** The max width. */
+	/** The max image width. */
 	private int maxWidth;
 
-	/** The max height. */
+	/** The max image height. */
 	private int maxHeight;
+	
+	/** The image width. */
+	private int width;
+	
+	/** The image height. */
+	private int height;
 
 	/** Local copy of the ImageLoader. */
 	private ImageLoader mImageLoader;
@@ -63,15 +69,14 @@ public class NetworkCacheView extends ImageView {
 	/** The center. */
 	private float center;
 
-	/** The draw border. */
+	/** default set draw border false. */
 	private boolean drawBorder = false;
 
-	private boolean drawCircle = true;
+	/** default set image to draw circle false. */
+	private boolean drawCircle = false;
 
+	/** default border color. */
 	private int borderColor = 0xFF129FCD;
-
-	/** The height. */
-	private int height;
 
 	/** The paint. */
 	private Paint paint;
@@ -81,9 +86,6 @@ public class NetworkCacheView extends ImageView {
 
 	/** The shader. */
 	private BitmapShader shader;
-
-	/** The width. */
-	private int width;
 
 	/**
 	 * Instantiates a new circular cache view.
@@ -128,13 +130,11 @@ public class NetworkCacheView extends ImageView {
 		TypedArray a = context
 				.obtainStyledAttributes(attrs, R.styleable.rocket);
 		drawCircle = a.getBoolean(R.styleable.rocket_drawCircle, drawCircle);
-		drawBorder = a.getBoolean(R.styleable.rocket_drawCircleBorder,
-				drawBorder);
+		drawBorder = a.getBoolean(R.styleable.rocket_drawCircleBorder, drawBorder);
 		borderColor = a.getInt(R.styleable.rocket_borderColor, borderColor);
 		a.recycle();
 
-		if (drawCircle)
-			initialize();
+		if (drawCircle) initialize();
 	}
 
 	/**
