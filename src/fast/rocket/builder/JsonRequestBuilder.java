@@ -9,6 +9,7 @@ import fast.rocket.cache.DiskCacheStrategy;
 import fast.rocket.error.RocketError;
 import fast.rocket.request.GsonRequest;
 import fast.rocket.request.Request.Method;
+import fast.rocket.response.JsonCallback;
 import fast.rocket.response.Response.ErrorListener;
 import fast.rocket.response.Response.Listener;
 

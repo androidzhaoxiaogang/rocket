@@ -1,4 +1,4 @@
-package fast.rocket.builder;
+package fast.rocket.response;
 
 import fast.rocket.error.RocketError;
 
