@@ -1,7 +1,7 @@
 
 package fast.rocket.error;
 
-import fast.rocket.NetworkResponse;
+import fast.rocket.response.NetworkResponse;
 import android.content.Intent;
 
 

@@ -4,9 +4,6 @@ package fast.rocket.http;
 import android.os.SystemClock;
 
 
-import fast.rocket.NetworkResponse;
-import fast.rocket.Request;
-import fast.rocket.WrappedResponse;
 import fast.rocket.cache.Cache;
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.error.NetworkError;
@@ -14,6 +11,9 @@ import fast.rocket.error.NoConnectionError;
 import fast.rocket.error.RocketError;
 import fast.rocket.error.ServerError;
 import fast.rocket.error.TimeoutError;
+import fast.rocket.request.Request;
+import fast.rocket.response.NetworkResponse;
+import fast.rocket.response.WrappedResponse;
 import fast.rocket.utils.ByteArrayPool;
 import fast.rocket.utils.Log;
 import fast.rocket.utils.PoolingByteArrayOutputStream;

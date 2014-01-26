@@ -1,15 +1,15 @@
 /*
  * 
  */
-package fast.rocket.config;
+package fast.rocket.builder;
 
 import java.lang.ref.WeakReference;
 
-import fast.rocket.Request.Method;
 import fast.rocket.Rocket;
 import fast.rocket.cache.NetworkCacheView;
 import fast.rocket.cache.ImageLoader;
 import fast.rocket.cache.ImageLoader.ImageCallback;
+import fast.rocket.request.Request.Method;
 import fast.rocket.utils.RocketUtils;
 
 import android.graphics.drawable.Drawable;
@@ -19,7 +19,7 @@ import android.view.animation.Animation;
  * The Class CacheviewRequestBuilder for the {@link NetworkCacheView}
  * configuration.
  *
- * @param <T> the generic type
+ * 
  */
 public class CacheviewRequestBuilder implements LaunchBuilder {
 

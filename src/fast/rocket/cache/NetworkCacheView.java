@@ -2,10 +2,10 @@ package fast.rocket.cache;
 
 import com.android.rocket.R;
 
+import fast.rocket.builder.CacheViewConfig;
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
-import fast.rocket.config.CacheViewConfig;
 import fast.rocket.error.RocketError;
 import fast.rocket.utils.RocketUtils;
 import android.content.Context;

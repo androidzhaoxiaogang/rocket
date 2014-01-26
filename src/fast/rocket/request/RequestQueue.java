@@ -1,5 +1,5 @@
 
-package fast.rocket;
+package fast.rocket.request;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -14,7 +14,11 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fast.rocket.cache.Cache;
+import fast.rocket.dispatcher.CacheDispatcher;
+import fast.rocket.dispatcher.NetworkDispatcher;
 import fast.rocket.http.Network;
+import fast.rocket.response.ExecutorDelivery;
+import fast.rocket.response.ResponseDelivery;
 import fast.rocket.utils.Log;
 
 

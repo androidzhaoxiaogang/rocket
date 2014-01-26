@@ -1,9 +1,9 @@
 
 package fast.rocket.http;
 
-import fast.rocket.NetworkResponse;
-import fast.rocket.Request;
 import fast.rocket.error.RocketError;
+import fast.rocket.request.Request;
+import fast.rocket.response.NetworkResponse;
 
 /**
  * An interface for performing requests.

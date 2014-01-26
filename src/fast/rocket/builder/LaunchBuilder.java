@@ -1,4 +1,4 @@
-package fast.rocket.config;
+package fast.rocket.builder;
 
 /**
  * The Interface LaunchBuilder.

@@ -1,10 +1,12 @@
 
-package fast.rocket;
+package fast.rocket.request;
 
 
 import fast.rocket.error.ParseError;
 import fast.rocket.http.DefaultRetryPolicy;
 import fast.rocket.http.HttpHeaderParser;
+import fast.rocket.response.NetworkResponse;
+import fast.rocket.response.Response;
 import fast.rocket.utils.Log;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;

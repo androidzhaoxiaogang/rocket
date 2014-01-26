@@ -2,15 +2,16 @@ package fast.rocket;
 
 import java.io.File;
 
+import fast.rocket.builder.CacheviewRequestBuilder;
+import fast.rocket.builder.ImageviewRequestBuilder;
+import fast.rocket.builder.JsonRequestBuilder;
 import fast.rocket.cache.*;
-import fast.rocket.config.CacheviewRequestBuilder;
-import fast.rocket.config.ImageviewRequestBuilder;
-import fast.rocket.config.JsonRequestBuilder;
 import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientStack;
 import fast.rocket.http.HttpStack;
 import fast.rocket.http.HurlStack;
 import fast.rocket.http.Network;
+import fast.rocket.request.RequestQueue;
 import fast.rocket.utils.AndroidHttpClient;
 
 import android.content.Context;

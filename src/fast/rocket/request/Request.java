@@ -1,5 +1,5 @@
 
-package fast.rocket;
+package fast.rocket.request;
 
 import android.net.TrafficStats;
 import android.net.Uri;
@@ -20,6 +20,8 @@ import fast.rocket.error.RocketError;
 import fast.rocket.error.TimeoutError;
 import fast.rocket.http.DefaultRetryPolicy;
 import fast.rocket.http.RetryPolicy;
+import fast.rocket.response.NetworkResponse;
+import fast.rocket.response.Response;
 import fast.rocket.utils.Log;
 import fast.rocket.utils.Log.MarkerLog;
 
@@ -107,7 +109,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * is provided by subclasses, who have a better idea of how to deliver an
      * already-parsed response.
      *
-     * @deprecated Use {@link #Request(int, String, fast.rocket.Response.ErrorListener)}.
+     * @deprecated Use {@link #Request(int, String, fast.rocket.response.Response.ErrorListener)}.
      */
     public Request(String url, Response.ErrorListener listener) {
         this(Method.DEPRECATED_GET_OR_POST, url, listener);
@@ -520,7 +522,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * @param rocketError the error retrieved from the network
      * @return an NetworkError augmented with additional information
      */
-    protected RocketError parseNetworkError(RocketError rocketError) {
+    public RocketError parseNetworkError(RocketError rocketError) {
         return rocketError;
     }
 

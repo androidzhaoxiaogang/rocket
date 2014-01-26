@@ -1,4 +1,4 @@
-package fast.rocket;
+package fast.rocket.request;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -6,11 +6,13 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import fast.rocket.Response.ErrorListener;
-import fast.rocket.Response.Listener;
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.error.ParseError;
 import fast.rocket.http.HttpHeaderParser;
+import fast.rocket.response.NetworkResponse;
+import fast.rocket.response.Response;
+import fast.rocket.response.Response.ErrorListener;
+import fast.rocket.response.Response.Listener;
 
 public class GsonRequest<T> extends Request<T> {
 	private final Gson gson = new Gson();

@@ -2,9 +2,9 @@
 package fast.rocket.http;
 
 
-import fast.rocket.Request;
-import fast.rocket.WrappedResponse;
 import fast.rocket.error.AuthFailureError;
+import fast.rocket.request.Request;
+import fast.rocket.response.WrappedResponse;
 
 
 import java.io.IOException;

@@ -1,5 +1,5 @@
 
-package fast.rocket;
+package fast.rocket.response;
 
 import org.apache.http.HttpStatus;
 

@@ -1,7 +1,8 @@
 
-package fast.rocket;
+package fast.rocket.response;
 
 import fast.rocket.error.RocketError;
+import fast.rocket.request.Request;
 
 public interface ResponseDelivery {
     /**
