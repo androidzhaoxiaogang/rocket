@@ -11,6 +11,7 @@ import fast.rocket.http.HttpClientStack;
 import fast.rocket.http.HttpStack;
 import fast.rocket.http.HurlStack;
 import fast.rocket.http.Network;
+import fast.rocket.request.RequestQueue;
 import fast.rocket.utils.AndroidHttpClient;
 
 import android.content.Context;

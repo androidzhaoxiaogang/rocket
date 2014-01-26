@@ -1,5 +1,5 @@
 
-package fast.rocket;
+package fast.rocket.dispatcher;
 
 import android.annotation.SuppressLint;
 import android.net.TrafficStats;
@@ -11,6 +11,10 @@ import java.util.concurrent.BlockingQueue;
 import fast.rocket.cache.Cache;
 import fast.rocket.error.RocketError;
 import fast.rocket.http.Network;
+import fast.rocket.request.Request;
+import fast.rocket.response.NetworkResponse;
+import fast.rocket.response.Response;
+import fast.rocket.response.ResponseDelivery;
 import fast.rocket.utils.Log;
 
 

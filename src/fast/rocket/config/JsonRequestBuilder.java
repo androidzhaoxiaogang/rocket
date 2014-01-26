@@ -4,13 +4,13 @@ import java.util.Map;
 
 import android.text.TextUtils;
 
-import fast.rocket.GsonRequest;
-import fast.rocket.Request.Method;
-import fast.rocket.Response.ErrorListener;
-import fast.rocket.Response.Listener;
 import fast.rocket.Rocket;
 import fast.rocket.cache.DiskCacheStrategy;
 import fast.rocket.error.RocketError;
+import fast.rocket.request.GsonRequest;
+import fast.rocket.request.Request.Method;
+import fast.rocket.response.Response.ErrorListener;
+import fast.rocket.response.Response.Listener;
 
 
 /**

@@ -1,7 +1,7 @@
 /*
  * 
  */
-package fast.rocket;
+package fast.rocket.response;
 
 import java.net.HttpURLConnection;
 

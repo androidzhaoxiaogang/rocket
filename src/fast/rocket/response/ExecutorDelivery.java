@@ -1,11 +1,12 @@
 
-package fast.rocket;
+package fast.rocket.response;
 
 import android.os.Handler;
 
 import java.util.concurrent.Executor;
 
 import fast.rocket.error.RocketError;
+import fast.rocket.request.Request;
 
 
 /**

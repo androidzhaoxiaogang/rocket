@@ -1,5 +1,5 @@
 
-package fast.rocket;
+package fast.rocket.response;
 
 import fast.rocket.cache.Cache;
 import fast.rocket.error.RocketError;

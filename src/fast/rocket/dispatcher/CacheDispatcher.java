@@ -1,11 +1,15 @@
 
-package fast.rocket;
+package fast.rocket.dispatcher;
 
 import android.os.Process;
 
 import java.util.concurrent.BlockingQueue;
 
 import fast.rocket.cache.Cache;
+import fast.rocket.request.Request;
+import fast.rocket.response.NetworkResponse;
+import fast.rocket.response.Response;
+import fast.rocket.response.ResponseDelivery;
 import fast.rocket.utils.Log;
 
 

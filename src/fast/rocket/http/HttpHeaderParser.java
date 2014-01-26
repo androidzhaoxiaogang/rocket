@@ -6,8 +6,8 @@ import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.http.protocol.HTTP;
 
-import fast.rocket.NetworkResponse;
 import fast.rocket.cache.Cache;
+import fast.rocket.response.NetworkResponse;
 
 
 import java.util.Map;

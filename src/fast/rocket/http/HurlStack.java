@@ -5,10 +5,10 @@ package fast.rocket.http;
 
 import android.text.TextUtils;
 
-import fast.rocket.Request;
-import fast.rocket.Request.Method;
-import fast.rocket.WrappedResponse;
 import fast.rocket.error.AuthFailureError;
+import fast.rocket.request.Request;
+import fast.rocket.request.Request.Method;
+import fast.rocket.response.WrappedResponse;
 
 
 import java.io.DataOutputStream;
