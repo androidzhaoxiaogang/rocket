@@ -1,6 +1,5 @@
 package fast.rocket.config;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface LaunchBuilder.
  */
