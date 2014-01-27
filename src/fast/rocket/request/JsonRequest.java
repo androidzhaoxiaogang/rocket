@@ -14,7 +14,7 @@ import fast.rocket.response.Response;
 import fast.rocket.response.Response.ErrorListener;
 import fast.rocket.response.Response.Listener;
 
-public class GsonRequest<T> extends Request<T> {
+public class JsonRequest<T> extends Request<T> {
 	private final Gson gson = new Gson();
 	private Class<T> clazz;
 	private Map<String, String> headers;
@@ -31,7 +31,7 @@ public class GsonRequest<T> extends Request<T> {
 	 * @param headers
 	 *            Map of request headers
 	 */
-	public GsonRequest(int method, String url, Class<T> clazz,
+	public JsonRequest(int method, String url, Class<T> clazz,
 			Map<String, String> headers, Map<String, String> params,
 			Listener<T> listener, ErrorListener errorListener) {
 		super(method, url, errorListener);

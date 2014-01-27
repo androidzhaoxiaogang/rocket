@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import fast.rocket.Rocket;
 import fast.rocket.cache.DiskCacheStrategy;
 import fast.rocket.error.RocketError;
-import fast.rocket.request.GsonRequest;
+import fast.rocket.request.JsonRequest;
 import fast.rocket.request.Request.Method;
 import fast.rocket.response.JsonCallback;
 import fast.rocket.response.Response.ErrorListener;
@@ -173,7 +173,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 			method = Method.POST;//reset the http method
 		}
 		
-		GsonRequest<T> request = new GsonRequest<T>(method, uri, clazz,
+		JsonRequest<T> request = new JsonRequest<T>(method, uri, clazz,
 				headers, params, new Listener<T>() {
 
 			@SuppressWarnings("unchecked")
