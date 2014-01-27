@@ -2,8 +2,7 @@ package fast.rocket.cache;
 
 import com.android.rocket.R;
 
-import fast.rocket.builder.CacheViewConfig;
-import fast.rocket.cache.ImageLoader.ImageCallback;
+import fast.rocket.builder.RocketImageBuilder;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.error.RocketError;
@@ -30,18 +29,6 @@ import android.widget.ImageView;
  */
 public class NetworkCacheView extends ImageView {
 
-	/** The skip disk cache. */
-	private boolean skipDiskCache;
-
-	/** The URL of the network image to load. */
-	private String mUrl;
-
-	/** The max image width. */
-	private int maxWidth;
-
-	/** The max image height. */
-	private int maxHeight;
-	
 	/** The image width. */
 	private int width;
 	
@@ -53,12 +40,6 @@ public class NetworkCacheView extends ImageView {
 
 	/** Current ImageContainer. (either in-flight or finished) */
 	private ImageContainer mImageContainer;
-
-	/** The callback. */
-	private ImageCallback callback;
-
-	/** The config. */
-	private CacheViewConfig config;
 
 	/** The bitmap. */
 	private Bitmap bitmap;
@@ -86,6 +67,8 @@ public class NetworkCacheView extends ImageView {
 
 	/** The shader. */
 	private BitmapShader shader;
+	
+	private RocketImageBuilder.Builder builder;
 
 	/**
 	 * Instantiates a new circular cache view.
@@ -186,10 +169,18 @@ public class NetworkCacheView extends ImageView {
 		} else {
 			BitmapDrawable drawable = (BitmapDrawable) getDrawable();
 			if (drawable == null) {
-				config.placeholder();
+				if (builder.placeholderResource != 0) {
+					setImageResource(builder.placeholderResource);
+				} else {
+					setImageDrawable(builder.placeholderDrawable);
+				}
 			} else if ((drawable.getBitmap() == null)
 					|| (drawable.getBitmap().isRecycled())) {
-				config.placeholder();
+				if (builder.placeholderResource != 0) {
+					setImageResource(builder.placeholderResource);
+				} else {
+					setImageDrawable(builder.placeholderDrawable);
+				}
 			}
 			
 			try {
@@ -228,14 +219,8 @@ public class NetworkCacheView extends ImageView {
 	 *            {@link NetworkCacheView#setErrorImageResId(int)} should be
 	 *            called prior to calling this function.
 	 */
-	public void setImageUrl(String url, ImageLoader imageLoader, int maxWidth,
-			int maxHeight, boolean skipDiskCache, final ImageCallback callback,
-			CacheViewConfig config) {
-		this.mUrl = url;
-		this.mImageLoader = imageLoader;
-		this.skipDiskCache = skipDiskCache;
-		this.callback = callback;
-		this.config = config;
+	public void setImageUrl(ImageLoader imageLoader, RocketImageBuilder.Builder builder) {
+		this.builder = builder;
 		// The URL has potentially changed. See if we need to load it.
 		loadImageIfNecessary(false);
 	}
@@ -280,7 +265,7 @@ public class NetworkCacheView extends ImageView {
 		// if the URL to be loaded in this view is empty, cancel any old
 		// requests and clear the
 		// currently loaded image.
-		if (TextUtils.isEmpty(mUrl)) {
+		if (TextUtils.isEmpty(builder.uri)) {
 			if (mImageContainer != null) {
 				mImageContainer.cancelRequest();
 				mImageContainer = null;
@@ -292,7 +277,7 @@ public class NetworkCacheView extends ImageView {
 		// if there was an old request in this view, check if it needs to be
 		// canceled.
 		if (mImageContainer != null && mImageContainer.getRequestUrl() != null) {
-			if (mImageContainer.getRequestUrl().equals(mUrl)) {
+			if (mImageContainer.getRequestUrl().equals(builder.uri)) {
 				// if the request is from the same URL, return.
 				return;
 			} else {
@@ -306,14 +291,14 @@ public class NetworkCacheView extends ImageView {
 		// The pre-existing content of this view didn't match the current URL.
 		// Load the new image
 		// from the network.
-		ImageContainer newContainer = mImageLoader.get(mUrl,
+		ImageContainer newContainer = mImageLoader.get(
 				new ImageListener() {
 					@Override
 					public void onErrorResponse(RocketError error) {
-						if(config != null) config.error();
-
-						if (callback != null) {
-							callback.onComplete(NetworkCacheView.this, null, false);
+						if (builder.errorResource != 0) {
+							setImageResource(builder.errorResource);
+						} else {
+							setImageDrawable(builder.errorDrawable);
 						}
 					}
 
@@ -339,17 +324,17 @@ public class NetworkCacheView extends ImageView {
 
 						if (response.getBitmap() != null) {
 							setImageBitmap(response.getBitmap());
-							if (callback != null) {
-								callback.onComplete(NetworkCacheView.this,
-										response.getBitmap(), isImmediate);
-							} else {
-								config.animateLoad();
-							}
+							RocketUtils.loadAnimation(NetworkCacheView.this, 
+									builder.inAnimation, builder.inAnimationResource);
 						} else {
-							config.placeholder();
+							if (builder.placeholderResource != 0) {
+								setImageResource(builder.placeholderResource);
+							} else {
+								setImageDrawable(builder.placeholderDrawable);
+							}
 						}
 					}
-				}, maxWidth, maxHeight, skipDiskCache, callback);
+				}, builder);
 
 		// update the ImageContainer to be the new bitmap container.
 		mImageContainer = newContainer;

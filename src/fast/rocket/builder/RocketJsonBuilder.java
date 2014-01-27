@@ -5,6 +5,7 @@ import java.util.Map;
 import android.text.TextUtils;
 
 import fast.rocket.Rocket;
+import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.DiskCacheStrategy;
 import fast.rocket.error.RocketError;
 import fast.rocket.request.JsonRequest;
@@ -13,11 +14,7 @@ import fast.rocket.response.JsonCallback;
 import fast.rocket.response.Response.ErrorListener;
 import fast.rocket.response.Response.Listener;
 
-
-/**
- * The Class JsonRequestBuilder for json request configuration.
- */
-public class JsonRequestBuilder implements LaunchBuilder {
+public class RocketJsonBuilder implements CacheBuilder{
 	
 	/** The future callback to be invoked after
 	 *  the json string being parsed. 
@@ -51,7 +48,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 *
 	 * @param rocket the rocket
 	 */
-	public JsonRequestBuilder(Rocket rocket) {
+	public RocketJsonBuilder(Rocket rocket) {
 		this.rocket = rocket;
 	}
 	
@@ -62,7 +59,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @return the rocket request builder
 	 */
 	@SuppressWarnings("rawtypes")
-	public JsonRequestBuilder invoke(JsonCallback callback) {
+	public RocketJsonBuilder invoke(JsonCallback callback) {
 		this.callback = callback;
 		return this;
 	}
@@ -73,7 +70,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param clazz the clazz
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder targetType(Class<?> clazz) {
+	public RocketJsonBuilder targetType(Class<?> clazz) {
 		this.clazz = clazz;
 		return this;
 	}
@@ -84,7 +81,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param tag the tag
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder requestTag(Object tag) {
+	public RocketJsonBuilder requestTag(Object tag) {
 		this.tag = tag;
 		return this;
 	}
@@ -95,7 +92,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
      * @param enableCookie the tag
      * @return the rocket request builder
      */
-    public JsonRequestBuilder enableCookie(boolean enableCookie) {
+    public RocketJsonBuilder enableCookie(boolean enableCookie) {
         this.isCookieEnabled = enableCookie;
         return this;
     }
@@ -106,7 +103,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
      * @param cacheStrategy the cache strategy
      * @return the rocket request builder
      */
-    public JsonRequestBuilder setCacheStrategy(DiskCacheStrategy cacheStrategy) {
+    public RocketJsonBuilder setCacheStrategy(DiskCacheStrategy cacheStrategy) {
         this.cacheStrategy = cacheStrategy;
         return this;
     }
@@ -117,7 +114,7 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param params the params
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder requestParams(Map<String, String> params) {
+	public RocketJsonBuilder requestParams(Map<String, String> params) {
 		this.params = params;
 		return this;
 	}
@@ -128,23 +125,17 @@ public class JsonRequestBuilder implements LaunchBuilder {
 	 * @param headers the headers
 	 * @return the rocket request builder
 	 */
-	public JsonRequestBuilder requestHeaders(Map<String, String> headers) {
+	public RocketJsonBuilder requestHeaders(Map<String, String> headers) {
         this.headers = headers;
         return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String)
-	 */
-	@Override
+	
 	public void load(String uri) {
 		load(Method.POST, uri);
 	}
 	
-	/* (non-Javadoc)
-	 * @see fast.rocket.config.LaunchBuilder#load(java.lang.String, java.lang.String)
-	 */
-	@Override
+
 	public void load(int method, String uri) {
 		if(TextUtils.isEmpty(uri)) return;
 		
@@ -198,5 +189,23 @@ public class JsonRequestBuilder implements LaunchBuilder {
         request.setCookieEnableOrDisable(isCookieEnabled);
         request.setCacheStrategy(cacheStrategy);
 		rocket.getRequestQueue().add(request);
+	}
+
+	@Override
+	public void cachePolicy(CachePolicy policy) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void skipMemoryCache(boolean skipMemoryCache) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void skipDiskCache(boolean skipDiskCache) {
+		// TODO Auto-generated method stub
+		
 	}
 }

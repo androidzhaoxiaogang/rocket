@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import fast.rocket.builder.RocketImageBuilder;
 import fast.rocket.error.RocketError;
 import fast.rocket.request.ImageRequest;
 import fast.rocket.request.Request;
@@ -157,6 +158,87 @@ public class ImageLoader {
 			}
 		};
 	}
+	
+	/**
+     * The default implementation of ImageListener which handles basic functionality
+     * of showing a default image until the network response is received, at which point
+     * it will switch to either the actual image or the error image.
+     *
+     * @param view the view
+     * @param placeholderDrawable the placeholder drawable
+     * @param defaultImageResId Default image resource ID to use, or 0 if it doesn't exist.
+     * @param errorDrawable the error drawable
+     * @param errorImageResId Error image resource ID to use, or 0 if it doesn't exist.
+     * @param animation the animation
+     * @param animationResource the animation resource
+     * @return the image listener
+     */
+	public static ImageListener getImageListener(final ImageView view,
+			final Drawable placeholderDrawable, final int defaultImageResId,
+			final Drawable errorDrawable, final int errorImageResId,
+			final Animation animation, final int animationResource) {
+		return new ImageListener() {
+			@Override
+			public void onErrorResponse(RocketError error) {
+				if (errorImageResId != 0) {
+					view.setImageResource(errorImageResId);
+				} else {
+					view.setImageDrawable(errorDrawable);
+				}
+			}
+
+			@Override
+			public void onResponse(ImageContainer response, boolean isImmediate) {
+				if (response.getBitmap() != null) {
+					setImageBitmap(view, response.getBitmap(), animation,
+							animationResource);
+				} else if (defaultImageResId != 0) {
+					view.setImageResource(defaultImageResId);
+				} else {
+					view.setImageDrawable(placeholderDrawable);
+				}
+			}
+		};
+	}
+	
+	/**
+     * The default implementation of ImageListener which handles basic functionality
+     * of showing a default image until the network response is received, at which point
+     * it will switch to either the actual image or the error image.
+     *
+     * @param view the view
+     * @param placeholderDrawable the placeholder drawable
+     * @param defaultImageResId Default image resource ID to use, or 0 if it doesn't exist.
+     * @param errorDrawable the error drawable
+     * @param errorImageResId Error image resource ID to use, or 0 if it doesn't exist.
+     * @param animation the animation
+     * @param animationResource the animation resource
+     * @return the image listener
+     */
+	public static ImageListener getImageListener(final ImageView view, final RocketImageBuilder.Builder builder) {
+		return new ImageListener() {
+			@Override
+			public void onErrorResponse(RocketError error) {
+				if (builder.errorResource != 0) {
+					view.setImageResource(builder.errorResource);
+				} else {
+					view.setImageDrawable(builder.errorDrawable);
+				}
+			}
+
+			@Override
+			public void onResponse(ImageContainer response, boolean isImmediate) {
+				if (response.getBitmap() != null) {
+					setImageBitmap(view, response.getBitmap(), 
+							builder.outAnimation, builder.outAnimationResource);
+				} else if (builder.placeholderResource != 0) {
+					view.setImageResource(builder.placeholderResource);
+				} else {
+					view.setImageDrawable(builder.placeholderDrawable);
+				}
+			}
+		};
+	}
     
     /**
      * Sets a {@link android.graphics.Bitmap} to an {@link android.widget.ImageView} using a
@@ -232,10 +314,10 @@ public class ImageLoader {
      * @param skipDiskCache the skip disk cache
      * @return the image container
      */
-    public ImageContainer get(String requestUrl, final ImageListener listener, 
-    		int maxWidth, int maxHeight,final boolean skipDiskCache, final ImageCallback callback) {
-        return get(requestUrl, listener, maxWidth, maxHeight, false, skipDiskCache);
-    }
+//    public ImageContainer get(String requestUrl, final ImageListener listener, 
+//    		int maxWidth, int maxHeight,final boolean skipDiskCache) {
+//        return get(requestUrl, listener, maxWidth, maxHeight, false, skipDiskCache);
+//    }
     
     /**
      * Issues a bitmap request with the given URL if that image is not available
@@ -268,26 +350,24 @@ public class ImageLoader {
      * @return A container object that contains all of the properties of the request, as well as
      *     the currently available image (default if remote is not loaded).
      */
-    public ImageContainer get(String requestUrl, ImageListener imageListener,
-            int maxWidth, int maxHeight, final boolean skipMemoryCache,
-            final boolean skipDiskCache) {
+    public ImageContainer get(ImageListener imageListener, final RocketImageBuilder.Builder builder) {
         // only fulfill requests that were initiated from the main thread.
         throwIfNotOnMainThread();
 
-        final String cacheKey = getCacheKey(requestUrl, maxWidth, maxHeight);
+        final String cacheKey = getCacheKey(builder.uri, builder.resizeWidth, builder.resizeHeight);
 
         // Try to look up the request in the cache of remote images.
         Bitmap cachedBitmap = mCache.getBitmap(cacheKey);
         if (cachedBitmap != null) {
             // Return the cached bitmap.
-            ImageContainer container = new ImageContainer(cachedBitmap, requestUrl, null, null);
+            ImageContainer container = new ImageContainer(cachedBitmap, builder.uri, null, null);
             imageListener.onResponse(container, true);
             return container;
         }
 
         // The bitmap did not exist in the cache, fetch it!
         ImageContainer imageContainer =
-                new ImageContainer(null, requestUrl, cacheKey, imageListener);
+                new ImageContainer(null, builder.uri, cacheKey, imageListener);
 
         // Update the caller to let them know that they should use the default bitmap.
         imageListener.onResponse(imageContainer, true);
@@ -303,19 +383,19 @@ public class ImageLoader {
         // The request is not already in flight. Send the new request to the network and
         // track it.
         Request<?> newRequest =
-            new ImageRequest(requestUrl, new Listener<Bitmap>() {
+            new ImageRequest(builder.uri, new Listener<Bitmap>() {
                 @Override
                 public void onResponse(Bitmap response) {
-                    onGetImageSuccess(cacheKey, response, skipMemoryCache);
+                    onGetImageSuccess(cacheKey, response, builder.skipMemoryCache);
                 }
-            }, maxWidth, maxHeight,
+            }, builder.resizeWidth, builder.resizeHeight,
             Config.RGB_565, new ErrorListener() {
                 @Override
                 public void onErrorResponse(RocketError error) {
                     onGetImageError(cacheKey, error);
                 }
             });
-        newRequest.setShouldCache(!skipDiskCache);
+        newRequest.setShouldCache(!builder.skipDiskCache);
         mRequestQueue.add(newRequest);
         mInFlightRequests.put(cacheKey,
                 new BatchedImageRequest(newRequest, imageContainer));
