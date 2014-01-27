@@ -8,6 +8,13 @@ public interface BitmapBuilder<B extends BitmapBuilder<?>> {
      * @return
      */
     public B resize(int width, int height);
+    
+    /** Resize the image to the specified dimension size.
+     * @param targetWidthResId
+     * @param targetHeightResId
+     * @return
+     */		
+    public B resizeDimen(int targetWidthResId, int targetHeightResId);
 
     /**
      * Center the image inside of the bounds specified by the ImageView or resize
@@ -24,11 +31,5 @@ public interface BitmapBuilder<B extends BitmapBuilder<?>> {
      * @return
      */
     public B centerInside();
-
-    /**
-     * Enable/disable automatic resizing to the dimensions of the device when loading the image.
-     * @param smartSize
-     * @return
-     */
-    public B smartSize(boolean smartSize);
+    
 }
