@@ -16,6 +16,7 @@ public interface LoadBuilder<L> {
      * @param url Url to load.
      * @return
      */
+
     public L load(int method, String url);
 
     /**

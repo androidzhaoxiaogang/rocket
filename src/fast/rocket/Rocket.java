@@ -2,7 +2,6 @@ package fast.rocket;
 
 import java.io.File;
 
-import fast.rocket.builder.RocketRequestBuilder;
 import fast.rocket.cache.*;
 import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientStack;

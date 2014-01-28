@@ -1,5 +1,6 @@
 package fast.rocket.builder;
 
+<<<<<<< HEAD
 import java.util.Map;
 
 import android.text.TextUtils;

@@ -1,21 +1,36 @@
 package fast.rocket.builder;
 
-import java.io.File;
-
 import android.content.Context;
-
-import com.google.gson.reflect.TypeToken;
-
 import fast.rocket.Rocket;
 import fast.rocket.cache.CachePolicy;
+import java.io.File;
 
 @SuppressWarnings("rawtypes")
-public class RocketRequestBuilder implements RequestBuilder, LoadBuilder<RocketRequestBuilder>, CacheBuilder {
+public class RocketRequestBuilder implements RequestBuilder,
+		LoadBuilder<RocketRequestBuilder>, CacheBuilder {
 	private Context context;
 	private Rocket rocket;
-	
+
 	public RocketRequestBuilder(Context context, Rocket rocket) {
 		this.context = context;
+	}
+
+	@Override
+	public void cachePolicy(CachePolicy policy) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void skipMemoryCache(boolean skipMemoryCache) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void skipDiskCache(boolean skipDiskCache) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -44,27 +59,13 @@ public class RocketRequestBuilder implements RequestBuilder, LoadBuilder<RocketR
 
 	@Override
 	public void group(Object groupKey) {
-	}
-
-	@Override
-	public RocketImageBuilder asImage() {
-		return new RocketImageBuilder(context);
-	}
-
-	@Override
-	public void cachePolicy(CachePolicy policy) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void skipMemoryCache(boolean skipMemoryCache) {
-		
-	}
-
-	@Override
-	public void skipDiskCache(boolean skipDiskCache) {
-		
+	public ImageViewBuilder asImage() {
+		return new RocketImageBuilder(this.context);
 	}
 
 	@Override
@@ -79,4 +80,5 @@ public class RocketRequestBuilder implements RequestBuilder, LoadBuilder<RocketR
 		
 	}
 
+	
 }
