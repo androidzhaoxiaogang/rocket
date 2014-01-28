@@ -207,8 +207,8 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>, CacheB
 	}
 
 	@Override
-	public RocketJsonBuilder enableCookie(boolean enableCookie) {
-		this.isCookieEnabled = enableCookie;
+	public RocketJsonBuilder enableCookie(boolean enable) {
+		this.isCookieEnabled = enable;
 		return this;
 	}
 
