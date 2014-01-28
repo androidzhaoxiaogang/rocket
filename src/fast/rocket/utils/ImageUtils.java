@@ -1,6 +1,6 @@
 package fast.rocket.utils;
 
-import fast.rocket.builder.ImageBuilder.ScaleMode;
+import fast.rocket.builder.ImageViewBuilder.ScaleMode;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;

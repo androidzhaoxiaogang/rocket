@@ -2,9 +2,17 @@ package fast.rocket.builder;
 
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
+import android.widget.ImageView;
+import fast.rocket.cache.NetworkCacheView;
 
 public interface ImageViewBuilder<I extends ImageViewBuilder<?>> {
-    /**
+	public enum ScaleMode {
+	    FitXY,
+	    CenterCrop,
+	    CenterInside
+	}
+	
+	/**
      * Set a placeholder on the ImageView while the request is loading
      * @param drawable
      * @return
@@ -67,4 +75,53 @@ public interface ImageViewBuilder<I extends ImageViewBuilder<?>> {
      * @return
      */
     public I animateOut(int animationResource);
+    
+    /**
+     * Resize the bitmap to the given dimensions.
+     * @param width
+     * @param height
+     * @return
+     */
+    public I resize(int width, int height);
+    
+    /** Resize the image to the specified dimension size.
+     * @param targetWidthResId
+     * @param targetHeightResId
+     * @return
+     */		
+    public I resizeDimen(int targetWidthResId, int targetHeightResId);
+
+    /**
+     * Center the image inside of the bounds specified by the ImageView or resize
+     * operation. This will scale the image so that it fills the bounds, and crops
+     * the extra.
+     * @return
+     */
+    public I centerCrop();
+
+    /**
+     * Center the image inside of the bounds specified by the ImageView or resize
+     * operation. This will scale the image so that one dimension is as large as the requested
+     * bounds.
+     * @return
+     */
+    public I centerInside();
+	
+	  /**
+     * Perform the request and get the result as a Bitmap, which will then be loaded
+     * into the given ImageView
+     * @param imageView ImageView to set once the request completes
+     * @return
+     */
+    public void into(ImageView imageView);
+    
+    /**
+     * Perform the request and get the result as a Bitmap, which will then be loaded
+     * into the given ImageView.The image references managed by the LRU bitmap cache
+     * and the image file managed by the LRU disk cache.
+     * @param imageView NetworkCacheView to set once the request completes
+     * @return
+     */
+    public void into(NetworkCacheView imageView);
+
 }

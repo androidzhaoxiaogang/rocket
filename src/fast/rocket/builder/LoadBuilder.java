@@ -16,7 +16,8 @@ public interface LoadBuilder<L> {
      * @param url Url to load.
      * @return
      */
-    public L load(String method, String url);
+
+    public L load(int method, String url);
 
     /**
      * Load a file from local or remote.

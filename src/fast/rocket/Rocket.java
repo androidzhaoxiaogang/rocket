@@ -2,9 +2,7 @@ package fast.rocket;
 
 import java.io.File;
 
-import fast.rocket.builder.CacheviewRequestBuilder;
-import fast.rocket.builder.ImageviewRequestBuilder;
-import fast.rocket.builder.JsonRequestBuilder;
+import fast.rocket.builder.RocketRequestBuilder;
 import fast.rocket.cache.*;
 import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientStack;
@@ -19,8 +17,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Looper;
-import android.widget.ImageView;
 
 /**
  * The Class Rocket.
@@ -41,11 +37,13 @@ public class Rocket {
 	/** The Rocket library name. */
 	private String name;
 	
-    /** The network for network request and response. */
+    /** The network holds the http client for network request and response. */
     private Network network;
     
-    /** The cache. */
+    /** The disk cache to store instant images or objects. */
     private Cache cache;
+    
+    private Context context;
 
 	/**
 	 *  Get the default Rocket object instance and begin building a request.
@@ -53,31 +51,9 @@ public class Rocket {
 	 * @param context the context
 	 * @return the rocket request builder
 	 */
-	public static JsonRequestBuilder with(Context context) {
+	public static RocketRequestBuilder with(Context context) {
 		 return getDefault(context).build();
 	}
-	
-	/**
-	 * Create a ImageView image request builder.
-	 *
-	 * @param imageView the image view
-	 * @return the imageview request builder
-	 */
-    public static ImageviewRequestBuilder with(ImageView imageView) {
-    	Rocket rocket = getDefault(imageView.getContext());
-        return rocket.build(imageView);
-    }
-    
-    /**
-     * Create a CacheImageView image request builder.
-     *
-     * @param imageView the image view
-     * @return the cacheview request builder
-     */
-    public static CacheviewRequestBuilder with(NetworkCacheView imageView) {
-    	Rocket rocket = getDefault(imageView.getContext());
-        return rocket.build(imageView);
-    }
 	
 	/**
 	 * Get the default Rocket instance.
@@ -87,7 +63,7 @@ public class Rocket {
 	 */
     public static Rocket getDefault(Context context) {
         if (instance == null)
-            instance = new Rocket(context, "Rocket");
+            instance = new Rocket(context, "Rocket V1.0");
         return instance;
     }
     
@@ -195,39 +171,8 @@ public class Rocket {
      *
      * @return the rocket request builder
      */
-    public JsonRequestBuilder build() {
-    	return new JsonRequestBuilder(this);
-    }
-    
-    /**
-     * Create a image request builder that can be used to
-     * build an network image request.
-     *
-     * @param imageView the image view
-     * @return ImageviewRequestBuilder
-     */
-    public ImageviewRequestBuilder build(ImageView imageView) {
-        if (Thread.currentThread() != Looper.getMainLooper().getThread())
-            throw new IllegalStateException("must be called from UI thread");
-        final ImageviewRequestBuilder imageBuilder = new ImageviewRequestBuilder();
-        imageBuilder.rocket = this;
-        return imageBuilder.withImageView(imageView);
-    }
-    
-    /**
-     * Create a cache image request builder that can be used to
-     * build an network image request.
-     *
-     * @param imageView the image view
-     * @return the cacheview request builder
-     */
-    public CacheviewRequestBuilder build(NetworkCacheView imageView) {
-        if (Thread.currentThread() != Looper.getMainLooper().getThread())
-            throw new IllegalStateException("must be called from UI thread");
-        final CacheviewRequestBuilder imageBuilder = 
-        		new CacheviewRequestBuilder();
-        imageBuilder.rocket = this;
-        return imageBuilder.withImageView(imageView);
+    public RocketRequestBuilder build() {
+    	return new RocketRequestBuilder(context, this);
     }
     
     /**
@@ -288,6 +233,7 @@ public class Rocket {
 		this.name = name;
 		this.requestQueue = newRequestQueue(context);
 		this.imageLoader = new ImageLoader(requestQueue, new BitmapLruCache());
+		this.context = context;
 	}
 	
 	/**
