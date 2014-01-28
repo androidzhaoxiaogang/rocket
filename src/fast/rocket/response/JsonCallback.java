@@ -3,7 +3,7 @@ package fast.rocket.response;
 import fast.rocket.error.RocketError;
 
 /**
- * The Interface FutureCallback.
+ * The Interface JsonCallback.
  *
  * @param <T> the generic type
  */

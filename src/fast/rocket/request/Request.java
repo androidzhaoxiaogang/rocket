@@ -291,7 +291,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /**
      * makes the request as cookie enabled;
      */
-    public void setCookieEnableOrDisable(boolean enabled) {
+    public void setCookieEnable(boolean enabled) {
         mCookieEnabled = enabled;
     }
 

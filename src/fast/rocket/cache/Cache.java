@@ -74,7 +74,7 @@ public interface Cache {
         /** True if the entry is expired. */
         public boolean isExpired() {
             if (this.cachePolicy != null) {
-                return this.cachePolicy.isCacheExpired();
+                //return this.cachePolicy.isCacheExpired();
             } else {
                 return this.ttl < System.currentTimeMillis();
             }

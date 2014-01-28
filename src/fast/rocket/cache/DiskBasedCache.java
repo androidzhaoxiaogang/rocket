@@ -41,13 +41,13 @@ public class DiskBasedCache implements Cache {
     private final int mMaxCacheSizeInBytes;
 
     /** Default maximum disk usage in bytes. */
-    private static final int DEFAULT_DISK_USAGE_BYTES = 20 * 1024 * 1024;
+    private static final int DEFAULT_DISK_USAGE_BYTES = 10 << 20;
 
     /** High water mark percentage for the cache */
     private static final float HYSTERESIS_FACTOR = 0.9f;
 
     /** Magic number for current version of cache file format. */
-    private static final int CACHE_MAGIC = 0x20131020;
+    private static final int CACHE_MAGIC = 0x20140120;
 
     /**
      * Constructs an instance of the DiskBasedCache at the specified directory.

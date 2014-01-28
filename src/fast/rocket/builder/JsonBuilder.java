@@ -5,8 +5,11 @@ import java.util.Map;
 import fast.rocket.response.JsonCallback;
 
 public interface JsonBuilder<J extends JsonBuilder<?>>{
+	/**
+	 * @param callback
+	 * @return
+	 */
 	public J invoke(JsonCallback<?> callback);
-	
 	
 	/**
 	 * Sets the request tag. Request can be removed by the tag.
@@ -16,14 +19,6 @@ public interface JsonBuilder<J extends JsonBuilder<?>>{
 	 */
 	public J requestTag(Object tag);
 
-    /**
-     * Sets the request cookie tag. Request can be removed by the tag.
-     *
-     * @param enableCookie the tag
-     * @return the rocket request builder
-     */
-    public J enableCookie(boolean enableCookie);
-	
 	/**
 	 * Sets the request params for the http post.
 	 *
@@ -39,4 +34,12 @@ public interface JsonBuilder<J extends JsonBuilder<?>>{
 	 * @return the rocket request builder
 	 */
 	public J requestHeaders(Map<String, String> headers);
+	
+	/**
+     * Sets the request cookie tag. Request can be removed by the tag.
+     *
+     * @param enableCookie the tag
+     * @return the rocket request builder
+     */
+    public J enableCookie(boolean enableCookie);
 }
