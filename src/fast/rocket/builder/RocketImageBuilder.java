@@ -16,7 +16,8 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 
 @SuppressWarnings("rawtypes")
-public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder, LoadBuilder<RocketImageBuilder> {
+public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<RocketImageBuilder>,
+		LoadBuilder<RocketImageBuilder> {
 
 	public Rocket rocket;
 	private Context context;
@@ -25,24 +26,12 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder, LoadB
 	private ScaleMode scaleMode = ScaleMode.FitXY;
 	private CachePolicy cachePolicy = CachePolicy.CACHEFIRST;
 	
-	public RocketImageBuilder (Context context) {
+	public RocketImageBuilder (Context context, RocketRequestBuilder requestBuilder) {
 		this.context = context;
-		builder = new Builder(scaleMode, cachePolicy);
+		this.builder = new Builder(scaleMode, cachePolicy);
+		this.rocket = requestBuilder.rocket;
 	}
 	
-	/**
-	 * With image view.
-	 * 
-	 * @param imageView NetworkCacheView
-	 *            
-	 * @return the image request builder
-	 */
-	public RocketImageBuilder withImageView(Context context) {
-		this.context = context;
-		builder = new Builder(scaleMode, cachePolicy);
-		return this;
-	}
-
 	@Override
 	public RocketImageBuilder placeholder(Drawable drawable) {
 		builder.placeholderDrawable = drawable;
@@ -140,18 +129,21 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder, LoadB
 	}
 
 	@Override
-	public void cachePolicy(CachePolicy policy) {
+	public RocketImageBuilder cachePolicy(CachePolicy policy) {
 		builder.cachePolicy = policy;
+		return this;
 	}
 
 	@Override
-	public void skipMemoryCache(boolean skipMemoryCache) {
+	public RocketImageBuilder skipMemoryCache(boolean skipMemoryCache) {
 		builder.skipMemoryCache = skipMemoryCache;
+		return this;
 	}
 
 	@Override
-	public void skipDiskCache(boolean skipDiskCache) {
+	public RocketImageBuilder skipDiskCache(boolean skipDiskCache) {
 		builder.skipDiskCache = skipDiskCache;
+		return this;
 	}
 
 	@Override
@@ -199,6 +191,5 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder, LoadB
 			cachePolicy = cp;
 		}
 	}
-
 
 }

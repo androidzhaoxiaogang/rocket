@@ -168,7 +168,7 @@ public class DiskBasedCache implements Cache {
             if (fullExpire) {
                 entry.ttl = 0;
             }
-            entry.cacheStrategy = null;
+            entry.cachePolicy = null;
             put(key, entry);
         }
 
@@ -340,7 +340,7 @@ public class DiskBasedCache implements Cache {
         public Map<String, String> responseHeaders;
 
         /** Cache Strategy for this record. */
-        public DiskCacheStrategy cacheStrategy;
+        public CachePolicy cachePolicy;
 
         /** Cache Strategy type for this record. */
         public int cacheStrategyType;
@@ -364,10 +364,10 @@ public class DiskBasedCache implements Cache {
             this.ttl = entry.ttl;
             this.softTtl = entry.softTtl;
             this.responseHeaders = entry.responseHeaders;
-            this.cacheStrategy = entry.cacheStrategy;
-            if (null != this.cacheStrategy) {
-                this.cacheStrategyType = this.cacheStrategy.getCacheType();
-                this.cacheStrategyExpires = this.cacheStrategy.getExpires();
+            this.cachePolicy = entry.cachePolicy;
+            if (null != this.cachePolicy) {
+                this.cacheStrategyType = this.cachePolicy.getCacheType();
+                this.cacheStrategyExpires = this.cachePolicy.getExpires();
             }
         }
 
@@ -457,7 +457,7 @@ public class DiskBasedCache implements Cache {
 			return "CacheHeader [size=" + size + ", key=" + key + ", etag="
 					+ etag + ", serverDate=" + serverDate + ", ttl=" + ttl
 					+ ", softTtl=" + softTtl + ", responseHeaders="
-					+ responseHeaders + ", cacheStrategy=" + cacheStrategy
+					+ responseHeaders + ", cacheStrategy=" + cachePolicy
 					+ ", cacheStrategyType=" + cacheStrategyType
 					+ ", cacheStrategyExpires=" + cacheStrategyExpires + "]";
 		}

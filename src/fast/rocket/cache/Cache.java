@@ -69,12 +69,12 @@ public interface Cache {
         public Map<String, String> responseHeaders = Collections.emptyMap();
 
         /** Cache Strategy for this record. */
-        public DiskCacheStrategy cacheStrategy;
+        public CachePolicy cachePolicy;
 
         /** True if the entry is expired. */
         public boolean isExpired() {
-            if (this.cacheStrategy != null) {
-                return this.cacheStrategy.isCacheExpired();
+            if (this.cachePolicy != null) {
+                return this.cachePolicy.isCacheExpired();
             } else {
                 return this.ttl < System.currentTimeMillis();
             }

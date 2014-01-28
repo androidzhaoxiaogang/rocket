@@ -1,6 +1,6 @@
 package fast.rocket.builder;
 
-<<<<<<< HEAD
+import java.io.File;
 import java.util.Map;
 
 import android.text.TextUtils;
@@ -15,7 +15,7 @@ import fast.rocket.response.JsonCallback;
 import fast.rocket.response.Response.ErrorListener;
 import fast.rocket.response.Response.Listener;
 
-public class RocketJsonBuilder implements CacheBuilder{
+public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>, CacheBuilder<RocketJsonBuilder>, LoadBuilder<RocketJsonBuilder>{
 	
 	/** The future callback to be invoked after
 	 *  the json string being parsed. 
@@ -41,114 +41,87 @@ public class RocketJsonBuilder implements CacheBuilder{
     /** The enable cookie tag. */
     private boolean isCookieEnabled;
 
-    /** The Cache Strategy. */
-    private DiskCacheStrategy cacheStrategy;
+    private CachePolicy cachePolicy;
     
 	/**
 	 * Instantiates a new rocket request builder.
 	 *
 	 * @param rocket the rocket
 	 */
-	public RocketJsonBuilder(Rocket rocket) {
+	public RocketJsonBuilder(Rocket rocket, Class<?> clazz) {
 		this.rocket = rocket;
-	}
-	
-	/**
-	 * Sets the callback.
-	 *
-	 * @param callback the callback
-	 * @return the rocket request builder
-	 */
-	@SuppressWarnings("rawtypes")
-	public RocketJsonBuilder invoke(JsonCallback callback) {
-		this.callback = callback;
-		return this;
-	}
-	
-	/**
-	 * Sets the json parsed class type. The gson parser will put the result to the class object.
-	 *
-	 * @param clazz the clazz
-	 * @return the rocket request builder
-	 */
-	public RocketJsonBuilder targetType(Class<?> clazz) {
 		this.clazz = clazz;
-		return this;
 	}
 	
-	/**
-	 * Sets the request tag. Request can be removed by the tag.
-	 *
-	 * @param tag the tag
-	 * @return the rocket request builder
-	 */
-	public RocketJsonBuilder requestTag(Object tag) {
-		this.tag = tag;
+	@Override
+	public RocketJsonBuilder skipMemoryCache(boolean skipMemoryCache) {
 		return this;
 	}
 
-    /**
-     * Sets the request cookie tag. Request can be removed by the tag.
-     *
-     * @param enableCookie the tag
-     * @return the rocket request builder
-     */
-    public RocketJsonBuilder enableCookie(boolean enableCookie) {
-        this.isCookieEnabled = enableCookie;
-        return this;
-    }
-
-    /**
-     * Sets the request api cache strategy. Request can be removed by the tag.
-     *
-     * @param cacheStrategy the cache strategy
-     * @return the rocket request builder
-     */
-    public RocketJsonBuilder setCacheStrategy(DiskCacheStrategy cacheStrategy) {
-        this.cacheStrategy = cacheStrategy;
-        return this;
-    }
-	
-	/**
-	 * Sets the request params for the http post.
-	 *
-	 * @param params the params
-	 * @return the rocket request builder
-	 */
-	public RocketJsonBuilder requestParams(Map<String, String> params) {
-		this.params = params;
+	@Override
+	public RocketJsonBuilder skipDiskCache(boolean skipDiskCache) {
 		return this;
 	}
-	
-	/**
-	 * Sets the json request http headers.
-	 *
-	 * @param headers the headers
-	 * @return the rocket request builder
-	 */
-	public RocketJsonBuilder requestHeaders(Map<String, String> headers) {
-        this.headers = headers;
-        return this;
+
+	@Override
+	public RocketJsonBuilder load(File file) {
+		return null;
 	}
 
-	
-	public void load(String uri) {
+	@Override
+	public RocketJsonBuilder load(String uri) {
 		load(Method.POST, uri);
+		return this;
 	}
-	
 
-	public void load(int method, String uri) {
-		if(TextUtils.isEmpty(uri)) return;
+	@Override
+	public RocketJsonBuilder load(int method, String url) {
+		if(TextUtils.isEmpty(url)) {
+			throw new IllegalArgumentException("Json request url is null");
+		}
 		
 		if(clazz == null || callback == null) {
 			throw new IllegalArgumentException("Initialization params is null");
 		}
 		
-//		if (Build.VERSION.SDK_INT >= 9 && uri.startsWith("https")) {
-//			RocketX509TrustManager.allowAllSSL();  
-//		}
-//		
-		addRequest(method, uri, clazz);
+		addRequest(method, url, clazz);
+		return this;
+	}
+
+	@Override
+	public RocketJsonBuilder invoke(JsonCallback<?> callback) {
+		this.callback = callback;
+		return this;
+	}
+
+	@Override
+	public RocketJsonBuilder cachePolicy(CachePolicy cachePolicy) {
+		this.cachePolicy = cachePolicy;
+		return this;
+	}
+
+	@Override
+	public RocketJsonBuilder requestTag(Object tag) {
+		this.tag = tag;
+		return this;
+	}
+
+	@Override
+	public RocketJsonBuilder enableCookie(boolean enable) {
+		this.isCookieEnabled = enable;
+		return this;
+	}
+
+	@Override
+	public RocketJsonBuilder requestParams(Map<String, String> params) {
+		this.params = params;
+		return this;
+	}
+
+	@Override
+	public RocketJsonBuilder requestHeaders(Map<String, String> headers) {
+		this.headers = headers;
+		return this;
 	}
 
 	//***************************private apis***************************************//
@@ -188,25 +161,8 @@ public class RocketJsonBuilder implements CacheBuilder{
 		
 		if(tag != null) request.setTag(tag);
         request.setCookieEnableOrDisable(isCookieEnabled);
-        request.setCacheStrategy(cacheStrategy);
+        request.setCacheStrategy(cachePolicy);
 		rocket.getRequestQueue().add(request);
 	}
-
-	@Override
-	public void cachePolicy(CachePolicy policy) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void skipMemoryCache(boolean skipMemoryCache) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void skipDiskCache(boolean skipDiskCache) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }

@@ -2,6 +2,7 @@ package fast.rocket;
 
 import java.io.File;
 
+import fast.rocket.builder.RocketRequestBuilder;
 import fast.rocket.cache.*;
 import fast.rocket.http.BasicNetwork;
 import fast.rocket.http.HttpClientStack;
@@ -36,10 +37,10 @@ public class Rocket {
 	/** The Rocket library name. */
 	private String name;
 	
-    /** The network for network request and response. */
+    /** The network holds the http client for network request and response. */
     private Network network;
     
-    /** The cache. */
+    /** The disk cache to store instant images or objects. */
     private Cache cache;
     
     private Context context;
@@ -62,7 +63,7 @@ public class Rocket {
 	 */
     public static Rocket getDefault(Context context) {
         if (instance == null)
-            instance = new Rocket(context, "Rocket");
+            instance = new Rocket(context, "Rocket V1.0");
         return instance;
     }
     
