@@ -21,7 +21,7 @@ package fast.rocket.cache;
  * CachePolicy.BOTH This policy will first retrieve an element from the cache, if the
  * cached data does not exist or is expired and then it will attempt to execute the 
  * request on line. Use this policy if you want more responsiveness without sacrificing 
- * the consistency of data with your backend. Also it does the volley same way.
+ * the consistency of data with your backend. Also it does the volley same way. 
  * 
  * */
 public enum CachePolicy {
