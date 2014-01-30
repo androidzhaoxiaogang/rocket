@@ -48,7 +48,7 @@ package fast.rocket.cache;
  * Backend but the cache will not be updated with the new results. Use this
  * policy if you want to set default results, however if a request is made that
  * cannot return these defaults a live request will be made (without modifying
- * those default values) 
+ * those default values).
  * 
  * CachePolicy.NETWORKFIRST - This policy will execute the request on the
  * network, and will store the result in the cache. If the online execution
