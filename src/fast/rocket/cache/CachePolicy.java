@@ -45,7 +45,7 @@ package fast.rocket.cache;
  * CachePolicy.CACHEFIRST_NOREFRESH - This policy will first attempt to retrieve
  * data from the cache. If the data has been cached, it will be returned. If the
  * data does not exist in the cache, the data will be retrieved from server
- * Backend but the cache will not be updated with the new results. Use this
+ * backend but the cache will not be updated with the new results. Use this
  * policy if you want to set default results, however if a request is made that
  * cannot return these defaults a live request will be made (without modifying
  * those default values).
