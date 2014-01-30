@@ -14,7 +14,8 @@ package fast.rocket.cache;
  * the cache. If the data has been cached, it will be returned. If the data does
  * not exist in the cache, the data will be retrieved from server Backend and
  * the cache will be updated. Use this policy if your application can display
- * data that doesn't change very often but you still want local updates.
+ * data that doesn't change very often but you still want local updates.Also, the
+ * expired data won't display for the user and does the volley way.
  * 
  * CachePolicy.CACHEFIRST_NOREFRESH - This policy will first attempt to retrieve
  * data from the cache. If the data has been cached, it will be returned. If the
@@ -32,17 +33,17 @@ package fast.rocket.cache;
  * 
  * CachePolicy.BOTH - This policy will first retrieve an element from the cache,
  * and then it will attempt to execute the request on line.Use this policy if
- * you want more responsiveness without sacrificing the consistency of data with
- * your backend.
+ * you want the cache data update every time but the first loads the cached data
+ * to display for the user whether expired or not.
  * 
  * */
 
-public enum CachePolicy {
-	NOCACHE,
+public enum CachePolicy { 
+	NOCACHE, // equals network only 
 
-	CACHEONLY,
+	CACHEONLY, 
 
-	CACHEFIRST,
+	CACHEFIRST, // same as volley does
 
 	CACHEFIRST_NOREFRESH,
 
