@@ -41,7 +41,7 @@ package fast.rocket.cache;
 public enum CachePolicy { 
 	NOCACHE, // equals network only 
 
-	CACHEONLY, 
+	CACHEONLY,  
 
 	CACHEFIRST, // same as volley does
 
