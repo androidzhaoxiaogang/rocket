@@ -6,6 +6,4 @@ public interface CacheBuilder<T> {
 	T cachePolicy(CachePolicy policy);
 	
 	T skipMemoryCache(boolean skipMemoryCache);
-	
-	T skipDiskCache(boolean skipDiskCache);
 }

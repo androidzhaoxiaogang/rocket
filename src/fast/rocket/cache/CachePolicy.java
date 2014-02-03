@@ -2,7 +2,7 @@ package fast.rocket.cache;
 
 /**
  * CachePolicy.NOCACHE - This policy will not use any caching, and will execute
- * every request online. Use this policy if your application is dependant on
+ * every request online. Use this policy if your application is dependent on
  * data that is shared between multiple users and always needs to be up to date.
  * 
  * CachePolicy.CACHEONLY - This policy will only retrieve data from the cache,
@@ -16,38 +16,19 @@ package fast.rocket.cache;
  * the cache will be updated. Use this policy if your application can display
  * data that doesn't change very often but you still want local updates.
  * 
- * CachePolicy.CACHEFIRST_NOREFRESH - This policy will first attempt to retrieve
- * data from the cache. If the data has been cached, it will be returned. If the
- * data does not exist in the cache, the data will be retrieved from server
- * backend but the cache will not be updated with the new results. Use this
- * policy if you want to set default results, however if a request is made that
- * cannot return these defaults a live request will be made (without modifying
- * those default values).
- * 
  * CachePolicy.NETWORKFIRST - This policy will execute the request on the
- * network, and will store the result in the cache. If the online execution
- * fails, the results will be pulled from the cache. Use this policy if you
- * application wants the latest data but you still want responsiveness if a
- * connection is lost
- * 
- * CachePolicy.BOTH - This policy will first retrieve an element from the cache,
- * and then it will attempt to execute the request on line.Use this policy if
- * you want more responsiveness without sacrificing the consistency of data with
- * your backend.
+ * network, and will store the result in the cache. Use this policy if you
+ * application wants the latest data but you still want the local cache update
+ * every time.
  * 
  * */
 
 public enum CachePolicy {
-	NOCACHE,
+	NOCACHE, // from network every time
 
-	CACHEONLY,
+	CACHEONLY, // from cache every time
 
-	CACHEFIRST,
+	CACHEFIRST, // does the volley way
 
-	CACHEFIRST_NOREFRESH,
-
-	NETWORKFIRST,
-
-	BOTH;
+	NETWORKFIRST, // update cache every time
 }
-

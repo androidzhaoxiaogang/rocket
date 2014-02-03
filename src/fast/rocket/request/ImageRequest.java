@@ -2,6 +2,7 @@
 package fast.rocket.request;
 
 
+import fast.rocket.cache.CachePolicy;
 import fast.rocket.error.ParseError;
 import fast.rocket.http.DefaultRetryPolicy;
 import fast.rocket.http.HttpHeaderParser;
@@ -61,8 +62,13 @@ public class ImageRequest extends Request<Bitmap> {
         mMaxWidth = maxWidth;
         mMaxHeight = maxHeight;
     }
+    
+	@Override
+	public CachePolicy getCachePolicy() {
+		return CachePolicy.CACHEFIRST;
+	}
 
-    @Override
+	@Override
     public Priority getPriority() {
         return Priority.LOW;
     }
