@@ -270,7 +270,7 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<Rocket
 		public Drawable errorDrawable;
 		
 		/** The skip memory cache. */
-		public boolean skipMemoryCache;
+		public boolean skipMemoryCache = false;
 
 		/** The uri. */
 		public String uri;
