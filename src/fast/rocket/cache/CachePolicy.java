@@ -24,11 +24,16 @@ package fast.rocket.cache;
  * */
 
 public enum CachePolicy {
+
+	/** The nocache. */
 	NOCACHE, // from network every time
 
+	/** The cacheonly. */
 	CACHEONLY, // from cache every time
 
+	/** The cachefirst. */
 	CACHEFIRST, // does the volley way
 
+	/** The networkfirst. */
 	NETWORKFIRST, // update cache every time
 }
