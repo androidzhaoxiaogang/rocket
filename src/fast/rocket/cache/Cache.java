@@ -90,7 +90,7 @@ public interface Cache {
 		}
 
 		@Override
-		public String toString() {
+		public String toString() { 
 			return "Entry [etag=" + etag + ", serverDate=" + serverDate
 					+ ", ttl=" + ttl + ", softTtl=" + softTtl
 					+ ", responseHeaders=" + responseHeaders + "]";
