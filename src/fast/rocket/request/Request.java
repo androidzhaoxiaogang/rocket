@@ -71,7 +71,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     private RequestQueue mRequestQueue;
 
     /** Whether or not responses to this request should be cached. */
-    private boolean mShouldCache = true;
+    //private boolean mShouldCache = true;
 
     /** Whether or not this request has been canceled. */
     private boolean mCanceled = false;
@@ -88,8 +88,8 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /** The retry policy for this request. */
     private RetryPolicy mRetryPolicy;
 
-    /** The cache policy for this request. */
-    private CachePolicy mCachePolicy;
+    /** The default cache policy for this request. */
+    private CachePolicy mCachePolicy = CachePolicy.CACHEFIRST;
     
     private boolean isSSLRequest = false;
 
@@ -99,7 +99,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * a "Not Modified" response, we can be sure it hasn't been evicted from cache.
      */
     private Cache.Entry mCacheEntry = null;
-
+    
     /** An opaque token tagging this request; used for bulk cancellation. */
     private Object mTag;
 
@@ -437,15 +437,15 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /**
      * Set whether or not responses to this request should be cached.
      */
-    public final void setShouldCache(boolean shouldCache) {
-        mShouldCache = shouldCache;
-    }
+//    public final void setShouldCache(boolean shouldCache) {
+//        mShouldCache = shouldCache;
+//    }
 
     /**
      * Returns true if responses to this request should be cached.
      */
     public final boolean shouldCache() {
-        return mShouldCache;
+        return mCachePolicy != CachePolicy.NOCACHE;
     }
 
     /**
@@ -483,7 +483,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     }
 
     /**
-     * Returns the cache strategy that should be used  for this request.
+     * Returns the cache policy that should be used  for this request.
      */
     public CachePolicy getCachePolicy() {
         return mCachePolicy;

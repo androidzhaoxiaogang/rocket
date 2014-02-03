@@ -14,6 +14,9 @@ import fast.rocket.response.JsonCallback;
 import fast.rocket.response.Response.ErrorListener;
 import fast.rocket.response.Response.Listener;
 
+/**
+ * The Class RocketJsonBuilder.
+ */
 public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>, 
 	CacheBuilder<RocketJsonBuilder>, LoadBuilder<RocketJsonBuilder>{
 	
@@ -32,8 +35,10 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 	/** Http headers. */
 	private Map<String, String> headers;
 	
+	/** The url. */
 	private String url;
 	
+	/** The method. */
 	private int method;
 	
 	/** The rocket instance. */
@@ -45,6 +50,7 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
     /** The enable cookie tag. */
     private boolean cookieEnable;
 
+    /** The cache policy. */
     private CachePolicy cachePolicy;
     
     
@@ -52,33 +58,49 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 	 * Instantiates a new rocket request builder.
 	 *
 	 * @param rocket the rocket
+	 * @param clazz the clazz
 	 */
 	public RocketJsonBuilder(Rocket rocket, Class<?> clazz) {
 		this.rocket = rocket;
 		this.clazz = clazz;
 	}
 	
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.CacheBuilder#skipMemoryCache(boolean)
+	 */
 	@Override
 	public RocketJsonBuilder skipMemoryCache(boolean skipMemoryCache) {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.CacheBuilder#skipDiskCache(boolean)
+	 */
 	@Override
 	public RocketJsonBuilder skipDiskCache(boolean skipDiskCache) {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.LoadBuilder#load(java.io.File)
+	 */
 	@Override
 	public RocketJsonBuilder load(File file) {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.LoadBuilder#load(java.lang.String)
+	 */
 	@Override
 	public RocketJsonBuilder load(String uri) {
 		load(Method.POST, uri);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.LoadBuilder#load(int, java.lang.String)
+	 */
 	@Override
 	public RocketJsonBuilder load(int method, String url) {
 		if(TextUtils.isEmpty(url)) {
@@ -90,6 +112,9 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.JsonBuilder#invoke(fast.rocket.response.JsonCallback)
+	 */
 	@Override
 	public RocketJsonBuilder invoke(JsonCallback<?> callback) {
 		this.callback = callback;
@@ -97,36 +122,59 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.CacheBuilder#cachePolicy(fast.rocket.cache.CachePolicy)
+	 */
 	@Override
 	public RocketJsonBuilder cachePolicy(CachePolicy cachePolicy) {
 		this.cachePolicy = cachePolicy;
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.JsonBuilder#requestTag(java.lang.Object)
+	 */
 	@Override
 	public RocketJsonBuilder requestTag(Object tag) {
 		this.tag = tag;
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.JsonBuilder#enableCookie(boolean)
+	 */
 	@Override
 	public RocketJsonBuilder enableCookie(boolean enable) {
 		this.cookieEnable = enable;
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.JsonBuilder#requestParams(java.util.Map)
+	 */
 	@Override
 	public RocketJsonBuilder requestParams(Map<String, String> params) {
 		this.params = params;
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see fast.rocket.builder.JsonBuilder#requestHeaders(java.util.Map)
+	 */
 	@Override
 	public RocketJsonBuilder requestHeaders(Map<String, String> headers) {
 		this.headers = headers;
 		return this;
 	}
 
+	/**
+	 * Adds the request.
+	 *
+	 * @param <T> the generic type
+	 * @param method the method
+	 * @param uri the uri
+	 * @param clazz the clazz
+	 */
 	private <T> void addRequest(int method, String uri, Class<T> clazz) {
 		if(clazz == null || callback == null) {
 			throw new IllegalArgumentException("Initialization params is null");
