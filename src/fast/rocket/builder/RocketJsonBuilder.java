@@ -168,7 +168,7 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 	}
 
 	/**
-	 * Adds the request.
+	 * Adds the json request.
 	 *
 	 * @param <T> the generic type
 	 * @param method the method
