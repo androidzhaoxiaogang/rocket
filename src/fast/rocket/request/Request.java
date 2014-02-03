@@ -168,9 +168,9 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     }
 
     /**
-     * Sets the cache strategy for this request.
+     * Sets the cache policy for this request.
      */
-    public void setCacheStrategy(CachePolicy cachePolicy) {
+    public void setCachePolicy(CachePolicy cachePolicy) {
         mCachePolicy = cachePolicy;
     }
 

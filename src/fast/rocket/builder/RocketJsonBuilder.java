@@ -74,14 +74,6 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 	}
 
 	/* (non-Javadoc)
-	 * @see fast.rocket.builder.CacheBuilder#skipDiskCache(boolean)
-	 */
-	@Override
-	public RocketJsonBuilder skipDiskCache(boolean skipDiskCache) {
-		return this;
-	}
-
-	/* (non-Javadoc)
 	 * @see fast.rocket.builder.LoadBuilder#load(java.io.File)
 	 */
 	@Override
@@ -207,7 +199,7 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 		
 		if(tag != null) request.setTag(tag);
         request.setCookieEnable(cookieEnable);
-        request.setCacheStrategy(cachePolicy);
+        request.setCachePolicy(cachePolicy);
 		rocket.getRequestQueue().add(request);
 	}
 	

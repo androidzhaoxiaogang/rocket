@@ -395,7 +395,7 @@ public class ImageLoader {
                     onGetImageError(cacheKey, error);
                 }
             });
-        //newRequest.setShouldCache(!builder.skipDiskCache);
+        newRequest.setCachePolicy(builder.cachePolicy);
         mRequestQueue.add(newRequest);
         mInFlightRequests.put(cacheKey,
                 new BatchedImageRequest(newRequest, imageContainer));

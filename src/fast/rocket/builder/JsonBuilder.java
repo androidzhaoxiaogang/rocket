@@ -2,6 +2,7 @@ package fast.rocket.builder;
 
 import java.util.Map;
 
+import fast.rocket.cache.CachePolicy;
 import fast.rocket.response.JsonCallback;
 
 public interface JsonBuilder<J extends JsonBuilder<?>>{
@@ -42,4 +43,10 @@ public interface JsonBuilder<J extends JsonBuilder<?>>{
      * @return the rocket request builder
      */
     public J enableCookie(boolean enableCookie);
+    
+    /**
+     * @param policy
+     * @return
+     */
+    public J cachePolicy(CachePolicy policy);
 }
