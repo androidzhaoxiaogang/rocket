@@ -25,15 +25,15 @@ package fast.rocket.cache;
 
 public enum CachePolicy {
 
-	/** The nocache. */
-	NOCACHE, // from network every time
+	/** The nocache equals network only. */
+	NOCACHE, // Get data from network every time and do not cache data.
 
 	/** The cacheonly. */
-	CACHEONLY, // from cache every time
+	CACHEONLY, // Get data only from cache every time.
 
 	/** The cachefirst. */
-	CACHEFIRST, // does the volley way
+	CACHEFIRST, // From cache first then network, update cache at last.
 
 	/** The networkfirst. */
-	NETWORKFIRST, // update cache every time
+	NETWORKFIRST, // From network first and then update cache.
 }

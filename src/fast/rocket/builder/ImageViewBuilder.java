@@ -3,14 +3,17 @@ package fast.rocket.builder;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.NetworkCacheView;
 
-public interface ImageViewBuilder<I extends ImageViewBuilder<?>> {
+public interface ImageViewBuilder<I extends ImageViewBuilder<?>> extends LoadBuilder {
 	public enum ScaleMode {
 	    FitXY,
 	    CenterCrop,
 	    CenterInside
 	}
+	
+	public I invoke(ImageCallback callback);
 	
 	/**
      * Set a placeholder on the ImageView while the request is loading
@@ -113,7 +116,7 @@ public interface ImageViewBuilder<I extends ImageViewBuilder<?>> {
      * @param imageView ImageView to set once the request completes
      * @return
      */
-    public void into(ImageView imageView);
+    public I into(ImageView imageView);
     
     /**
      * Perform the request and get the result as a Bitmap, which will then be loaded
@@ -122,6 +125,6 @@ public interface ImageViewBuilder<I extends ImageViewBuilder<?>> {
      * @param imageView NetworkCacheView to set once the request completes
      * @return
      */
-    public void into(NetworkCacheView imageView);
+    public I into(NetworkCacheView imageView);
 
 }

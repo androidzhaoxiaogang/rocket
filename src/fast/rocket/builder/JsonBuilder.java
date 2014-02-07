@@ -5,12 +5,12 @@ import java.util.Map;
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.response.JsonCallback;
 
-public interface JsonBuilder<J extends JsonBuilder<?>>{
+public interface JsonBuilder extends LoadBuilder{
 	/**
 	 * @param callback
 	 * @return
 	 */
-	public J invoke(JsonCallback<?> callback);
+	public JsonBuilder invoke(JsonCallback<?> callback);
 	
 	/**
 	 * Sets the request tag. Request can be removed by the tag.
@@ -18,7 +18,7 @@ public interface JsonBuilder<J extends JsonBuilder<?>>{
 	 * @param tag the tag
 	 * @return the rocket request builder
 	 */
-	public J requestTag(Object tag);
+	public JsonBuilder requestTag(Object tag);
 
 	/**
 	 * Sets the request params for the http post.
@@ -26,7 +26,7 @@ public interface JsonBuilder<J extends JsonBuilder<?>>{
 	 * @param params the params
 	 * @return the rocket request builder
 	 */
-	public J requestParams(Map<String, String> params);
+	public JsonBuilder requestParams(Map<String, String> params);
 	
 	/**
 	 * Sets the json request http headers.
@@ -34,7 +34,7 @@ public interface JsonBuilder<J extends JsonBuilder<?>>{
 	 * @param headers the headers
 	 * @return the rocket request builder
 	 */
-	public J requestHeaders(Map<String, String> headers);
+	public JsonBuilder requestHeaders(Map<String, String> headers);
 	
 	/**
      * Sets the request cookie tag. Request can be removed by the tag.
@@ -42,11 +42,11 @@ public interface JsonBuilder<J extends JsonBuilder<?>>{
      * @param enableCookie the tag
      * @return the rocket request builder
      */
-    public J enableCookie(boolean enableCookie);
+    public JsonBuilder enableCookie(boolean enableCookie);
     
     /**
      * @param policy
      * @return
      */
-    public J cachePolicy(CachePolicy policy);
+    public JsonBuilder cachePolicy(CachePolicy policy);
 }

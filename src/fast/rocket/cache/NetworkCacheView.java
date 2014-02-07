@@ -221,6 +221,7 @@ public class NetworkCacheView extends ImageView {
 	 */
 	public void setImageUrl(ImageLoader imageLoader, RocketImageBuilder.Builder builder) {
 		this.builder = builder;
+		this.mImageLoader = imageLoader;
 		// The URL has potentially changed. See if we need to load it.
 		loadImageIfNecessary(false);
 	}
@@ -249,6 +250,10 @@ public class NetworkCacheView extends ImageView {
 	 *            True if this was invoked from a layout pass, false otherwise.
 	 */
 	private void loadImageIfNecessary(final boolean isInLayoutPass) {
+		if(builder == null) {
+			return;
+		}
+		
 		int width = getWidth();
 		int height = getHeight();
 
@@ -326,11 +331,19 @@ public class NetworkCacheView extends ImageView {
 							setImageBitmap(response.getBitmap());
 							RocketUtils.loadAnimation(NetworkCacheView.this, 
 									builder.inAnimation, builder.inAnimationResource);
+							if(builder.callback != null) {
+								builder.callback.onComplete(NetworkCacheView.this, 
+										response.getBitmap());
+							}
 						} else {
 							if (builder.placeholderResource != 0) {
 								setImageResource(builder.placeholderResource);
 							} else {
 								setImageDrawable(builder.placeholderDrawable);
+							}
+							
+							if(builder.callback != null) {
+								builder.callback.onComplete(NetworkCacheView.this, null);
 							}
 						}
 					}

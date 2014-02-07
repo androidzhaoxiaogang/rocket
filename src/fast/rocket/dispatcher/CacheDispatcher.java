@@ -95,6 +95,17 @@ public class CacheDispatcher extends Thread {
 					if (DEBUG) Log.v("cache-discard-canceled");
 					continue;
 				}
+				
+				final CachePolicy cachePolicy = request.getCachePolicy();
+				
+				if (cachePolicy == CachePolicy.NETWORKFIRST) {
+					request.addMarker("network-first");
+					// Do not get from cache; send off to the network
+					// dispatcher.
+					mNetworkQueue.put(request);
+					if (DEBUG) Log.v("network-first");
+					continue;
+				}
 
 				// Attempt to retrieve this item from cache.
 				Cache.Entry entry = mCache.get(request.getCacheKey());
@@ -105,8 +116,6 @@ public class CacheDispatcher extends Thread {
 					if (DEBUG) Log.v("cache-miss");
 					continue;
 				}
-
-				final CachePolicy cachePolicy = request.getCachePolicy();
 
 				if (cachePolicy == CachePolicy.CACHEONLY) {
 					request.addMarker("cache-hit");
@@ -126,18 +135,35 @@ public class CacheDispatcher extends Thread {
 					if (DEBUG) Log.v("no-cache");
 					continue;
 				}
+				
+				if (cachePolicy == CachePolicy.CACHEFIRST) {
+					Response<?> response = request.parseNetworkResponse(new NetworkResponse(
+							entry.data, entry.responseHeaders));
+					
+					request.addMarker("cache-hit-refresh-needed");
+					request.setCacheEntry(entry);
 
-				if (cachePolicy == CachePolicy.NETWORKFIRST) {
-					request.addMarker("network-first");
-					// Do not get from cache; send off to the network
-					// dispatcher.
-					mNetworkQueue.put(request);
-					if (DEBUG) Log.v("network-first");
+					// Mark the response as intermediate.
+					response.intermediate = true;
+
+					// Post the intermediate response back to the user and have
+					// the delivery then forward the request along to the
+					// network.
+					mDelivery.postResponse(request, response, new Runnable() {
+						@Override
+						public void run() {
+							try {
+								mNetworkQueue.put(request);
+							} catch (InterruptedException e) {
+								// Not much we can do about this.
+							}
+						}
+					});
 					continue;
 				}
 
 				// If it is completely expired, just send it to the network.
-				if (cachePolicy == CachePolicy.CACHEFIRST && entry.isExpired()) {
+				if (entry.isExpired()) {
 					request.addMarker("cache-hit-expired");
 					request.setCacheEntry(entry);
 					mNetworkQueue.put(request);

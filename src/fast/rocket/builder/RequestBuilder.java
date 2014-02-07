@@ -13,7 +13,7 @@ public interface RequestBuilder<R extends RequestBuilder<?>>{
      * @param clazz the clazz
      * @return the json builder<? extends json builder<?>>
      */
-    public JsonBuilder<? extends JsonBuilder<?>> asJson(Class<?> clazz);
+    public JsonBuilder asJson(Class<?> clazz);
 
     /**
      * As image.

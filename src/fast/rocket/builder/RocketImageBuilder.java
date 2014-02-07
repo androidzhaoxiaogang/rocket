@@ -5,6 +5,7 @@ import java.io.File;
 import fast.rocket.Rocket;
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.ImageLoader;
+import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.NetworkCacheView;
 import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.request.Request.Method;
@@ -19,8 +20,7 @@ import android.widget.ImageView;
  * The Class RocketImageBuilder.
  */
 @SuppressWarnings("rawtypes")
-public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<RocketImageBuilder>,
-		LoadBuilder<RocketImageBuilder> {
+public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<RocketImageBuilder> {
 
 	/** The rocket. */
 	public Rocket rocket;
@@ -47,6 +47,12 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<Rocket
 		this.context = context;
 		this.builder = new Builder(scaleMode, cachePolicy);
 		this.rocket = requestBuilder.rocket;
+	}
+	
+	@Override
+	public ImageViewBuilder invoke(ImageCallback callback) {
+		builder.callback = callback;
+		return this;
 	}
 	
 	/* (non-Javadoc)
@@ -171,25 +177,27 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<Rocket
 	 * @see fast.rocket.builder.ImageViewBuilder#into(android.widget.ImageView)
 	 */
 	@Override
-	public void into(ImageView imageView) {
+	public RocketImageBuilder into(ImageView imageView) {
 		final ImageLoader loader = rocket.getImageLoader();
 		final ImageListener listener = ImageLoader.getImageListener(imageView, builder);
 		builder.skipMemoryCache = true;
 
 		loader.get(listener, builder);
 		RocketUtils.loadAnimation(imageView, builder.inAnimation, builder.inAnimationResource);
+		return this;
 	}
 
 	/* (non-Javadoc)
 	 * @see fast.rocket.builder.ImageViewBuilder#into(fast.rocket.cache.NetworkCacheView)
 	 */
 	@Override
-	public void into(NetworkCacheView imageView) {
+	public RocketImageBuilder into(NetworkCacheView imageView) {
 		final ImageLoader loader = rocket.getImageLoader();
 		builder.skipMemoryCache = false;
 
 		imageView.setImageUrl(loader, builder);
 		RocketUtils.loadAnimation(imageView, builder.inAnimation, builder.inAnimationResource);
+		return this;
 	}
 
 	/* (non-Javadoc)
@@ -214,26 +222,23 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<Rocket
 	 * @see fast.rocket.builder.LoadBuilder#load(java.lang.String)
 	 */
 	@Override
-	public RocketImageBuilder load(String uri) {
+	public void load(String uri) {
 		load(Method.GET, uri);
-		return this;
 	}
 
 	/* (non-Javadoc)
 	 * @see fast.rocket.builder.LoadBuilder#load(int, java.lang.String)
 	 */
 	@Override
-	public RocketImageBuilder load(int method, String url) {
+	public void load(int method, String url) {
 		builder.uri = url;
-		return this;
 	}
 
 	/* (non-Javadoc)
 	 * @see fast.rocket.builder.LoadBuilder#load(java.io.File)
 	 */
 	@Override
-	public RocketImageBuilder load(File file) {
-		return this;
+	public void load(File file) {
 	}
 	
 	/**
@@ -273,6 +278,8 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<Rocket
 		
 		/** The skip memory cache. */
 		public boolean skipMemoryCache = false;
+		
+		public ImageCallback callback;
 
 		/** The uri. */
 		public String uri;
@@ -294,5 +301,5 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<Rocket
 			cachePolicy = cp;
 		}
 	}
-
+	
 }

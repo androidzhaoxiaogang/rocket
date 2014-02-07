@@ -17,8 +17,8 @@ import fast.rocket.response.Response.Listener;
 /**
  * The Class RocketJsonBuilder.
  */
-public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>, 
-	CacheBuilder<RocketJsonBuilder>, LoadBuilder<RocketJsonBuilder>{
+public class RocketJsonBuilder implements JsonBuilder, 
+	CacheBuilder<RocketJsonBuilder>{
 	
 	/** The future callback to be invoked after
 	 *  the json string being parsed. 
@@ -34,12 +34,6 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 	
 	/** Http headers. */
 	private Map<String, String> headers;
-	
-	/** The url. */
-	private String url;
-	
-	/** The method. */
-	private int method;
 	
 	/** The rocket instance. */
 	private Rocket rocket;
@@ -77,31 +71,27 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 	 * @see fast.rocket.builder.LoadBuilder#load(java.io.File)
 	 */
 	@Override
-	public RocketJsonBuilder load(File file) {
-		return this;
+	public void load(File file) {
 	}
 
 	/* (non-Javadoc)
 	 * @see fast.rocket.builder.LoadBuilder#load(java.lang.String)
 	 */
 	@Override
-	public RocketJsonBuilder load(String uri) {
+	public void load(String uri) {
 		load(Method.POST, uri);
-		return this;
 	}
 
 	/* (non-Javadoc)
 	 * @see fast.rocket.builder.LoadBuilder#load(int, java.lang.String)
 	 */
 	@Override
-	public RocketJsonBuilder load(int method, String url) {
+	public void load(int method, String url) {
 		if(TextUtils.isEmpty(url)) {
 			throw new IllegalArgumentException("Request url is null");
 		}
 		
-		this.url = url;
-		this.method = method;
-		return this;
+		addRequest(method, url, clazz);
 	}
 
 	/* (non-Javadoc)
@@ -110,7 +100,6 @@ public class RocketJsonBuilder implements JsonBuilder<RocketJsonBuilder>,
 	@Override
 	public RocketJsonBuilder invoke(JsonCallback<?> callback) {
 		this.callback = callback;
-		addRequest(method, url, clazz);
 		return this;
 	}
 

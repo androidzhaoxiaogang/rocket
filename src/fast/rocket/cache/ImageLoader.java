@@ -95,7 +95,7 @@ public class ImageLoader {
 	     * @param error the error
 	     * @param result the result
 	     */
-	    public void onComplete(ImageView view, Bitmap result, boolean isImmediate);
+	    public void onComplete(ImageView view, Bitmap result);
     }
 
     /**
@@ -137,7 +137,7 @@ public class ImageLoader {
 				}
 				
 				if(callback != null) {
-					callback.onComplete(view, null, false);
+					callback.onComplete(view, null);
 				}
 			}
 
@@ -153,7 +153,7 @@ public class ImageLoader {
 				}
 				
 				if(callback != null) {
-					callback.onComplete(view, response.getBitmap(), isImmediate);
+					callback.onComplete(view, response.getBitmap());
 				}
 			}
 		};
@@ -224,6 +224,10 @@ public class ImageLoader {
 				} else {
 					view.setImageDrawable(builder.errorDrawable);
 				}
+				
+				if(builder.callback != null) {
+					builder.callback.onComplete(view, null);
+				}
 			}
 
 			@Override
@@ -235,6 +239,10 @@ public class ImageLoader {
 					view.setImageResource(builder.placeholderResource);
 				} else {
 					view.setImageDrawable(builder.placeholderDrawable);
+				}
+				
+				if(builder.callback != null) {
+					builder.callback.onComplete(view, response.getBitmap());
 				}
 			}
 		};
