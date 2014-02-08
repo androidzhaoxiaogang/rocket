@@ -2,6 +2,8 @@ package fast.rocket;
 
 import java.io.File;
 
+import fast.rocket.builder.LoadBuilder;
+import fast.rocket.builder.RequestBuilder;
 import fast.rocket.builder.RocketRequestBuilder;
 import fast.rocket.cache.*;
 import fast.rocket.http.BasicNetwork;
@@ -51,15 +53,12 @@ public class Rocket {
 	 * @param context the context
 	 * @return the rocket request builder
 	 */
-//	public static RocketRequestBuilder with(Context context) {
-//		 return getDefault(context).build();
-//	}
-	
-	public static RocketRequestBuilder with(Context context) {
+
+	public static LoadBuilder<RequestBuilder> with(Context context) {
 	     return getDefault(context).build(context);
 	}
 	 
-	public RocketRequestBuilder build(Context context) {
+	public LoadBuilder<RequestBuilder> build(Context context) {
         return new RocketRequestBuilder(context, this);
     }
 	

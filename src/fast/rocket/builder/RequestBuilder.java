@@ -5,7 +5,7 @@ package fast.rocket.builder;
  *
  * @param <R> the generic type
  */
-public interface RequestBuilder<R extends RequestBuilder<?>>{
+public interface RequestBuilder{
     
     /**
      * As json.

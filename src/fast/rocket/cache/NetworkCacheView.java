@@ -110,8 +110,7 @@ public class NetworkCacheView extends ImageView {
 	}
 
 	private void initialize(Context context, AttributeSet attrs) {
-		TypedArray a = context
-				.obtainStyledAttributes(attrs, R.styleable.rocket);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.rocket);
 		drawCircle = a.getBoolean(R.styleable.rocket_drawCircle, drawCircle);
 		drawBorder = a.getBoolean(R.styleable.rocket_drawCircleBorder, drawBorder);
 		borderColor = a.getInt(R.styleable.rocket_borderColor, borderColor);

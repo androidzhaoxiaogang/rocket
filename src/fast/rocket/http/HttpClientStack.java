@@ -2,6 +2,7 @@
 package fast.rocket.http;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -22,7 +23,6 @@ import android.text.TextUtils;
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.request.Request;
 import fast.rocket.request.Request.Method;
-import fast.rocket.response.WrappedResponse;
 
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class HttpClientStack implements HttpStack {
     }
 
     @Override
-    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         HttpUriRequest httpRequest = createHttpRequest(request, additionalHeaders);
         addHeaders(httpRequest, additionalHeaders);
@@ -76,7 +76,7 @@ public class HttpClientStack implements HttpStack {
         	setCookie(mClient);
         }
         
-        return new WrappedResponse(mClient.execute(httpRequest), httpRequest);
+        return mClient.execute(httpRequest);
     }
 
     /**

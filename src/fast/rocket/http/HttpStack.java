@@ -4,11 +4,12 @@ package fast.rocket.http;
 
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.request.Request;
-import fast.rocket.response.WrappedResponse;
 
 
 import java.io.IOException;
 import java.util.Map;
+
+import org.apache.http.HttpResponse;
 
 
 /**
@@ -26,7 +27,7 @@ public interface HttpStack {
      *         {@link Request#getHeaders()}
      * @return the HTTP response
      */
-    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
         throws IOException, AuthFailureError;
 
 }

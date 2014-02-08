@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.request.Request;
 import fast.rocket.request.Request.Method;
-import fast.rocket.response.WrappedResponse;
 
 
 import java.io.DataOutputStream;
@@ -30,6 +29,7 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.entity.BasicHttpEntity;
@@ -114,7 +114,7 @@ public class HurlStack implements HttpStack {
      * @see fast.rocket.http.HttpStack#performRequest(fast.rocket.Request, java.util.Map)
      */
     @Override
-    public WrappedResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
+    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         String url = request.getUrl();
         HashMap<String, String> map = new HashMap<String, String>();
@@ -164,8 +164,7 @@ public class HurlStack implements HttpStack {
             }
         }
         
-        //return response;
-        return new WrappedResponse(response, connection);
+        return response;
     }
 
     /**
