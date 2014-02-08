@@ -1,14 +1,11 @@
 package fast.rocket.builder;
 
-import java.io.File;
-
 import fast.rocket.Rocket;
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.ImageLoader;
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.NetworkCacheView;
 import fast.rocket.cache.ImageLoader.ImageListener;
-import fast.rocket.request.Request.Method;
 import fast.rocket.utils.RocketUtils;
 import android.content.Context;
 import android.content.res.Resources;
@@ -43,9 +40,10 @@ public class RocketImageBuilder implements ImageViewBuilder {
 	 * @param context the context
 	 * @param requestBuilder the request builder
 	 */
-	public RocketImageBuilder (Context context, RocketRequestBuilder requestBuilder) {
+	public RocketImageBuilder (Context context, RocketRequestBuilder requestBuilder, String uri) {
 		this.context = context;
 		this.builder = new Builder(scaleMode, cachePolicy);
+		this.builder.uri = uri;
 		this.rocket = requestBuilder.rocket;
 	}
 	
@@ -218,29 +216,6 @@ public class RocketImageBuilder implements ImageViewBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.LoadBuilder#load(java.lang.String)
-	 */
-	@Override
-	public void load(String uri) {
-		load(Method.GET, uri);
-	}
-
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.LoadBuilder#load(int, java.lang.String)
-	 */
-	@Override
-	public void load(int method, String url) {
-		builder.uri = url;
-	}
-
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.LoadBuilder#load(java.io.File)
-	 */
-	@Override
-	public void load(File file) {
-	}
-	
 	/**
 	 * The Class Builder.
 	 */
