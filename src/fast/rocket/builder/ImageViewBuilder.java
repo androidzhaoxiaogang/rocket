@@ -7,7 +7,7 @@ import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.NetworkCacheView;
 
-public interface ImageViewBuilder<I extends ImageViewBuilder<?>> extends LoadBuilder {
+public interface ImageViewBuilder<I extends ImageViewBuilder<?>>{
 	public enum ScaleMode {
 	    FitXY,
 	    CenterCrop,

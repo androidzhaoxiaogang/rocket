@@ -1,9 +1,8 @@
 package fast.rocket.builder;
 
-import java.io.File;
 import java.util.Map;
 
-import android.text.TextUtils;
+import android.content.Context;
 
 import fast.rocket.Rocket;
 import fast.rocket.cache.CachePolicy;
@@ -18,84 +17,80 @@ import fast.rocket.response.Response.Listener;
  * The Class RocketJsonBuilder.
  */
 public class RocketJsonBuilder implements JsonBuilder {
-	
-	/** The future callback to be invoked after
-	 *  the json string being parsed. 
+
+	/**
+	 * The future callback to be invoked after the json string being parsed.
 	 **/
+
 	@SuppressWarnings("rawtypes")
-	private JsonCallback callback ;
-	
+	private JsonCallback callback;
+
 	/** The class type to be parsed. */
 	private Class<?> clazz;
-	
+
 	/** Http post or put params. */
 	private Map<String, String> params;
-	
+
 	/** Http headers. */
 	private Map<String, String> headers;
-	
+
 	/** The rocket instance. */
 	private Rocket rocket;
-	
+
 	/** The request tag. */
 	private Object tag;
 
-    /** The enable cookie tag. */
-    private boolean cookieEnable;
+	/** The enable cookie tag. */
+	private boolean cookieEnable;
 
-    /** The cache policy. */
-    private CachePolicy cachePolicy;
-    
-    
+	/** The cache policy. */
+	private CachePolicy cachePolicy;
+
+	private String uri;
+
+	// private File file;
+
+	private int method;
+
+	public RocketJsonBuilder(Context context, Rocket rocket, String uri) {
+		this.rocket = rocket;
+		this.uri = uri;
+	}
+
 	/**
 	 * Instantiates a new rocket request builder.
-	 *
-	 * @param rocket the rocket
-	 * @param clazz the clazz
+	 * 
+	 * @param rocket
+	 *            the rocket
+	 * @param clazz
+	 *            the clazz
 	 */
-	public RocketJsonBuilder(Rocket rocket, Class<?> clazz) {
+	public RocketJsonBuilder(Rocket rocket, Class<?> clazz, String uri, int method) {
 		this.rocket = rocket;
 		this.clazz = clazz;
-	}
-	
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.LoadBuilder#load(java.io.File)
-	 */
-	@Override
-	public void load(File file) {
+		this.uri = uri;
+		this.method = method;
 	}
 
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.LoadBuilder#load(java.lang.String)
-	 */
-	@Override
-	public void load(String uri) {
-		load(Method.POST, uri);
-	}
-
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.LoadBuilder#load(int, java.lang.String)
-	 */
-	@Override
-	public void load(int method, String url) {
-		if(TextUtils.isEmpty(url)) {
-			throw new IllegalArgumentException("Request url is null");
-		}
-		
-		addRequest(method, url, clazz);
-	}
-
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.JsonBuilder#invoke(fast.rocket.response.JsonCallback)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fast.rocket.builder.JsonBuilder#invoke(fast.rocket.response.JsonCallback)
 	 */
 	@Override
 	public RocketJsonBuilder invoke(JsonCallback<?> callback) {
 		this.callback = callback;
+		addRequest(method, uri, clazz);
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.CacheBuilder#cachePolicy(fast.rocket.cache.CachePolicy)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fast.rocket.builder.CacheBuilder#cachePolicy(fast.rocket.cache.CachePolicy
+	 * )
 	 */
 	@Override
 	public RocketJsonBuilder cachePolicy(CachePolicy cachePolicy) {
@@ -103,7 +98,9 @@ public class RocketJsonBuilder implements JsonBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see fast.rocket.builder.JsonBuilder#requestTag(java.lang.Object)
 	 */
 	@Override
@@ -112,7 +109,9 @@ public class RocketJsonBuilder implements JsonBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see fast.rocket.builder.JsonBuilder#enableCookie(boolean)
 	 */
 	@Override
@@ -121,7 +120,9 @@ public class RocketJsonBuilder implements JsonBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see fast.rocket.builder.JsonBuilder#requestParams(java.util.Map)
 	 */
 	@Override
@@ -130,7 +131,9 @@ public class RocketJsonBuilder implements JsonBuilder {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see fast.rocket.builder.JsonBuilder#requestHeaders(java.util.Map)
 	 */
 	@Override
@@ -141,46 +144,51 @@ public class RocketJsonBuilder implements JsonBuilder {
 
 	/**
 	 * Adds the json request.
-	 *
-	 * @param <T> the generic type
-	 * @param method the method
-	 * @param uri the uri
-	 * @param clazz the clazz
+	 * 
+	 * @param <T>
+	 *            the generic type
+	 * @param method
+	 *            the method
+	 * @param uri
+	 *            the uri
+	 * @param clazz
+	 *            the clazz
 	 */
 	private <T> void addRequest(int method, String uri, Class<T> clazz) {
-		if(clazz == null || callback == null) {
+		if (clazz == null || callback == null) {
 			throw new IllegalArgumentException("Initialization params is null");
 		}
-		
-		if(params != null && method == Method.GET) {
-			method = Method.POST;//reset the http method
+
+		if (params != null && method == Method.GET) {
+			method = Method.POST;// reset the http method
 		}
-		
+
 		JsonRequest<T> request = new JsonRequest<T>(method, uri, clazz,
 				headers, params, new Listener<T>() {
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onResponse(T response) {
-				if(callback != null) {
-					callback.onCompleted(null, response);
-				}
-			}
-		}, new ErrorListener() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public void onResponse(T response) {
+						if (callback != null) {
+							callback.onCompleted(null, response);
+						}
+					}
+				}, new ErrorListener() {
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onErrorResponse(RocketError error) {
-				if(callback != null) {
-					callback.onCompleted(error, null);
-				}
-			}
-		});
-		
-		if(tag != null) request.setTag(tag);
-        request.setCookieEnable(cookieEnable);
-        request.setCachePolicy(cachePolicy);
+					@SuppressWarnings("unchecked")
+					@Override
+					public void onErrorResponse(RocketError error) {
+						if (callback != null) {
+							callback.onCompleted(error, null);
+						}
+					}
+				});
+
+		if (tag != null)
+			request.setTag(tag);
+		request.setCookieEnable(cookieEnable);
+		request.setCachePolicy(cachePolicy);
 		rocket.getRequestQueue().add(request);
 	}
-	
+
 }

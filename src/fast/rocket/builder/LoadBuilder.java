@@ -2,13 +2,13 @@ package fast.rocket.builder;
 
 import java.io.File;
 
-public interface LoadBuilder {
+public interface LoadBuilder<T> {
     /**
      * Load an uri.
      * @param uri Uri to load. This may be a http(s), file, or content uri.
      * @return
      */
-    public void load(String uri);
+    public T load(String uri);
 
     /**
      * Load an url using the given an HTTP method such as GET,POST,PUT or DEELETE.
@@ -17,12 +17,12 @@ public interface LoadBuilder {
      * @return
      */
 
-    public void load(int method, String url);
+    public T load(int method, String url);
 
     /**
      * Load a file from local or remote.
      * @param file File to load.
      * @return
      */
-    public void load(File file);
+    public T load(File file);
 }

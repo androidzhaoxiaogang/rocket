@@ -5,7 +5,7 @@ import java.util.Map;
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.response.JsonCallback;
 
-public interface JsonBuilder extends LoadBuilder{
+public interface JsonBuilder{
 	/**
 	 * @param callback
 	 * @return

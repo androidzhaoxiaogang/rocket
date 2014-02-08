@@ -51,9 +51,17 @@ public class Rocket {
 	 * @param context the context
 	 * @return the rocket request builder
 	 */
+//	public static RocketRequestBuilder with(Context context) {
+//		 return getDefault(context).build();
+//	}
+	
 	public static RocketRequestBuilder with(Context context) {
-		 return getDefault(context).build();
+	     return getDefault(context).build(context);
 	}
+	 
+	public RocketRequestBuilder build(Context context) {
+        return new RocketRequestBuilder(context, this);
+    }
 	
 	/**
 	 * Get the default Rocket instance.
