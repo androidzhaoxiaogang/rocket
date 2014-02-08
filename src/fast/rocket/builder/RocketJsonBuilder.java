@@ -17,8 +17,7 @@ import fast.rocket.response.Response.Listener;
 /**
  * The Class RocketJsonBuilder.
  */
-public class RocketJsonBuilder implements JsonBuilder, 
-	CacheBuilder<RocketJsonBuilder>{
+public class RocketJsonBuilder implements JsonBuilder {
 	
 	/** The future callback to be invoked after
 	 *  the json string being parsed. 
@@ -59,14 +58,6 @@ public class RocketJsonBuilder implements JsonBuilder,
 		this.clazz = clazz;
 	}
 	
-	/* (non-Javadoc)
-	 * @see fast.rocket.builder.CacheBuilder#skipMemoryCache(boolean)
-	 */
-	@Override
-	public RocketJsonBuilder skipMemoryCache(boolean skipMemoryCache) {
-		return this;
-	}
-
 	/* (non-Javadoc)
 	 * @see fast.rocket.builder.LoadBuilder#load(java.io.File)
 	 */

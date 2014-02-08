@@ -89,7 +89,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     private RetryPolicy mRetryPolicy;
 
     /** The default cache policy for this request. */
-    private CachePolicy mCachePolicy = CachePolicy.CACHEFIRST;
+    private CachePolicy mCachePolicy = CachePolicy.BOTH;
     
     private boolean isSSLRequest = false;
 

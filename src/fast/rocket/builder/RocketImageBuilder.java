@@ -20,7 +20,7 @@ import android.widget.ImageView;
  * The Class RocketImageBuilder.
  */
 @SuppressWarnings("rawtypes")
-public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<RocketImageBuilder> {
+public class RocketImageBuilder implements ImageViewBuilder {
 
 	/** The rocket. */
 	public Rocket rocket;
@@ -35,7 +35,7 @@ public class RocketImageBuilder implements ImageViewBuilder, CacheBuilder<Rocket
 	private ScaleMode scaleMode = ScaleMode.FitXY;
 	
 	/** The cache policy. */
-	private CachePolicy cachePolicy = CachePolicy.CACHEFIRST;
+	private CachePolicy cachePolicy = CachePolicy.BOTH;
 	
 	/**
 	 * Instantiates a new rocket image builder.

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import fast.rocket.cache.ImageLoader.ImageCallback;
+import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.NetworkCacheView;
 
 public interface ImageViewBuilder<I extends ImageViewBuilder<?>> extends LoadBuilder {
@@ -13,7 +14,29 @@ public interface ImageViewBuilder<I extends ImageViewBuilder<?>> extends LoadBui
 	    CenterInside
 	}
 	
+	/**
+	 * Cache policy.
+	 *
+	 * @param policy the policy
+	 * @return the i
+	 */
+	public I cachePolicy(CachePolicy policy);
+	
+	/**
+	 * Invoke.
+	 *
+	 * @param callback the callback
+	 * @return the i
+	 */
 	public I invoke(ImageCallback callback);
+	
+	/**
+	 * Skip memory cache.
+	 *
+	 * @param skipMemoryCache the skip memory cache
+	 * @return the i
+	 */
+	public I skipMemoryCache(boolean skipMemoryCache);
 	
 	/**
      * Set a placeholder on the ImageView while the request is loading
