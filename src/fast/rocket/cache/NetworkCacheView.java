@@ -166,6 +166,11 @@ public class NetworkCacheView extends ImageView {
 				super.onDraw(paramCanvas);
 
 		} else {
+			if(builder == null) {
+				super.onDraw(paramCanvas);
+				return;
+			}
+			
 			BitmapDrawable drawable = (BitmapDrawable) getDrawable();
 			if (drawable == null) {
 				if (builder.placeholderResource != 0) {
@@ -372,10 +377,13 @@ public class NetworkCacheView extends ImageView {
 	protected void onSizeChanged(int paramInt1, int paramInt2, int paramInt3,
 			int paramInt4) {
 		super.onSizeChanged(paramInt1, paramInt2, paramInt3, paramInt4);
-		this.width = paramInt1;
-		this.height = paramInt2;
-		this.center = (this.width >> 1);
-		setShader();
+		
+		if(drawCircle) {
+			this.width = paramInt1;
+			this.height = paramInt2;
+			this.center = (this.width >> 1);
+			setShader();
+		} 
 	}
 
 	/*
