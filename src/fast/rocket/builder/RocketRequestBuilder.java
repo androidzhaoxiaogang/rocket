@@ -41,9 +41,6 @@ public class RocketRequestBuilder implements RequestBuilder, LoadBuilder<Request
 	 */
 	@Override
 	public ImageViewBuilder<?> asImage() {
-		if(TextUtils.isEmpty(uri)) 
-			throw new IllegalArgumentException("Image uri is empty!");
-		
 		return new RocketImageBuilder(this.context, this, uri);
 	}
 
