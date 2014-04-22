@@ -26,7 +26,7 @@ public interface JsonBuilder{
 	 * @param params the params
 	 * @return the rocket request builder
 	 */
-	public JsonBuilder requestParams(Map<String, String> params);
+	public JsonBuilder requestParams(Map<String, Object> params);
 	
 	/**
 	 * Sets the json request http headers.

@@ -3,7 +3,6 @@ package fast.rocket.builder;
 import java.io.File;
 
 import android.content.Context;
-import android.text.TextUtils;
 import fast.rocket.Rocket;
 import fast.rocket.request.Request.Method;
 

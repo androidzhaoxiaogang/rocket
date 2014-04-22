@@ -18,7 +18,7 @@ public class JsonRequest<T> extends Request<T> {
 	private final Gson gson = new Gson();
 	private Class<T> clazz;
 	private Map<String, String> headers;
-	private Map<String, String> params;
+	private Map<String, Object> params;
 	private final Listener<T> listener;
 
 	/**
@@ -32,7 +32,7 @@ public class JsonRequest<T> extends Request<T> {
 	 *            Map of request headers
 	 */
 	public JsonRequest(int method, String url, Class<T> clazz,
-			Map<String, String> headers, Map<String, String> params,
+			Map<String, String> headers, Map<String, Object> params,
 			Listener<T> listener, ErrorListener errorListener) {
 		super(method, url, errorListener);
 		this.clazz = clazz;
@@ -47,7 +47,7 @@ public class JsonRequest<T> extends Request<T> {
 	}
 	
 	@Override
-	protected Map<String, String> getParams() throws AuthFailureError {
+	protected Map<String, Object> getParams() throws AuthFailureError {
 		return params != null ? params : super.getParams();
 	}
 
@@ -61,6 +61,7 @@ public class JsonRequest<T> extends Request<T> {
 		try {
 			String json = new String(response.data,
 					HttpHeaderParser.parseCharset(response.headers));
+			System.out.println("========json======"+json);
 			return Response.success(gson.fromJson(json, clazz),
 					HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {

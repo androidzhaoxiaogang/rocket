@@ -29,7 +29,7 @@ public class RocketJsonBuilder implements JsonBuilder {
 	private Class<?> clazz;
 
 	/** Http post or put params. */
-	private Map<String, String> params;
+	private Map<String, Object> params;
 
 	/** Http headers. */
 	private Map<String, String> headers;
@@ -126,7 +126,7 @@ public class RocketJsonBuilder implements JsonBuilder {
 	 * @see fast.rocket.builder.JsonBuilder#requestParams(java.util.Map)
 	 */
 	@Override
-	public RocketJsonBuilder requestParams(Map<String, String> params) {
+	public RocketJsonBuilder requestParams(Map<String, Object> params) {
 		this.params = params;
 		return this;
 	}

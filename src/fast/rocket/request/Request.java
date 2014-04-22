@@ -9,9 +9,10 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
+
+import com.google.gson.Gson;
 
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.Cache;
@@ -323,7 +324,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      *
      * @deprecated Use {@link #getParams()} instead.
      */
-    protected Map<String, String> getPostParams() throws AuthFailureError {
+    protected Map<String, Object> getPostParams() throws AuthFailureError {
         return getParams();
     }
 
@@ -364,7 +365,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         // here instead of simply calling the getBody() function because this function must
         // call getPostParams() and getPostParamsEncoding() since legacy clients would have
         // overridden these two member functions for POST requests.
-        Map<String, String> postParams = getPostParams();
+        Map<String, Object> postParams = getPostParams();
         if (postParams != null && postParams.size() > 0) {
             return encodeParameters(postParams, getPostParamsEncoding());
         }
@@ -379,7 +380,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      *
      * @throws AuthFailureError in the event of auth failure
      */
-    protected Map<String, String> getParams() throws AuthFailureError {
+    protected Map<String, Object> getParams() throws AuthFailureError {
         return null;
     }
 
@@ -409,7 +410,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * @throws AuthFailureError in the event of auth failure
      */
     public byte[] getBody() throws AuthFailureError {
-        Map<String, String> params = getParams();
+        Map<String, Object> params = getParams();
         if (params != null && params.size() > 0) {
             return encodeParameters(params, getParamsEncoding());
         }
@@ -419,16 +420,14 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /**
      * Converts <code>params</code> into an application/x-www-form-urlencoded encoded string.
      */
-    private byte[] encodeParameters(Map<String, String> params, String paramsEncoding) {
-        StringBuilder encodedParams = new StringBuilder();
+    private byte[] encodeParameters(Map<String, Object> params, String paramsEncoding) {
         try {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                encodedParams.append(URLEncoder.encode(entry.getKey(), paramsEncoding));
-                encodedParams.append('=');
-                encodedParams.append(URLEncoder.encode(entry.getValue(), paramsEncoding));
-                encodedParams.append('&');
-            }
-            return encodedParams.toString().getBytes(paramsEncoding);
+            final Gson gson = new Gson(); 
+            final String json = gson.toJson(params);
+            
+            System.out.println("====================WWWWWWWWWWWWWWWWWWWWW"+json);
+            
+            return json.getBytes(paramsEncoding);
         } catch (UnsupportedEncodingException uee) {
             throw new RuntimeException("Encoding not supported: " + paramsEncoding, uee);
         }
