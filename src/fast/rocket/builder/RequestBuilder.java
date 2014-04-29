@@ -22,4 +22,10 @@ public interface RequestBuilder{
      */
     public ImageViewBuilder<? extends ImageViewBuilder<?>> asImage();
     
+    
+    /**
+     * @return FileMultipartBuilder
+     */
+    public FileMultipartBuilder asFile(Class<?> clazz);
+    
 }

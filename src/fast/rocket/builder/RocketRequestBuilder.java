@@ -1,7 +1,5 @@
 package fast.rocket.builder;
 
-import java.io.File;
-
 import android.content.Context;
 import fast.rocket.Rocket;
 import fast.rocket.request.Request.Method;
@@ -19,8 +17,6 @@ public class RocketRequestBuilder implements RequestBuilder, LoadBuilder<Request
 	public Rocket rocket;
 	
 	private String uri;
-	
-	//private File file;
 	
 	private int method;
 
@@ -64,8 +60,8 @@ public class RocketRequestBuilder implements RequestBuilder, LoadBuilder<Request
 	}
 
 	@Override
-	public RocketRequestBuilder load(File file) {
-		return null;
+	public FileMultipartBuilder asFile(Class clazz) {
+		return new RocketFileBuilder(rocket, clazz, uri);
 	}
 
 }

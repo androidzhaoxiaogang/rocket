@@ -23,8 +23,14 @@ import android.text.TextUtils;
 import fast.rocket.error.AuthFailureError;
 import fast.rocket.request.Request;
 import fast.rocket.request.Request.Method;
+import fast.rocket.request.filecore.FilePart;
+import fast.rocket.request.filecore.MultiPartRequest;
+import fast.rocket.request.filecore.MultipartEntity;
+import fast.rocket.request.filecore.StringPart;
+import fast.rocket.request.filecore.MultiPartRequest.MultiPartParam;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +90,7 @@ public class HttpClientStack implements HttpStack {
      */
     @SuppressWarnings("deprecation")
     /* protected */ static HttpUriRequest createHttpRequest(Request<?> request,
-            Map<String, String> additionalHeaders) throws AuthFailureError {
+            Map<String, String> additionalHeaders) throws AuthFailureError, IOException {
     	final String requestUrl = request.getUrl();
         switch (request.getMethod()) {
             case Method.DEPRECATED_GET_OR_POST: {
@@ -127,12 +133,40 @@ public class HttpClientStack implements HttpStack {
     }
 
     private static void setEntityIfNonEmptyBody(HttpEntityEnclosingRequestBase httpRequest,
-            Request<?> request) throws AuthFailureError {
-        byte[] body = request.getBody();
-        if (body != null) {
-            HttpEntity entity = new ByteArrayEntity(body);
-            httpRequest.setEntity(entity);
-        }
+            Request<?> request) throws IOException, AuthFailureError {
+    	 if (request instanceof MultiPartRequest) {
+
+             final Map<String, MultiPartParam> multipartParams = ((MultiPartRequest<?>) request).getMultipartParams();
+             final Map<String, String> filesToUpload = ((MultiPartRequest<?>) request).getFilesToUpload();
+
+             MultipartEntity multipartEntity = new MultipartEntity();
+
+             for (String key : multipartParams.keySet()) {
+                 multipartEntity.addPart(new StringPart(key, multipartParams.get(key).value));
+             }
+
+             for (String key : filesToUpload.keySet()) {
+                 File file = new File(filesToUpload.get(key));
+                 
+                 if(!file.exists()) {
+                     throw new IOException(String.format("File not found: %s", file.getAbsolutePath()));
+                 }
+                 
+                 if(file.isDirectory()) {
+                     throw new IOException(String.format("File is a directory: %s", file.getAbsolutePath()));
+                 }
+                 
+                 multipartEntity.addPart(new FilePart(key, file, null, null));
+             }
+             httpRequest.setEntity(multipartEntity);
+
+         } else {
+			byte[] body = request.getBody();
+			if (body != null) {
+				HttpEntity entity = new ByteArrayEntity(body);
+				httpRequest.setEntity(entity);
+			}
+         }
     }
 
     /**
