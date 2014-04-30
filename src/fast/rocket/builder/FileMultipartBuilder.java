@@ -2,6 +2,7 @@ package fast.rocket.builder;
 
 import java.util.Map;
 
+import fast.rocket.cache.CachePolicy;
 import fast.rocket.response.JsonCallback;
 
 public interface FileMultipartBuilder {
@@ -33,4 +34,10 @@ public interface FileMultipartBuilder {
 	 * @return
 	 */
 	public FileMultipartBuilder addFile(String name, String filePath);
+	
+    /**
+     * @param policy
+     * @return
+     */
+    public FileMultipartBuilder cachePolicy(CachePolicy policy);
 }

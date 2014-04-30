@@ -440,8 +440,6 @@ public abstract class Request<T> implements Comparable<Request<T>> {
             final Gson gson = new Gson(); 
             final String json = gson.toJson(params);
             
-            System.out.println("====================WWWWWWWWWWWWWWWWWWWWW"+json);
-            
             return json.getBytes(paramsEncoding);
         } catch (UnsupportedEncodingException uee) {
             throw new RuntimeException("Encoding not supported: " + paramsEncoding, uee);

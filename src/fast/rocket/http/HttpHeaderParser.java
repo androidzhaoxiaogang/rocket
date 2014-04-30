@@ -34,8 +34,6 @@ public class HttpHeaderParser {
         long maxAge = 0;
         boolean hasCacheControl = false;
         
-        //System.out.println("==============headers====="+headers);
-
         String serverEtag = null;
         String headerValue;
 

@@ -3,6 +3,7 @@ package fast.rocket.builder;
 import java.util.Map;
 
 import fast.rocket.Rocket;
+import fast.rocket.cache.CachePolicy;
 import fast.rocket.error.RocketError;
 import fast.rocket.request.FileRequest;
 import fast.rocket.request.Request.Method;
@@ -27,6 +28,9 @@ public class RocketFileBuilder implements FileMultipartBuilder {
 	private Map<String, String> params;
 	
 	private String contentType = "text/plain;";
+	
+	/** The cache policy. */
+	private CachePolicy cachePolicy;
 	
 	private String uri;
 	
@@ -72,15 +76,17 @@ public class RocketFileBuilder implements FileMultipartBuilder {
 					}
 				}, clazz);
 		
-		
-		for(String name : params.keySet()) {
-			request.addMultipartParam(name, contentType, params.get(name));
+		if(params != null) {
+			for(String name : params.keySet()) {
+				request.addMultipartParam(name, contentType, params.get(name));
+			}
 		}
 		
 		request.addFile(fileName, filePath);
 
 		if (tag != null)
 			request.setTag(tag);
+		request.setCachePolicy(cachePolicy);
 		rocket.getRequestQueue().add(request);
 	}
 
@@ -100,6 +106,12 @@ public class RocketFileBuilder implements FileMultipartBuilder {
 	@Override
 	public FileMultipartBuilder addMultipartParam(Map<String, String> params) {
 		this.params = params;
+		return this;
+	}
+
+	@Override
+	public FileMultipartBuilder cachePolicy(CachePolicy policy) {
+		this.cachePolicy = policy;
 		return this;
 	}
 }
