@@ -24,7 +24,7 @@ public class ImageRequest extends Request<Bitmap> {
     private static final int IMAGE_MAX_RETRIES = 2;
 
     /** Default backoff multiplier for image requests */
-    private static final float IMAGE_BACKOFF_MULT = 2f;
+    private static final float IMAGE_BACKOFF_MULT = 10f;
 
     private final Response.Listener<Bitmap> mListener;
     private final Config mDecodeConfig;
