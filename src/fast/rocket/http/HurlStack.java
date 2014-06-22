@@ -339,9 +339,10 @@ public class HurlStack implements HttpStack {
         Map<String, String> filesToUpload = ((MultiPartRequest<?>) request)
                 .getFilesToUpload();
         PrintWriter writer = null;
+        OutputStream out = null;
         try {
             addHeadersToConnection(connection, additionalHeaders);
-            OutputStream out = connection.getOutputStream();
+            out = connection.getOutputStream();
             writer = new PrintWriter(new OutputStreamWriter(out, charset), true);
 
             for (String key : multipartParams.keySet()) {
@@ -424,6 +425,10 @@ public class HurlStack implements HttpStack {
             if (writer != null) {
                 writer.close();
             }
+            
+            if(out != null) {
+        		out.close();
+        	}
         }
     }
     

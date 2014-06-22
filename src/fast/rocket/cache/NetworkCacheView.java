@@ -1,24 +1,15 @@
 package fast.rocket.cache;
 
-import com.android.rocket.R;
-
 import fast.rocket.builder.RocketImageBuilder;
 import fast.rocket.cache.ImageLoader.ImageContainer;
 import fast.rocket.cache.ImageLoader.ImageListener;
 import fast.rocket.error.RocketError;
 import fast.rocket.utils.RocketUtils;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
@@ -29,45 +20,12 @@ import android.widget.ImageView;
  */
 public class NetworkCacheView extends ImageView {
 
-	/** The image width. */
-	private int width;
-	
-	/** The image height. */
-	private int height;
-
 	/** Local copy of the ImageLoader. */
 	private ImageLoader mImageLoader;
 
 	/** Current ImageContainer. (either in-flight or finished) */
 	private ImageContainer mImageContainer;
 
-	/** The bitmap. */
-	private Bitmap bitmap;
-
-	/** The border width. */
-	private float borderWidth = 2.0F;
-
-	/** The center. */
-	private float center;
-
-	/** default set draw border false. */
-	private boolean drawBorder = false;
-
-	/** default set image to draw circle false. */
-	private boolean drawCircle = false;
-
-	/** default border color. */
-	private int borderColor = 0xFF129FCD;
-
-	/** The paint. */
-	private Paint paint;
-
-	/** The paint border. */
-	private Paint paintBorder;
-
-	/** The shader. */
-	private BitmapShader shader;
-	
 	private RocketImageBuilder.Builder builder;
 
 	/**
@@ -78,7 +36,6 @@ public class NetworkCacheView extends ImageView {
 	 */
 	public NetworkCacheView(Context context) {
 		super(context);
-		initialize(context, null);
 	}
 
 	/**
@@ -91,7 +48,6 @@ public class NetworkCacheView extends ImageView {
 	 */
 	public NetworkCacheView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		initialize(context, attrs);
 	}
 
 	/**
@@ -106,52 +62,8 @@ public class NetworkCacheView extends ImageView {
 	 */
 	public NetworkCacheView(Context context, AttributeSet attrs, int paramInt) {
 		super(context, attrs, paramInt);
-		initialize(context, attrs);
 	}
 
-	private void initialize(Context context, AttributeSet attrs) {
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.rocket);
-		drawCircle = a.getBoolean(R.styleable.rocket_drawCircle, drawCircle);
-		drawBorder = a.getBoolean(R.styleable.rocket_drawCircleBorder, drawBorder);
-		borderColor = a.getInt(R.styleable.rocket_borderColor, borderColor);
-		a.recycle();
-
-		initialize();
-	}
-
-	/**
-	 * Sets the shader.
-	 */
-	private void setShader() {
-		BitmapDrawable drawable = (BitmapDrawable) getDrawable();
-		if (drawable != null) {
-			this.bitmap = drawable.getBitmap();
-		}
-
-		if ((this.bitmap != null) && (this.width > 0) && (this.height > 0)) {
-			this.shader = new BitmapShader(Bitmap.createScaledBitmap(
-					this.bitmap, this.width, this.height, false),
-					BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
-			this.paint.setShader(this.shader);
-		}
-	}
-
-	/**
-	 * Initialize the paint and paint border.
-	 */
-	private void initialize() {
-		Resources localResources = getResources();
-		this.borderWidth = TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, this.borderWidth,
-				localResources.getDisplayMetrics());
-		this.paint = new Paint();
-		this.paint.setAntiAlias(true);
-		this.paintBorder = new Paint();
-		this.paintBorder.setColor(borderColor);
-		this.paintBorder.setStyle(Paint.Style.STROKE);
-		this.paintBorder.setStrokeWidth(this.borderWidth);
-		this.paintBorder.setAntiAlias(true);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -160,11 +72,7 @@ public class NetworkCacheView extends ImageView {
 	 */
 	public void onDraw(Canvas paramCanvas) {
 		if (RocketUtils.hasHoneycomb()) {
-			if (drawCircle)
-				drawCircle(paramCanvas);
-			else
-				super.onDraw(paramCanvas);
-
+			super.onDraw(paramCanvas);
 		} else {
 			BitmapDrawable drawable = (BitmapDrawable) getDrawable();
 			if (drawable == null) {
@@ -183,10 +91,7 @@ public class NetworkCacheView extends ImageView {
 			}
 			
 			try {
-				if (drawCircle)
-					drawCircle(paramCanvas);
-				else
-					super.onDraw(paramCanvas);
+				super.onDraw(paramCanvas);
 			} catch (RuntimeException localRuntimeException) {
 			}
 		}
@@ -223,23 +128,6 @@ public class NetworkCacheView extends ImageView {
 		this.mImageLoader = imageLoader;
 		// The URL has potentially changed. See if we need to load it.
 		loadImageIfNecessary(false);
-	}
-
-	/**
-	 * Draw circle.
-	 * 
-	 * @param paramCanvas
-	 *            the param canvas
-	 */
-	private void drawCircle(Canvas paramCanvas) {
-		if ((this.bitmap != null) && (this.shader != null)) {
-			float f1 = this.center - 2 * (int) this.borderWidth;
-			float f2 = this.center - ((int) this.borderWidth >> 1);
-			paramCanvas.drawCircle(this.center, this.center, f1, this.paint);
-			if (this.drawBorder)
-				paramCanvas.drawCircle(this.center, this.center, f2
-						- this.borderWidth, this.paintBorder);
-		}
 	}
 
 	/**
@@ -327,6 +215,10 @@ public class NetworkCacheView extends ImageView {
 						}
 
 						if (response.getBitmap() != null) {
+							if(builder.listener != null) {
+								builder.listener.onComplete();
+							}
+							
 							setImageBitmap(response.getBitmap());
 							RocketUtils.loadAnimation(NetworkCacheView.this, 
 									builder.inAnimation, builder.inAnimationResource);
@@ -362,38 +254,6 @@ public class NetworkCacheView extends ImageView {
 			int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		loadImageIfNecessary(true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.view.View#onSizeChanged(int, int, int, int)
-	 */
-	protected void onSizeChanged(int paramInt1, int paramInt2, int paramInt3,
-			int paramInt4) {
-		super.onSizeChanged(paramInt1, paramInt2, paramInt3, paramInt4);
-		this.width = paramInt1;
-		this.height = paramInt2;
-		this.center = (this.width >> 1);
-		setShader();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.widget.ImageView#setImageDrawable(android.graphics.drawable.Drawable
-	 * )
-	 */
-	public void setImageDrawable(Drawable paramDrawable) {
-		super.setImageDrawable(paramDrawable);
-		if ((paramDrawable instanceof BitmapDrawable)) {
-			this.bitmap = ((BitmapDrawable) paramDrawable).getBitmap();
-			setShader();
-			return;
-		}
-		this.shader = null;
-		invalidate();
 	}
 
 }

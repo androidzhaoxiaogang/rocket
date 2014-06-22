@@ -3,10 +3,16 @@ package fast.rocket.builder;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import fast.rocket.cache.ImageLoader.DownloadListener;
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.NetworkCacheView;
 
+/**
+ * @author zhaoxiaogang
+ *
+ * @param <I>
+ */
 public interface ImageViewBuilder<I extends ImageViewBuilder<?>>{
 	public enum ScaleMode {
 	    FitXY,
@@ -21,6 +27,12 @@ public interface ImageViewBuilder<I extends ImageViewBuilder<?>>{
 	 * @return the i
 	 */
 	public I cachePolicy(CachePolicy policy);
+	
+	/**
+	 * @param listener
+	 * @return
+	 */
+	public I listen(DownloadListener listener);
 	
 	/**
 	 * Invoke.

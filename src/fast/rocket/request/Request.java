@@ -60,7 +60,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     private final String mUrl;
 
     /** Default tag for {@link TrafficStats}. */
-    private final int mDefaultTrafficStatsTag;
+    private int mDefaultTrafficStatsTag;
 
     /** Listener interface for errors. */
     private final Response.ErrorListener mErrorListener;
@@ -128,7 +128,11 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         mErrorListener = listener;
         setRetryPolicy(new DefaultRetryPolicy());
 
-        mDefaultTrafficStatsTag = TextUtils.isEmpty(url) ? 0: Uri.parse(url).getHost().hashCode();
+        try{
+        	mDefaultTrafficStatsTag = TextUtils.isEmpty(url) ? 0: Uri.parse(url).getHost().hashCode();
+        } catch(Exception ex){
+        	mDefaultTrafficStatsTag = 0;
+        }
     }
     
     /**

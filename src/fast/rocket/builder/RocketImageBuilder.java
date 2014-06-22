@@ -3,6 +3,7 @@ package fast.rocket.builder;
 import fast.rocket.Rocket;
 import fast.rocket.cache.CachePolicy;
 import fast.rocket.cache.ImageLoader;
+import fast.rocket.cache.ImageLoader.DownloadListener;
 import fast.rocket.cache.ImageLoader.ImageCallback;
 import fast.rocket.cache.NetworkCacheView;
 import fast.rocket.cache.ImageLoader.ImageListener;
@@ -215,6 +216,12 @@ public class RocketImageBuilder implements ImageViewBuilder {
 		builder.skipMemoryCache = skipMemoryCache;
 		return this;
 	}
+	
+	@Override
+	public ImageViewBuilder listen(DownloadListener listener) {
+		builder.listener = listener;
+		return this;
+	}
 
 	/**
 	 * The Class Builder.
@@ -254,6 +261,8 @@ public class RocketImageBuilder implements ImageViewBuilder {
 		/** The skip memory cache. */
 		public boolean skipMemoryCache = false;
 		
+		public DownloadListener listener;
+		
 		public ImageCallback callback;
 
 		/** The uri. */
@@ -276,5 +285,5 @@ public class RocketImageBuilder implements ImageViewBuilder {
 			cachePolicy = cp;
 		}
 	}
-	
+
 }

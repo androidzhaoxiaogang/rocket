@@ -97,6 +97,11 @@ public class ImageLoader {
 	     */
 	    public void onComplete(ImageView view, Bitmap result);
     }
+    
+    public interface DownloadListener {
+    	public void onStart();
+    	public void onComplete();
+    }
 
     /**
      * Constructs a new ImageLoader.
@@ -371,6 +376,10 @@ public class ImageLoader {
             ImageContainer container = new ImageContainer(cachedBitmap, builder.uri, null, null);
             imageListener.onResponse(container, true);
             return container;
+        }
+        
+        if(builder.listener != null) {
+        	builder.listener.onStart();
         }
 
         // The bitmap did not exist in the cache, fetch it!
