@@ -61,7 +61,6 @@ public class JsonRequest<T> extends Request<T> {
 		try {
 			String json = new String(response.data,
 					HttpHeaderParser.parseCharset(response.headers));
-			System.out.println("======json" +json);
 			return Response.success(gson.fromJson(json, clazz),
 					HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {

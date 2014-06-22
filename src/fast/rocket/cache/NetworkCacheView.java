@@ -26,6 +26,7 @@ public class NetworkCacheView extends ImageView {
 	/** Current ImageContainer. (either in-flight or finished) */
 	private ImageContainer mImageContainer;
 
+	/** Image cache configure builder*/
 	private RocketImageBuilder.Builder builder;
 
 	/**
