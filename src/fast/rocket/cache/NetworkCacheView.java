@@ -163,7 +163,7 @@ public class NetworkCacheView extends ImageView {
 				mImageContainer.cancelRequest();
 				mImageContainer = null;
 			}
-			setImageBitmap(null);
+			setDefaultImageOrNull();
 			return;
 		}
 
@@ -177,7 +177,7 @@ public class NetworkCacheView extends ImageView {
 				// if there is a pre-existing request, cancel it if it's
 				// fetching a different URL.
 				mImageContainer.cancelRequest();
-				setImageBitmap(null);
+				setDefaultImageOrNull();
 			}
 		}
 
@@ -221,10 +221,13 @@ public class NetworkCacheView extends ImageView {
 							}
 							
 							setImageBitmap(response.getBitmap());
-							RocketUtils.loadAnimation(NetworkCacheView.this, 
-									builder.inAnimation, builder.inAnimationResource);
+							RocketUtils.loadAnimation(
+									NetworkCacheView.this, 
+									builder.inAnimation, 
+									builder.inAnimationResource);
 							if(builder.callback != null) {
-								builder.callback.onComplete(NetworkCacheView.this, 
+								builder.callback.onComplete(
+										NetworkCacheView.this, 
 										response.getBitmap());
 							}
 						} else {
@@ -244,6 +247,16 @@ public class NetworkCacheView extends ImageView {
 		// update the ImageContainer to be the new bitmap container.
 		mImageContainer = newContainer;
 	}
+	
+	private void setDefaultImageOrNull() {
+		if (builder.placeholderResource != 0) {
+			setImageResource(builder.placeholderResource);
+		} else if (builder.placeholderDrawable != null) {
+			setImageDrawable(builder.placeholderDrawable);
+		} else {
+            setImageBitmap(null);
+        }
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -256,5 +269,24 @@ public class NetworkCacheView extends ImageView {
 		super.onLayout(changed, left, top, right, bottom);
 		loadImageIfNecessary(true);
 	}
+	
+	@Override
+    protected void onDetachedFromWindow() {
+        if (mImageContainer != null) {
+            // If the view was bound to an image request, cancel it and clear
+            // out the image from the view.
+            mImageContainer.cancelRequest();
+            setImageBitmap(null);
+            // also clear out the container so we can reload the image if necessary.
+            mImageContainer = null;
+        }
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        invalidate();
+    }
 
 }
